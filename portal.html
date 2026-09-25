@@ -1,0 +1,2068 @@
+<!doctype html>
+<html lang="ru">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>КРЫМ terrace · рабочий стол</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  /* нейтрали тёплые: база не белая, чёрный не фальшивый */
+  --paper:#f4f2f1;
+  --surface:#ffffff;
+  --surface-2:#edeae6;
+  --surface-3:#e5e1db;
+  --line:#dfdad4;
+  --line-2:#c9c2ba;
+  --ink:#353230;
+  --ink-2:#6b655e;
+  --ink-3:#9a938a;
+  /* единственный металлический акцент — бренд и активное состояние */
+  --bronze:#967850;
+  --bronze-deep:#6f5836;
+  --bronze-wash:#96785014;
+  --bronze-line:#9678504d;
+  /* семантика: wash / line / text выводятся из одного цвета */
+  --ok:#2c6a47;      --ok-wash:#2c6a4714;   --ok-line:#2c6a4740;
+  --warn:#8a6a1f;    --warn-wash:#8a6a1f14; --warn-line:#8a6a1f40;
+  --bad:#9e2e2e;     --bad-wash:#9e2e2e14;  --bad-line:#9e2e2e40;
+  --sans:'IBM Plex Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,SFMono-Regular,Consolas,monospace;
+  --row:36px;
+  --sidebar:242px;
+}
+*{box-sizing:border-box}
+body{margin:0; background:var(--paper); color:var(--ink); font-family:var(--sans); font-size:14px; line-height:1.55}
+button{font:inherit; color:inherit}
+a{color:var(--ink)}
+:focus-visible{outline:2px solid var(--bronze); outline-offset:2px}
+.num{font-family:var(--mono); font-variant-numeric:tabular-nums; font-feature-settings:"tnum"}
+
+/* ─── каркас ─── */
+.app{display:grid; grid-template-columns:var(--sidebar) minmax(0,1fr); min-height:100dvh}
+.side{
+  position:sticky; top:46px; align-self:start; height:calc(100dvh - 46px); overflow:auto;
+  background:var(--paper); border-right:1px solid var(--line); padding:18px 12px 20px;
+  display:flex; flex-direction:column; gap:2px;
+}
+.mark{display:flex; align-items:center; gap:10px; padding:4px 10px 20px}
+.mark__sq{width:30px; height:30px; flex:none; border:1px solid var(--bronze); color:var(--bronze); display:grid; place-items:center; font-size:11px; font-weight:600; letter-spacing:.04em}
+.mark__n{font-size:14px; font-weight:600; line-height:1.15; white-space:nowrap}
+.mark__a{display:block; font-size:11px; color:var(--ink-3); font-weight:400; margin-top:2px}
+.sgroup{font-size:11px; color:var(--ink-3); padding:16px 10px 6px}
+.slink{
+  display:flex; align-items:center; gap:9px; width:100%; text-align:left; cursor:pointer;
+  padding:7px 10px; border:1px solid transparent; border-radius:5px; background:none; font-size:14px; color:var(--ink-2);
+}
+.slink:hover{background:var(--surface-2); color:var(--ink)}
+.slink[aria-current="true"]{background:var(--surface); border-color:var(--line); color:var(--ink); font-weight:500}
+.slink[aria-current="true"] .slink__b{background:var(--bronze)}
+.slink__b{width:3px; height:15px; border-radius:2px; background:transparent; flex:none}
+.slink__c{margin-left:auto; font-family:var(--mono); font-size:11px; color:var(--bad); background:var(--bad-wash); padding:1px 6px; border-radius:3px}
+
+.main{min-width:0; display:flex; flex-direction:column}
+.strip{background:var(--warn-wash); border-bottom:1px solid var(--warn-line); padding:8px 26px; font-size:12.5px; color:#75581a; line-height:1.5}
+.strip b{font-weight:600}
+.head{padding:26px 26px 0; display:flex; align-items:flex-start; gap:20px; flex-wrap:wrap}
+.head__t{font-size:22px; font-weight:600; letter-spacing:-.015em; margin:0 0 5px}
+.head__s{margin:0; color:var(--ink-2); font-size:14px; max-width:74ch}
+.head__r{margin-left:auto; display:flex; gap:8px; align-items:center; flex-wrap:wrap}
+.body{padding:22px 26px 60px}
+.note{margin:0 0 18px; padding:11px 14px; background:var(--warn-wash); border:1px solid var(--warn-line); border-radius:5px; font-size:13px; color:#75581a; line-height:1.55}
+.note b{font-weight:600}
+
+/* ─── элементы ─── */
+.seg{display:inline-flex; border:1px solid var(--line); border-radius:5px; overflow:hidden; background:var(--surface)}
+.seg button{height:30px; padding:0 12px; border:none; border-left:1px solid var(--line); background:none; color:var(--ink-2); cursor:pointer; font-size:13px}
+.seg button:first-child{border-left:none}
+.seg button:hover{background:var(--surface-2); color:var(--ink)}
+.seg button[aria-pressed="true"]{background:var(--ink); color:var(--paper); font-weight:500}
+.btn{height:30px; padding:0 12px; border:1px solid var(--line); background:var(--surface); border-radius:5px; cursor:pointer; font-size:13px; display:inline-flex; align-items:center; gap:6px}
+.btn:hover{border-color:var(--bronze); color:var(--bronze-deep)}
+.btn--go{background:var(--bronze); border-color:var(--bronze); color:#fff; font-weight:500}
+.btn--go:hover{background:var(--bronze-deep); color:#fff}
+.btn--q{border-color:transparent; background:none; color:var(--ink-2)}
+.btn--q:hover{background:var(--surface-2); border-color:transparent; color:var(--ink)}
+.chip{display:inline-flex; align-items:center; gap:5px; height:21px; padding:0 7px; border-radius:3px; font-size:11.5px; font-weight:500; white-space:nowrap; border:1px solid}
+.chip--ok{background:var(--ok-wash); border-color:var(--ok-line); color:var(--ok)}
+.chip--warn{background:var(--warn-wash); border-color:var(--warn-line); color:var(--warn)}
+.chip--bad{background:var(--bad-wash); border-color:var(--bad-line); color:var(--bad)}
+.chip--flat{background:var(--surface-2); border-color:var(--line); color:var(--ink-2)}
+
+/* ─── «как это посчитано» ─── */
+.qm{width:15px; height:15px; padding:0; margin-left:6px; border:1px solid var(--line-2); border-radius:50%;
+    background:var(--surface); color:var(--ink-3); font-size:9.5px; font-family:var(--sans); line-height:1;
+    cursor:pointer; display:inline-grid; place-items:center; vertical-align:1px; flex:none}
+.qm:hover{border-color:var(--bronze); color:var(--bronze-deep); background:var(--bronze-wash)}
+.qm[aria-expanded="true"]{background:var(--ink); border-color:var(--ink); color:var(--paper)}
+.qpop{position:absolute; z-index:80; width:min(320px,calc(100vw - 24px)); background:#2b2724; color:#ece7e0;
+      font-size:12.5px; line-height:1.55; padding:11px 13px; border-radius:6px; box-shadow:0 8px 28px rgba(20,18,16,.3)}
+.qpop b{color:#fff; font-weight:600}
+.qpop i{font-style:normal; color:#b9afa2}
+
+/* ─── показатели ─── */
+.kpis{display:grid; grid-template-columns:repeat(auto-fit,minmax(172px,1fr)); gap:1px; background:var(--line); border:1px solid var(--line); border-radius:6px; overflow:hidden; margin-bottom:22px}
+.kpi{background:var(--surface); padding:14px 16px 15px}
+.kpi__k{font-size:12px; color:var(--ink-2); display:block; margin-bottom:8px}
+.kpi__v{font-family:var(--mono); font-variant-numeric:tabular-nums; font-size:25px; font-weight:500; line-height:1; letter-spacing:-.02em; display:block}
+.kpi__v i{font-style:normal; font-family:var(--sans); font-size:13px; color:var(--ink-2); font-weight:400}
+.kpi__d{display:block; margin-top:8px; font-size:12px; color:var(--ink-3)}
+.kpi__d b{font-family:var(--mono); font-weight:500}
+.up{color:var(--ok)} .down{color:var(--bad)}
+
+/* ─── панель ─── */
+.panel{background:var(--surface); border:1px solid var(--line); border-radius:6px; margin-bottom:22px}
+.panel__h{display:flex; align-items:center; gap:12px; flex-wrap:wrap; padding:13px 16px; border-bottom:1px solid var(--line)}
+.panel__t{font-size:13.5px; font-weight:600; margin:0}
+.panel__s{font-size:12.5px; color:var(--ink-3)}
+.panel__a{margin-left:auto; display:flex; gap:7px; align-items:center; flex-wrap:wrap}
+.panel__b{padding:16px}
+.panel__b--flush{padding:0}
+.cols{display:grid; grid-template-columns:repeat(auto-fit,minmax(340px,1fr)); gap:22px; align-items:start}
+
+/* ─── таблицы ─── */
+.scroll{overflow-x:auto}
+table{width:100%; border-collapse:collapse; font-size:13px}
+th,td{padding:0 12px; height:var(--row); text-align:left; border-bottom:1px solid var(--line); white-space:nowrap}
+thead th{font-size:11.5px; font-weight:600; color:var(--ink-2); height:32px; background:var(--surface-2)}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:var(--surface-2)}
+td.r,th.r{text-align:right; font-family:var(--mono); font-variant-numeric:tabular-nums}
+th[data-s]{cursor:pointer; user-select:none}
+th[data-s]:hover{color:var(--ink)}
+th[aria-sort]{color:var(--bronze-deep)}
+tr[data-hole="1"] td{background:var(--warn-wash)}
+tr[data-hole="1"]:hover td{background:#f5ecd8}
+tfoot td{height:34px; font-weight:600; background:var(--surface-2); border-top:1px solid var(--line-2); border-bottom:none}
+.wrapok{white-space:normal; min-width:200px}
+
+/* ─── полосы ─── */
+.bars{list-style:none; margin:0; padding:0}
+.bars li{display:grid; grid-template-columns:minmax(0,1fr) 62px; gap:14px; align-items:center; padding:7px 0}
+.bars__l{font-size:12.5px; color:var(--ink-2); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; margin-bottom:5px}
+.bars__t{display:block; height:8px; background:var(--surface-3); border-radius:2px; overflow:hidden}
+.bars__f{display:block; height:100%; background:var(--bronze); opacity:.9}
+.bars li[data-hole="1"] .bars__f{background:var(--warn)}
+.bars__n{text-align:right; font-family:var(--mono); font-variant-numeric:tabular-nums; font-size:13px; font-weight:500}
+
+/* ─── воронка ─── */
+.fun{list-style:none; margin:0; padding:0}
+.fun li{display:grid; grid-template-columns:minmax(104px,1fr) minmax(0,1.3fr) 54px; gap:12px; align-items:center; padding:5px 0; font-size:12.5px}
+.fun__l{color:var(--ink-2); overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.fun__t{height:18px; background:var(--surface-3); border-radius:2px; overflow:hidden}
+.fun__f{display:block; height:100%; background:var(--ink-3); min-width:2px}
+.fun li[data-drop="1"] .fun__f{background:var(--bad)}
+.fun li[data-drop="1"] .fun__l{color:var(--bad); font-weight:600}
+.fun__n{text-align:right; font-family:var(--mono); font-variant-numeric:tabular-nums; font-weight:500}
+
+/* ─── сотрудники: часы и смены за месяц ─── */
+.mon{display:grid; min-width:1215px; font-size:12px}
+.mon__c{border-bottom:1px solid var(--line)}
+.mon__d{padding:0 0 7px; text-align:center; border-bottom:1px solid var(--line)}
+.mon__dn{color:var(--bad); font-weight:600}
+.mon__d--bad .mon__dw{color:var(--bad)}
+.daybar{display:flex; align-items:center; gap:10px; flex-wrap:wrap; padding:13px 16px; border-bottom:1px solid var(--line); background:var(--surface-2); font-size:13px}
+.daybar b{font-weight:600}
+.daybar button{height:26px; padding:0 10px; border:1px solid var(--bad-line); background:var(--bad-wash); color:var(--bad); border-radius:4px; cursor:pointer; font-size:12.5px; font-weight:500}
+.daybar button:hover{background:#f6e2e2}
+.mon__dn{font-family:var(--mono); font-variant-numeric:tabular-nums; font-size:12.5px; color:var(--ink)}
+.mon__dw{font-size:10px; color:var(--ink-3); display:block}
+.mon__d--we .mon__dn{color:var(--ink-3)}
+.mon__d--now .mon__dn{color:var(--bronze-deep); font-weight:600}
+.mon__g{grid-column:1/-1; font-size:11px; color:var(--ink-3); padding:14px 0 5px}
+.mon__n{display:flex; flex-direction:column; justify-content:center; padding:4px 10px 4px 0; border-bottom:1px solid var(--line); min-height:34px; font-size:12.5px}
+.mon__r{font-size:10.5px; color:var(--ink-3)}
+.mon__x{border-bottom:1px solid var(--line); border-left:1px solid var(--line); padding:3px; display:grid; place-items:center}
+.mon__x--we{background:var(--surface-2)}
+.mon__s{width:100%; height:22px; border-radius:2px; cursor:pointer; font-family:var(--mono); font-size:9.5px; letter-spacing:-.02em; font-weight:500; display:grid; place-items:center; border:1px solid}
+.mon__s:hover{filter:brightness(.96)}
+.mon__e{width:100%; height:22px; border:none; background:none; cursor:pointer; border-radius:2px}
+.mon__e:hover{background:var(--bronze-wash)}
+.mon__tot{display:grid; place-items:center; border-bottom:1px solid var(--line); border-left:1px solid var(--line); font-family:var(--mono); font-variant-numeric:tabular-nums; font-size:12.5px; font-weight:500}
+.mon__tot--over{color:var(--bad)}
+.draft{border-style:dashed}
+.legend{display:flex; gap:18px; flex-wrap:wrap; padding:14px 16px 0; font-size:12px; color:var(--ink-2)}
+.legend i{width:18px; height:12px; border-radius:2px; display:inline-block; margin-right:6px; vertical-align:-2px; border:1px solid}
+
+/* ─── цвет смены = подразделение, пунктир = черновик ─── */
+.dp-cc{background:#e7efe9; border-color:#a9c6b6; color:#255c3d}
+.dp-mg{background:#eae7f0; border-color:#bfb6d1; color:#4b4162}
+.dp-bq{background:#f5eedd; border-color:#dcc79c; color:#70561a}
+
+/* ─── месяц: календарная сетка ─── */
+.mcal{display:grid; grid-template-columns:repeat(7,minmax(118px,1fr)); min-width:880px; border-top:1px solid var(--line)}
+.mcal__h{font-size:11px; color:var(--ink-2); padding:6px 9px; background:var(--surface-2); border-left:1px solid var(--line); border-bottom:1px solid var(--line)}
+.mcal__h:first-child{border-left:none}
+.mcal__c{position:relative; min-height:126px; padding:5px 5px 8px; border-left:1px solid var(--line); border-bottom:1px solid var(--line); display:flex; flex-direction:column; gap:3px; cursor:pointer}
+.mcal__c:nth-child(7n+1){border-left:none}
+.mcal__c--we{background:var(--surface-2)}
+.mcal__c--out{background:repeating-linear-gradient(135deg,var(--surface-2) 0 6px,var(--paper) 6px 12px); cursor:default}
+.mcal__c:hover{background:#fbfaf9}
+.mcal__c--we:hover{background:var(--surface-3)}
+.mcal__c[data-drop="on"]{background:var(--bronze-wash); box-shadow:inset 0 0 0 1px var(--bronze)}
+.mcal__t{display:flex; align-items:center; gap:6px; margin-bottom:3px}
+.mcal__n{font-family:var(--mono); font-variant-numeric:tabular-nums; font-size:12.5px; min-width:21px; height:21px; display:grid; place-items:center; border-radius:50%}
+.mcal__c--now .mcal__n{background:var(--bronze); color:#fff; font-weight:500}
+.mcal__s{font-size:10.5px; color:var(--ink-3); font-family:var(--mono); white-space:nowrap; overflow:hidden}
+.mcal__s .q{font-style:normal}
+.mcal__a{margin-left:auto; width:20px; height:20px; flex:none; border:none; background:none; color:var(--ink-3); border-radius:4px; cursor:pointer; font-size:15px; line-height:1; opacity:0}
+.mcal__c:hover .mcal__a{opacity:1}
+.mcal__a:hover{background:var(--surface-3); color:var(--ink)}
+.mchip{display:flex; align-items:center; gap:5px; width:100%; border:1px solid; border-radius:3px; padding:2px 5px; font-size:11px; cursor:grab; text-align:left; white-space:nowrap; overflow:hidden}
+.mchip b{font-family:var(--mono); font-weight:500; font-size:10.5px; flex:none}
+.mchip span{overflow:hidden; text-overflow:ellipsis}
+.mchip:hover{filter:brightness(.96)}
+.mcal__m{border:none; background:none; color:var(--ink-3); font-size:11px; cursor:pointer; text-align:left; padding:1px 5px}
+.mcal__m:hover{color:var(--bronze-deep)}
+
+/* ─── панель видов — в шапке самого календаря ─── */
+.schbar{display:flex; align-items:center; gap:10px; flex-wrap:wrap; padding:11px 16px; border-bottom:1px solid var(--line); background:var(--surface-2); border-radius:6px 6px 0 0}
+.schbar__r{margin-left:auto; display:flex; gap:8px; flex-wrap:wrap}
+
+/* ─── неделя: колонка на день ─── */
+.wag{display:grid; grid-template-columns:repeat(7,minmax(150px,1fr)); min-width:1070px; border-top:1px solid var(--line)}
+.wag__h{border-left:1px solid var(--line); border-bottom:1px solid var(--line); padding:8px 10px 9px; text-align:center; background:var(--surface-2)}
+.wag__h:first-child{border-left:none}
+.wag__h b{display:block; font-family:var(--mono); font-variant-numeric:tabular-nums; font-size:17px; font-weight:500; line-height:1.2}
+.wag__h span{font-size:10.5px; color:var(--ink-3)}
+.wag__h em{display:block; font-style:normal; font-family:var(--mono); font-size:10.5px; color:var(--ink-2); margin-top:3px}
+.wag__h:hover{background:var(--surface-3)}
+.wag__h--now{background:var(--bronze-wash)}
+.wag__h--now b{color:var(--bronze-deep)}
+.wag__h--flag{background:var(--bad-wash)}
+.wag__h--flag b{color:var(--bad)}
+.wag__c{border-left:1px solid var(--line); border-bottom:1px solid var(--line); padding:6px; display:flex; flex-direction:column; gap:5px; min-height:190px}
+.wag__c:nth-child(7n+1){border-left:none}
+.wag__c--we{background:var(--surface-2)}
+.wag__c--out{background:repeating-linear-gradient(135deg,var(--surface-2) 0 6px,var(--paper) 6px 12px)}
+.wag__c[data-drop="on"]{background:var(--bronze-wash); box-shadow:inset 0 0 0 1px var(--bronze)}
+.wchip{border:1px solid; border-radius:4px; padding:5px 8px 6px; text-align:left; cursor:grab; display:block}
+.wchip b{display:block; font-family:var(--mono); font-size:11px; font-weight:500}
+.wchip span{display:block; font-size:12.5px; margin-top:1px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.wchip small{display:block; font-size:10.5px; opacity:.85; margin-top:2px; line-height:1.4}
+.wchip:hover{filter:brightness(.97)}
+.wag__add{margin-top:auto; border:1px dashed var(--line-2); background:none; border-radius:4px; color:var(--ink-3); cursor:pointer; font-size:12px; padding:7px 6px}
+.wag__add:hover{border-color:var(--bronze); color:var(--bronze-deep)}
+
+/* ─── день: сетка часов, колонка на сотрудника ─── */
+.cal{display:grid; grid-template-columns:54px repeat(9,minmax(122px,1fr)); min-width:1150px; padding-bottom:16px}
+.cal__corner{border-bottom:1px solid var(--line)}
+.cal__h{border-left:1px solid var(--line); border-bottom:1px solid var(--line); padding:8px 8px 9px; text-align:center}
+.cal__h b{display:block; font-size:13px; font-weight:600; line-height:1.25}
+.cal__h span{font-size:10.5px; color:var(--ink-3)}
+.cal__h em{display:block; font-style:normal; font-family:var(--mono); font-size:10px; color:var(--ink-2); margin-top:3px; white-space:nowrap}
+.cal__gut{position:relative; height:var(--ch)}
+.cal__gut i{position:absolute; right:8px; font-style:normal; font-family:var(--mono); font-size:10px; color:var(--ink-3); transform:translateY(-6px)}
+.cal__col{position:relative; height:var(--ch); border-left:1px solid var(--line); background-image:repeating-linear-gradient(to bottom,var(--line) 0 1px,transparent 1px var(--hh))}
+.cal__col[data-drop="on"]{background-color:var(--bronze-wash)}
+.shb{position:absolute; border:1px solid; border-radius:4px; padding:4px 7px; overflow:hidden; text-align:left; cursor:grab; display:block}
+.shb b{display:block; font-family:var(--mono); font-size:10.5px; font-weight:500}
+.shb span{display:block; font-size:12px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; margin-top:1px}
+.shb small{display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; font-size:10px; opacity:.9; margin-top:3px; line-height:1.4; overflow:hidden}
+.shb:hover{filter:brightness(.97)}
+.shb--drag{opacity:.35}
+.shb--new{animation:pop .32s ease both}
+.evb{position:absolute; left:calc(34% + 2px); width:calc(66% - 6px); border:1px solid var(--bronze-line); background:#f4ecdf; color:var(--bronze-deep); border-radius:4px; padding:3px 6px; overflow:hidden; z-index:12}
+.evb b{display:block; font-family:var(--mono); font-size:10px; font-weight:500}
+.evb span{display:block; font-size:11.5px; font-weight:500; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.evb small{display:block; font-size:10px; opacity:.9; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.evb--tech{background:var(--surface-2); border-color:var(--line-2); border-style:dashed; color:var(--ink-2)}
+
+/* ─── карточка смены ─── */
+.f{margin-bottom:14px}
+.f>label{display:block; font-size:12px; color:var(--ink-2); margin-bottom:5px}
+.f input,.f select,.f textarea{width:100%; font:inherit; font-size:13px; color:var(--ink); background:var(--surface); border:1px solid var(--line-2); border-radius:5px; padding:7px 9px}
+.f textarea{resize:vertical; line-height:1.5}
+.f input:focus,.f select:focus,.f textarea:focus{outline:2px solid var(--bronze); outline-offset:1px; border-color:var(--bronze)}
+.frow{display:grid; grid-template-columns:1fr 1fr; gap:12px}
+.fhint{margin:-7px 0 15px; font-size:12px; color:var(--ink-3)}
+.fhint b{font-family:var(--mono); color:var(--ink-2); font-weight:500}
+.fhint--bad{color:var(--bad)}
+.fhint--bad b{color:var(--bad)}
+.fsec{font-size:12.5px; font-weight:600; margin:22px 0 9px}
+.tasks{list-style:none; margin:0 0 9px; padding:0}
+.tasks li{display:grid; grid-template-columns:minmax(0,1fr) 26px; gap:6px; align-items:center; padding:6px 0; border-bottom:1px solid var(--line); font-size:13px}
+.tasks label{display:flex; gap:9px; align-items:flex-start; cursor:pointer}
+.tasks input{width:auto; margin-top:3px; accent-color:var(--bronze)}
+.tasks li[data-done="1"] span{color:var(--ink-3); text-decoration:line-through}
+.tasks .rm{border:none; background:none; color:var(--ink-3); cursor:pointer; font-size:16px; line-height:1; border-radius:4px; height:24px}
+.tasks .rm:hover{background:var(--surface-2); color:var(--bad)}
+.tasks .e{display:block; color:var(--ink-3); font-size:12.5px; border-bottom:none; padding:0 0 4px}
+.tadd{display:grid; grid-template-columns:minmax(0,1fr) auto; gap:7px}
+.tadd input{font:inherit; font-size:13px; padding:7px 9px; border:1px solid var(--line-2); border-radius:5px; background:var(--surface); color:var(--ink)}
+.chk{display:flex; gap:9px; align-items:flex-start; font-size:12.5px; color:var(--ink-2); margin:16px 0 20px; cursor:pointer}
+.chk input{margin-top:2px; accent-color:var(--bronze)}
+.facts{display:flex; gap:9px; flex-wrap:wrap; border-top:1px solid var(--line); padding-top:16px}
+.dlist{list-style:none; margin:0; padding:0}
+.dlist li{display:grid; grid-template-columns:auto minmax(0,1fr); gap:13px; align-items:start; padding:10px 0; border-bottom:1px solid var(--line); font-size:13px}
+.dlist li:last-child{border-bottom:none}
+.dlist__t{font-family:var(--mono); font-size:11.5px; color:var(--ink-2); padding-top:1px}
+.dlist__r{font-size:11.5px; color:var(--ink-3); display:block}
+.dlist__b{width:3px; border-radius:2px; align-self:stretch}
+
+/* ─── залы ─── */
+.halls{display:grid; grid-template-columns:172px minmax(0,1fr); min-width:820px}
+.halls__s{grid-column:2; display:grid; font-size:10.5px; color:var(--ink-3); padding-bottom:8px; font-family:var(--mono)}
+.halls__n{display:flex; flex-direction:column; justify-content:center; padding:12px 12px 12px 0; border-top:1px solid var(--line)}
+.halls__t{font-size:14px; font-weight:600; letter-spacing:.01em}
+.halls__c{font-size:11px; color:var(--ink-3); margin-top:3px}
+.halls__l{position:relative; border-top:1px solid var(--line); border-left:1px solid var(--line); min-height:66px; background-image:repeating-linear-gradient(to right,var(--line) 0 1px,transparent 1px var(--hs))}
+.ev{position:absolute; top:7px; bottom:7px; border-radius:3px; padding:5px 8px; border:1px solid; overflow:hidden; text-align:left; cursor:pointer; display:flex; flex-direction:column; gap:1px; min-width:0}
+.ev b{font-size:11.5px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.ev small{font-size:10px; opacity:.85; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.ev--show{background:var(--bronze-wash); border-color:var(--bronze-line); color:var(--bronze-deep)}
+.ev--ban{background:var(--ok-wash); border-color:var(--ok-line); color:var(--ok)}
+.ev--tech{background:var(--surface-2); border-color:var(--line); border-style:dashed; color:var(--ink-2)}
+
+/* ─── список дел ─── */
+.issues{list-style:none; margin:0; padding:0}
+.issues li{display:grid; grid-template-columns:3px 1fr auto; gap:13px; align-items:start; padding:13px 16px; border-bottom:1px solid var(--line)}
+.issues li:last-child{border-bottom:none}
+.issues .bar{width:3px; align-self:stretch; border-radius:2px; background:var(--bad)}
+.issues li[data-tone="warn"] .bar{background:var(--warn)}
+.issues__t{font-size:13.5px; display:block}
+.issues__r{font-size:12.5px; color:var(--ink-2); display:block; margin-top:3px}
+.issues__r code{font-family:var(--mono); font-size:11.5px; background:var(--surface-2); padding:1px 5px; border-radius:3px}
+
+/* ─── звонки ─── */
+.calls{display:grid; grid-template-columns:minmax(0,300px) minmax(0,1fr); gap:0}
+.clist{list-style:none; margin:0; padding:0; border-right:1px solid var(--line); max-height:620px; overflow:auto}
+.crow{display:grid; grid-template-columns:1fr auto; gap:10px; align-items:center; width:100%; padding:10px 14px; background:none; border:none; border-left:3px solid transparent; border-bottom:1px solid var(--line); cursor:pointer; text-align:left}
+.crow:hover{background:var(--surface-2)}
+.crow[aria-current="true"]{background:var(--bronze-wash); border-left-color:var(--bronze)}
+.crow__w{font-size:13px; display:block}
+.crow__m{font-size:11.5px; color:var(--ink-3); display:block; margin-top:2px; font-family:var(--mono)}
+.crow__s{font-family:var(--mono); font-variant-numeric:tabular-nums; font-size:16px; font-weight:500}
+.s-ok{color:var(--ok)} .s-w{color:var(--warn)} .s-b{color:var(--bad)}
+.cdet{padding:16px}
+/* таймлайн залит по темам разговора */
+.tl{display:flex; height:26px; border-radius:3px; overflow:hidden; border:1px solid var(--line); margin:10px 0 7px; cursor:pointer}
+.tl span{display:block; position:relative}
+.tl span:hover{filter:brightness(.94)}
+.tl__k{display:flex; gap:14px; flex-wrap:wrap; font-size:11.5px; color:var(--ink-2); margin-bottom:16px}
+.tl__k i{width:11px; height:11px; border-radius:2px; display:inline-block; margin-right:5px; vertical-align:-1px}
+.tr{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:7px}
+.tr li{display:grid; grid-template-columns:62px minmax(0,1fr); gap:11px; font-size:13px; align-items:start; cursor:pointer; border-radius:4px; padding:2px}
+.tr li:hover{background:var(--surface-2)}
+.tr li[data-on="1"]{background:var(--bronze-wash)}
+.tr__w{font-family:var(--mono); font-size:11px; color:var(--ink-3); padding-top:7px}
+.tr__x{padding:7px 11px; border-radius:4px; background:var(--surface-2); line-height:1.5; border-left:3px solid transparent}
+.tr li[data-s="op"] .tr__x{background:var(--surface); border:1px solid var(--line); border-left:3px solid var(--line)}
+.tr li[data-s="good"] .tr__x{border-left-color:var(--ok)}
+.tr li[data-s="bad"] .tr__x{border-left-color:var(--bad)}
+.tr__f{display:block; font-size:11.5px; margin-top:5px; font-weight:500}
+.tr li[data-s="good"] .tr__f{color:var(--ok)}
+.tr li[data-s="bad"] .tr__f{color:var(--bad)}
+.ck{list-style:none; margin:0; padding:0; font-size:13px}
+.ck li{display:grid; grid-template-columns:16px 1fr auto; gap:9px; align-items:center; padding:7px 0; border-bottom:1px solid var(--line)}
+.ck li:last-child{border-bottom:none}
+.ck .m{font-weight:600}
+.ck .m.y{color:var(--ok)} .ck .m.n{color:var(--bad)}
+.ck li[data-d="0"] span:nth-child(2){color:var(--ink-2)}
+.ck .rate{font-family:var(--mono); font-variant-numeric:tabular-nums; font-size:12px; color:var(--ink-3)}
+/* целевой коридор рядом с метрикой */
+.gauge{margin:0 0 18px; border:1px solid var(--line); border-radius:6px; padding:14px 16px 16px; background:var(--surface)}
+.gauge__h{font-size:12.5px; font-weight:600; margin:0 0 12px}
+.gauge__l{display:flex; justify-content:space-between; align-items:baseline; font-size:12.5px; color:var(--ink-2); margin-bottom:9px}
+.gauge__l b{font-family:var(--mono); font-variant-numeric:tabular-nums; color:var(--ink); font-weight:500; font-size:19px}
+.gauge__t{display:block; position:relative; height:14px; background:var(--surface-3); border-radius:3px}
+.gauge__z{position:absolute; top:0; bottom:0; background:var(--ok-wash); border-left:2px solid var(--ok); border-right:2px solid var(--ok)}
+.gauge__p{position:absolute; top:-5px; width:3px; height:24px; background:var(--ink); border-radius:2px}
+.gauge__p.out{background:var(--bad)}
+.gauge__sc{display:block; position:relative; height:15px; margin-top:4px; font-family:var(--mono); font-size:10.5px; color:var(--ink-3)}
+.gauge__sc span{position:absolute; transform:translateX(-50%)}
+.gauge__c{font-size:12.5px; color:var(--ink-2); margin-top:9px; display:block; line-height:1.5}
+.gauge__c b{font-weight:600}
+.gauge__c.out b{color:var(--bad)}
+
+/* ─── панель справа ─── */
+.sheet{position:fixed; inset:0; z-index:60; display:grid; grid-template-columns:1fr minmax(0,420px)}
+.sheet__s{background:rgba(53,50,48,.3); border:none; cursor:pointer}
+.sheet__p{position:relative; background:var(--surface); border-left:1px solid var(--line); padding:22px 22px calc(22px + env(safe-area-inset-bottom,0px)); overflow:auto}
+.sheet__c{position:absolute; top:14px; right:16px}
+.kv{display:grid; grid-template-columns:auto 1fr; gap:8px 16px; font-size:13px; margin:0}
+.kv dt{color:var(--ink-3); font-size:12.5px}
+.kv dd{margin:0}
+.kv dd.n{font-family:var(--mono); font-variant-numeric:tabular-nums}
+.tline{list-style:none; margin:0; padding:0 0 0 16px; border-left:1px solid var(--line)}
+.tline li{position:relative; padding:0 0 15px 14px; font-size:13px}
+.tline li::before{content:""; position:absolute; left:-21px; top:6px; width:9px; height:9px; border-radius:50%; background:var(--surface); border:1px solid var(--line-2)}
+.tline li[data-on="1"]::before{background:var(--bronze); border-color:var(--bronze)}
+.tline__t{font-family:var(--mono); font-size:11px; color:var(--ink-3); display:block}
+
+/* ─── источники ─── */
+.src{display:grid; grid-template-columns:repeat(auto-fit,minmax(238px,1fr)); gap:14px; margin-bottom:22px}
+.scard{border:1px solid var(--line); border-radius:6px; padding:15px; background:var(--surface); border-top:3px solid var(--line)}
+.scard--a{border-top-color:var(--ok)}
+.scard--p{border-top-color:var(--warn)}
+.scard--m{border-top-color:var(--bad)}
+.scard h3{margin:0; font-size:13.5px; font-weight:600}
+.scard__n{font-family:var(--mono); font-variant-numeric:tabular-nums; font-size:27px; font-weight:500; display:block; margin:7px 0 6px}
+.scard p{margin:0; font-size:12.5px; color:var(--ink-2); line-height:1.55}
+.scard ul{margin:9px 0 0; padding-left:16px; font-size:12px; color:var(--ink-2); line-height:1.7}
+.plan{display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:14px}
+.pcard{border:1px solid var(--line); border-radius:6px; padding:15px; background:var(--surface)}
+.pcard b{display:block; margin-bottom:6px; font-size:13.5px}
+.pcard p{margin:0; font-size:12.5px; color:var(--ink-2); line-height:1.6}
+
+.tabbar{display:none}
+@media (max-width:1000px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  .side{display:none}
+  .strip,.head,.body{padding-left:15px; padding-right:15px}
+  .kpis{grid-template-columns:repeat(2,1fr)}
+  .calls{grid-template-columns:minmax(0,1fr)}
+  .clist{border-right:none; border-bottom:1px solid var(--line); max-height:280px}
+  .sheet{grid-template-columns:minmax(0,1fr)}
+  .sheet__s{display:none}
+  .sheet__p{border-left:none; border-top:1px solid var(--line); border-radius:10px 10px 0 0; margin-top:52px}
+  .tr li{grid-template-columns:minmax(0,1fr); gap:3px}
+  .tr__w{padding-top:0}
+  .body{padding-bottom:78px}
+  .mcal__s .q{display:none}
+  .tabbar{display:grid; grid-template-columns:repeat(5,1fr); position:fixed; left:0; right:0; bottom:0; z-index:50; background:var(--surface); border-top:1px solid var(--line); padding-bottom:env(safe-area-inset-bottom,0px)}
+  .tabbar button{background:none; border:none; padding:9px 2px; cursor:pointer; font-size:10.5px; color:var(--ink-3); position:relative}
+  .tabbar button[aria-current="true"]{color:var(--bronze-deep); font-weight:600}
+  .tabbar button[aria-current="true"]::before{content:""; position:absolute; top:0; left:20%; right:20%; height:2px; background:var(--bronze)}
+}
+/* ─── телефон: свои раскладки графика, таблицы карточками ─── */
+.msort{display:none}
+@media (max-width:640px){
+  /* iOS приближает страницу, если у поля шрифт меньше 16px */
+  input,select,textarea,.f input,.f select,.f textarea,.tadd input{font-size:16px!important}
+  .seg{max-width:100%; overflow-x:auto; scrollbar-width:none}
+  .seg::-webkit-scrollbar{display:none}
+  .seg button{flex:none; white-space:nowrap; height:34px}
+  .schbar{padding:10px 12px}
+  .schbar .seg{width:100%}
+  .schbar .seg button{flex:1 0 auto}
+  .schbar__r{margin-left:0; width:100%}
+  .schbar__r .btn{flex:1; justify-content:center; height:36px}
+  .panel__h{padding:12px 14px}
+  .panel__a{margin-left:0; width:100%}
+  .panel__a .btn--q{flex:1; justify-content:center; border:1px solid var(--line); height:34px}
+  .head__r{margin-left:0}
+  .cols{grid-template-columns:minmax(0,1fr)}
+  .issues li{grid-template-columns:3px minmax(0,1fr); padding:13px 14px}
+  .issues li>.btn{grid-column:2; justify-self:start}
+  .issues li>span:empty:not(.bar){display:none}
+  .legend{gap:8px 16px; padding:12px 14px 0}
+  .qm{width:20px; height:20px; font-size:11px}
+  .fun li{grid-template-columns:minmax(96px,1fr) minmax(0,1fr) 44px; gap:9px}
+  .clist{max-height:none}
+  .msort{display:flex; align-items:center; gap:8px; width:100%; font-size:12.5px; color:var(--ink-2)}
+  .msort select{flex:1; min-width:0; border:1px solid var(--line-2); border-radius:5px; background:var(--surface); color:var(--ink); padding:6px 8px}
+
+  /* таблица → карточки: подпись столбца над значением */
+  table.tcards,table.tcards tbody,table.tcards tfoot{display:block}
+  table.tcards thead{display:none}
+  table.tcards tr{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px 12px; padding:13px 14px; border-bottom:1px solid var(--line)}
+  table.tcards td{display:block; height:auto; padding:0; border:none; white-space:normal; text-align:left!important; min-width:0; font-size:13.5px; background:none!important}
+  table.tcards td::before{content:attr(data-l); display:block; font-family:var(--sans); font-size:11px; font-weight:400; color:var(--ink-3); margin-bottom:2px; line-height:1.3}
+  table.tcards td.tc-t{grid-column:1/-1; font-size:14.5px; font-weight:500}
+  table.tcards td.tc-t::before,table.tcards td.tc-n::before{display:none}
+  table.tcards td.tc-w{grid-column:1/-1}
+  table.tcards td:empty{display:none}
+  table.tcards tr[data-hole="1"]{background:var(--warn-wash)}
+  table.tcards tfoot tr{background:var(--surface-2); border-bottom:none; border-radius:0 0 6px 6px}
+  table.tcards tfoot td{font-weight:600}
+}
+
+/* месяц на телефоне: компактная сетка + список смен выбранного дня */
+.mm{display:grid; grid-template-columns:repeat(7,minmax(0,1fr))}
+.mm__h{font-size:11px; color:var(--ink-3); text-align:center; padding:8px 0 6px; border-bottom:1px solid var(--line)}
+.mm__c{border:none; background:none; border-bottom:1px solid var(--line); border-left:1px solid var(--line); min-height:58px; padding:5px 2px 6px; display:flex; flex-direction:column; align-items:center; gap:4px; cursor:pointer; min-width:0}
+.mm__c:nth-child(7n+1){border-left:none}
+.mm__c--we{background:var(--surface-2)}
+.mm__c--out{background:repeating-linear-gradient(135deg,var(--surface-2) 0 5px,var(--paper) 5px 10px); cursor:default}
+.mm__n{font-family:var(--mono); font-variant-numeric:tabular-nums; font-size:14px; width:28px; height:28px; display:grid; place-items:center; border-radius:50%}
+.mm__c--now .mm__n{color:var(--bronze-deep); font-weight:600; box-shadow:inset 0 0 0 1px var(--bronze)}
+.mm__c[aria-pressed="true"] .mm__n{background:var(--ink); color:var(--paper); box-shadow:none}
+.mm__c[aria-pressed="true"]{background:var(--bronze-wash)}
+.mm__d{display:flex; flex-wrap:wrap; justify-content:center; gap:2px; max-width:34px}
+.mm__d i{width:6px; height:6px; border-radius:50%; border:1px solid}
+.mm__d i{background:currentColor; border-color:currentColor}
+.mm__d i.draft{background:transparent}
+.mm__e{font-size:9.5px; line-height:1; color:var(--bronze-deep); font-family:var(--mono)}
+.mm__e--bad{color:var(--bad); font-weight:600}
+.agenda{padding:14px 14px 4px}
+.agenda__h{display:flex; flex-wrap:wrap; align-items:baseline; gap:4px 10px; margin:0 0 11px}
+.agenda__h b{font-size:15px; font-weight:600}
+.agenda__h span{font-size:12.5px; color:var(--ink-3)}
+.agenda__l{display:flex; flex-direction:column; gap:6px}
+.agenda__l .wchip{width:100%}
+.agenda__ev{list-style:none; margin:12px 0 0; padding:0; font-size:13px}
+.agenda__ev li{display:grid; grid-template-columns:48px minmax(0,1fr); gap:8px; padding:7px 0; border-top:1px solid var(--line)}
+.agenda__ev .t{font-family:var(--mono); font-size:12px; color:var(--bronze-deep); padding-top:1px}
+.agenda__ev small{display:block; font-size:11.5px; color:var(--ink-3)}
+.agenda__b{display:flex; gap:8px; margin-top:14px}
+.agenda__b .btn{flex:1; justify-content:center; height:38px}
+.wag--m{grid-template-columns:minmax(0,1fr); min-width:0}
+.wag--m .wag__h{border-left:none; display:flex; align-items:baseline; gap:9px; text-align:left; padding:10px 14px}
+.wag--m .wag__h b{display:inline; font-size:16px}
+.wag--m .wag__h em{display:inline; margin:0 0 0 auto}
+.wag--m .wag__c{border-left:none; min-height:0; padding:8px 14px 12px}
+.wag--m .wag__add{margin-top:2px}
+
+/* день на телефоне: строка на сотрудника, полоса смены по часам */
+.dm{padding:4px 14px 6px}
+.dm__sc{position:relative; height:18px; margin:6px 0 0; font-family:var(--mono); font-size:10px; color:var(--ink-3)}
+.dm__sc span{position:absolute; transform:translateX(-50%)}
+.dm__sc span:first-child{transform:none}
+.dm__sc span:last-child{transform:translateX(-100%)}
+.dm__r{padding:11px 0 12px; border-top:1px solid var(--line)}
+.dm__g{font-size:11px; color:var(--ink-3); padding:14px 0 2px}
+.dm__t{display:flex; align-items:baseline; gap:8px; margin-bottom:7px}
+.dm__t b{font-size:14px; font-weight:500}
+.dm__t span{font-size:11.5px; color:var(--ink-3)}
+.dm__t em{margin-left:auto; font-style:normal; font-family:var(--mono); font-size:12px; color:var(--ink-2); white-space:nowrap}
+.dm__t em.off{color:var(--ink-3); font-family:var(--sans)}
+.dm__k{position:relative; height:36px; border-radius:4px; background-color:var(--surface-2); background-image:repeating-linear-gradient(to right,var(--line) 0 1px,transparent 1px var(--hs)); cursor:pointer}
+.dm__s{position:absolute; top:0; bottom:0; border:1px solid; border-radius:4px; padding:0 7px; font-family:var(--mono); font-size:11px; font-weight:500; display:flex; align-items:center; white-space:nowrap; overflow:hidden; cursor:pointer}
+.dm__e{position:absolute; bottom:3px; height:11px; border-radius:2px; background:var(--bronze); opacity:.85; pointer-events:none; z-index:2}
+.dm__e--tech{background:var(--ink-3)}
+.dm__x{margin:7px 0 0; padding:0; list-style:none; font-size:12px; color:var(--ink-2)}
+.dm__x li{display:flex; gap:7px; padding:1px 0}
+.dm__x li b{font-family:var(--mono); font-weight:500; color:var(--bronze-deep); font-size:11.5px; flex:none}
+
+/* сотрудники на телефоне: карточка с часами и полосой месяца */
+.pm{padding:2px 14px 6px}
+.pm__g{font-size:11px; color:var(--ink-3); padding:14px 0 2px}
+.pm__r{padding:12px 0 13px; border-top:1px solid var(--line)}
+.pm__t{display:flex; align-items:baseline; gap:8px}
+.pm__t b{font-size:14px; font-weight:500}
+.pm__t span{font-size:11.5px; color:var(--ink-3)}
+.pm__h{margin-left:auto; font-family:var(--mono); font-variant-numeric:tabular-nums; font-size:15px; font-weight:500; white-space:nowrap}
+.pm__h i{font-style:normal; font-size:11px; color:var(--ink-3); font-weight:400}
+.pm__h--over{color:var(--bad)}
+.pm__bar{display:block; position:relative; height:5px; background:var(--surface-3); border-radius:3px; margin:8px 0 9px; overflow:hidden}
+.pm__bar span{position:absolute; top:0; bottom:0; left:0; background:var(--bronze)}
+.pm__bar span.over{background:var(--bad)}
+.pm__m{display:grid; grid-template-columns:repeat(15,minmax(0,1fr)); gap:2px}
+:where(.pm__m) button{height:24px; padding:0; border:1px solid var(--line); background:var(--surface); border-radius:3px; font-family:var(--mono); font-size:10px; color:var(--ink-3); cursor:pointer; min-width:0}
+.pm__m .we{background:var(--surface-2)}
+.pm__m .now{box-shadow:inset 0 0 0 1px var(--bronze)}
+.pm__m button[class*="dp-"]{font-weight:500}
+
+/* залы на телефоне: список мероприятий */
+.hm{padding:4px 14px 8px}
+.hm__r{padding:12px 0; border-top:1px solid var(--line)}
+.hm__r:first-child{border-top:none}
+.hm__t{font-size:14px; font-weight:600}
+.hm__c{font-size:11.5px; color:var(--ink-3); margin:1px 0 8px}
+.hm__l{display:flex; flex-direction:column; gap:6px}
+.hm__l .ev{position:static; display:grid; grid-template-columns:86px minmax(0,1fr); gap:1px 10px; padding:8px 10px}
+.hm__l .ev small{white-space:normal}
+.hm__l .ev .t{grid-row:span 2; font-family:var(--mono); font-size:12px; font-weight:500}
+.hm__0{font-size:12.5px; color:var(--ink-3)}
+.hm__l .ev b{white-space:normal}
+
+@media (prefers-reduced-motion:reduce){*{animation:none!important; transition:none!important}}
+
+/* ─── сквозная навигация по пакету материалов ─── */
+.pkgnav{position:sticky; top:0; z-index:50; background:#2b2724; display:flex; align-items:stretch;
+  font-family:'IBM Plex Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;
+  overflow-x:auto; scrollbar-width:none}
+.pkgnav::-webkit-scrollbar{display:none}
+.pkgnav__b{display:flex; flex-direction:column; justify-content:center; padding:0 17px 0 22px;
+  text-decoration:none; color:#f2ece4; font-size:13px; font-weight:600; line-height:1.15;
+  white-space:nowrap; border-right:1px solid #443d37; flex:none}
+.pkgnav__b span{font-size:10px; font-weight:400; color:#9c9189; letter-spacing:.09em; margin-top:3px}
+.pkgnav__b:hover{background:#35302b}
+.pkgnav__l{display:flex; align-items:stretch; flex:none}
+.pkgnav__l a{display:flex; align-items:center; padding:0 15px; height:46px; text-decoration:none;
+  color:#b3a99f; font-size:13.5px; white-space:nowrap; border-bottom:2px solid transparent}
+.pkgnav__l a:hover{color:#f2ece4; background:#35302b}
+.pkgnav__l a[aria-current="page"]{color:#f2ece4; border-bottom-color:#c99b58; font-weight:500}
+.pkgnav__l a:focus-visible{outline:2px solid #c99b58; outline-offset:-3px}
+@media (max-width:660px){
+  .pkgnav__b{padding:0 12px 0 15px; font-size:12.5px}
+  .pkgnav__b span{display:none}
+  .pkgnav__l a{padding:0 11px; font-size:13px}
+}
+/* на телефоне все пять разделов помещаются без прокрутки: знак ведёт туда же, куда «Обзор» */
+@media (max-width:560px){
+  .pkgnav__b{display:none}
+  .pkgnav__l{flex:1; justify-content:space-between}
+  .pkgnav__l a{padding:0 8px; font-size:13px}
+}
+</style>
+
+<nav class="pkgnav" aria-label="Разделы пакета">
+  <a class="pkgnav__b" href="index.html">КРЫМ terrace<span>МАТЕРИАЛЫ</span></a>
+  <div class="pkgnav__l">
+    <a href="index.html">Обзор</a>
+    <a href="tz.html">Техзадание</a>
+    <a href="portal.html" aria-current="page">Прототип</a>
+    <a href="site.html">Сайт</a>
+    <a href="restaurant.html">Ресторан</a>
+  </div>
+</nav>
+
+
+<div class="app">
+  <aside class="side">
+    <div class="mark">
+      <span class="mark__sq">КТ</span>
+      <span class="mark__n">КРЫМ terrace
+        <span class="mark__a">Болотная набережная, 3с1</span>
+      </span>
+    </div>
+    <div class="sgroup">Работа</div>
+    <nav id="nav"></nav>
+  </aside>
+
+  <main class="main">
+    <div class="strip">
+      <b>Это макет, а не ваши данные.</b> Все числа, имена и разговоры здесь придуманы — экраны
+      показывают, как будет выглядеть работа на ваших настоящих данных после подключения систем.
+    </div>
+
+    <div class="head">
+      <div>
+        <h1 class="head__t" id="pgT"></h1>
+        <p class="head__s" id="pgS"></p>
+      </div>
+      <div class="head__r" id="pgA"></div>
+    </div>
+
+    <div class="body">
+      <section id="v-leads"></section>
+      <section id="v-schedule" hidden></section>
+      <section id="v-calls" hidden></section>
+      <section id="v-clients" hidden></section>
+      <section id="v-sources" hidden></section>
+    </div>
+  </main>
+</div>
+<nav class="tabbar" id="tabbar"></nav>
+
+<script>
+(function(){
+"use strict";
+var $=function(s,r){return (r||document).querySelector(s);};
+function el(t,c,h){var n=document.createElement(t); if(c)n.className=c; if(h!=null)n.innerHTML=h; return n;}
+function fmt(n){return String(n).replace(/\B(?=(\d{3})+(?!\d))/g,' ');}
+function rub(n){return fmt(Math.round(n))+' ₽';}
+function pct(x){return (Math.round(x*10)/10).toString().replace('.',',')+'%';}
+function hh(h){var a=Math.floor(h),m=Math.round((h-a)*60);return (a<10?'0':'')+a+':'+(m<10?'0':'')+m;}
+function qa(t){return String(t).replace(/&/g,'&amp;').replace(/"/g,'&quot;');}
+function qm(t){return '<button class="qm" type="button" aria-expanded="false" aria-label="Как это посчитано" data-q="'+qa(t)+'">?</button>';}
+var qpop=null, qbtn=null;
+function qclose(){ if(qpop){qpop.remove(); qpop=null;} if(qbtn){qbtn.setAttribute('aria-expanded','false'); qbtn=null;} }
+document.addEventListener('click',function(e){
+  var t=e.target, b=t&&t.closest?t.closest('.qm'):null;
+  if(!b){ if(qpop && !(t.closest&&t.closest('.qpop'))) qclose(); return; }
+  e.preventDefault();
+  var again=(qbtn===b); qclose(); if(again) return;
+  var w=el('div','qpop',b.dataset.q);
+  document.body.appendChild(w);
+  var r=b.getBoundingClientRect(), vw=document.documentElement.clientWidth;
+  var x=r.left+window.pageXOffset-10, max=window.pageXOffset+vw-w.offsetWidth-12;
+  w.style.left=Math.round(Math.max(window.pageXOffset+12,Math.min(x,max)))+'px';
+  w.style.top=Math.round(r.bottom+window.pageYOffset+7)+'px';
+  qpop=w; qbtn=b; b.setAttribute('aria-expanded','true');
+});
+document.addEventListener('keydown',function(e){ if(e.key==='Escape') qclose(); });
+function pl(n,a,b,c){var x=n%10,y=n%100; if(x===1&&y!==11)return a; if(x>=2&&x<=4&&(y<10||y>=20))return b; return c;}
+/* телефон: графику и таблицам нужны свои раскладки, а не сжатая десктопная */
+function M(){return window.matchMedia('(max-width:640px)').matches;}
+/* на телефоне таблица показывается карточками — каждой ячейке нужна подпись её столбца */
+function tcards(t,wide){
+  if(!t) return;
+  t.classList.add('tcards');
+  var hs=Array.prototype.map.call(t.querySelectorAll('thead th'),function(th){
+    return Array.prototype.filter.call(th.childNodes,function(n){return n.nodeType===3;}).map(function(n){return n.textContent;}).join('').trim();
+  });
+  Array.prototype.forEach.call(t.querySelectorAll('tbody tr, tfoot tr'),function(tr){
+    Array.prototype.forEach.call(tr.children,function(td,i){
+      if(td.colSpan>1){td.className+=' tc-t tc-n'; return;}
+      td.setAttribute('data-l',hs[i]||'');
+      if(i===0) td.classList.add('tc-t');
+      if(wide&&wide.indexOf(i)>=0) td.classList.add('tc-w');
+    });
+  });
+}
+
+/* ══ СПРАВОЧНИКИ ══ */
+var PAGES=[
+  {id:'leads', nav:'Заявки и каналы', t:'Откуда приходят заявки', s:'Шестнадцать источников из вашего списка: сколько заявок дал каждый, сколько из них целевых и сколько дошло до показа площадки.'},
+  {id:'schedule', nav:'График смен', t:'График работы', s:'Календарь смен: месяц, неделя по часам и часы по каждому сотруднику. Смена создаётся прямо в календаре: сотрудник, время, заметка и задачи. Часы и переработки считаются сами.', bad:2},
+  {id:'calls', nav:'Звонки', t:'Разбор разговоров', s:'Записи уже ведёт ваша телефония. Система расшифровывает разговор, показывает его форму и сверяет с вашим скриптом продаж.', bad:2},
+  {id:'clients', nav:'Клиенты', t:'Кто к нам обратился', s:'Все обращения из АмоCRM: кто, на какую дату, сколько гостей и на каком этапе стоит сейчас.'},
+  {id:'sources', nav:'Источники данных', t:'Что подключается, а что нет', s:'Честная карта по каждому каналу: где есть программный доступ, где нужен обходной путь и где данные может дать только человек.'}
+];
+
+var DW=['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
+var MD=30, TODAY=23, NORM=176;
+function wd(d){return d%7;}
+function wk(d){return Math.floor(d/7);}
+
+var DEPT=[{id:'cc',n:'Колл-центр'},{id:'mg',n:'Менеджеры площадки'},{id:'bq',n:'Банкетная служба'}];
+/* rot: '22' — два через два со сдвигом off; 'wd' — фиксированные дни недели.
+   f/t — начало и конец смены в часах. Часы смены считаются как t−f, а не «по девять на всех». */
+var EMP=[
+  {id:'m1',n:'Мария Ковалёва', r:'Оператор',            d:'cc', f:9,  t:21,   rot:'22', off:0},
+  {id:'m2',n:'Артём Лыков',    r:'Оператор',            d:'cc', f:9,  t:21,   rot:'22', off:2},
+  {id:'m3',n:'Дина Сафина',    r:'Оператор',            d:'cc', f:10, t:17.5, rot:'wd', w:[0,1,2,3,4]},
+  {id:'g1',n:'Ольга Ильина',   r:'Менеджер проектов',   d:'mg', f:11, t:19,   rot:'wd', w:[0,1,2,3,5]},
+  {id:'g2',n:'Никита Ерохин',  r:'Менеджер проектов',   d:'mg', f:13, t:23,   rot:'wd', w:[1,2,3,4]},
+  {id:'g3',n:'Вера Гончар',    r:'Менеджер проектов',   d:'mg', f:12, t:21,   rot:'wd', w:[1,2,4,6]},
+  {id:'b1',n:'Руслан Тагиров', r:'Администратор зала',  d:'bq', f:13, t:23.5, rot:'wd', w:[3,4,5,6]},
+  {id:'b2',n:'Лада Мельник',   r:'Хостес',              d:'bq', f:12, t:23.5, rot:'wd', w:[4,5,6]},
+  {id:'b3',n:'Егор Бекетов',   r:'Техник',              d:'bq', f:9,  t:19,   rot:'wd', w:[0,2,4,5]}
+];
+var SEQ=1, SH=[];
+function mk(e,d,f,t,pub,note,tasks){
+  return {id:'s'+(SEQ++), e:e, d:d, f:f, t:t, pub:pub!==false, note:note||'', tasks:tasks||[]};
+}
+EMP.forEach(function(e){
+  for(var d=1;d<=MD;d++){
+    var on = e.rot==='22' ? (Math.floor((d-1+e.off)/2)%2===0) : e.w.indexOf(wd(d))>=0;
+    if(on) SH.push(mk(e.id,d,e.f,e.t,d<=25));
+  }
+});
+/* пара смен с заметкой и задачами — чтобы было видно, как это выглядит */
+(function(){
+  function dec(id,d,note,tasks){
+    var s=SH.filter(function(x){return x.e===id&&x.d===d;})[0]; if(!s)return;
+    s.note=note; s.tasks=tasks.map(function(t,i){return {t:t,done:i===0};});
+  }
+  dec('g1',23,'Показ площадки в 11:00 — сделка № 12488, гость едет со свадебным организатором.',
+      ['Подготовить WHITE hall к показу','Отправить смету по сделке № 12488','Согласовать дегустацию на 25-е']);
+  dec('g2',23,'Юбилей на 140 гостей, TERRACE. Хозяин мероприятия приедет к 17:30.',
+      ['Проверить рассадку по схеме','Встретить подрядчика по свету','Забрать подписанный акт']);
+  dec('m2',23,'','Прослушать три своих вчерашних звонка с низкой оценкой,Перезвонить по недозвонам с выходных'.split(','));
+  dec('b3',23,'Монтаж сцены на TERRACE с 16:00.',['Проверить питание на сцене','Убрать кабель-каналы после монтажа']);
+  dec('g1',26,'Свадьба на 180 гостей и три показа в один день.',['Разнести показы по времени','Передать банкет администратору к 18:00']);
+})();
+
+var HALL=[
+  {id:'w',n:'WHITE hall',c:'50–500 гостей, окна пять метров на Москву-реку'},
+  {id:'l',n:'LOFT hall',c:'50–130 гостей, кирпич 1890 года'},
+  {id:'t',n:'TERRACE',c:'200 м², крытая, работает круглый год'}
+];
+var EV=[
+  {d:21,h:'w',a:12,b:13,k:'show',t:'Показ площадки',w:'Ольга Ильина',x:'12455'},
+  {d:22,h:'w',a:11,b:12,k:'show',t:'Показ площадки',w:'Ольга Ильина',x:'12480'},
+  {d:22,h:'l',a:15,b:16,k:'show',t:'Дегустация меню',w:'Вера Гончар',x:'12433'},
+  {d:22,h:'t',a:18,b:23,k:'ban',t:'День рождения, 60 гостей',w:'Никита Ерохин',x:'12301'},
+  {d:23,h:'w',a:11,b:12,k:'show',t:'Показ площадки',w:'Ольга Ильина',x:'12488'},
+  {d:23,h:'w',a:18,b:23.5,k:'ban',t:'Юбилей, 140 гостей',w:'Никита Ерохин',x:'12331'},
+  {d:23,h:'l',a:14,b:15,k:'show',t:'Дегустация меню',w:'Вера Гончар',x:'12491'},
+  {d:23,h:'t',a:16,b:18,k:'tech',t:'Монтаж сцены',w:'Егор Бекетов',x:null},
+  {d:24,h:'w',a:13,b:14,k:'show',t:'Показ площадки',w:'Ольга Ильина',x:'12495'},
+  {d:25,h:'w',a:12,b:13,k:'show',t:'Показ площадки',w:'Никита Ерохин',x:'12499'},
+  {d:25,h:'l',a:19,b:23.5,k:'ban',t:'Корпоратив, 90 гостей',w:'Вера Гончар',x:'12290'},
+  {d:25,h:'t',a:17,b:18,k:'show',t:'Дегустация меню',w:'Вера Гончар',x:'12502'},
+  {d:26,h:'w',a:11,b:12,k:'show',t:'Показ площадки',w:'Ольга Ильина',x:'12506'},
+  {d:26,h:'l',a:13,b:14,k:'show',t:'Показ площадки',w:'Ольга Ильина',x:'12511'},
+  {d:26,h:'t',a:15,b:16,k:'show',t:'Показ площадки',w:'Ольга Ильина',x:'12514'},
+  {d:26,h:'w',a:18,b:24,k:'ban',t:'Свадьба, 180 гостей',w:'Ольга Ильина',x:'12120'},
+  {d:27,h:'l',a:14,b:15,k:'show',t:'Показ площадки',w:'Вера Гончар',x:'12520'}
+];
+
+var CH=[
+  {n:'Яндекс.Директ',l:341,t:148,s:21,sp:286000,rv:2380000,d:12.4,how:'api'},
+  {n:'Органика и SEO',l:208,t:96,s:14,sp:45000,rv:1700000,d:5.1,how:'api'},
+  {n:'Без метки канала',l:185,t:62,s:7,sp:0,rv:820000,hole:1,d:18.2,how:'man'},
+  {n:'Яндекс.Карты',l:143,t:71,s:9,sp:18000,rv:1020000,d:-2.4,how:'api'},
+  {n:'Агрегаторы: Рестоклаб, 4банкет, Горько',l:122,t:54,s:8,sp:96000,rv:940000,d:7.8,how:'part'},
+  {n:'2GIS',l:88,t:39,s:5,sp:12000,rv:590000,d:-6.1,how:'part'},
+  {n:'Чат на сайте',l:76,t:31,s:4,sp:0,rv:460000,d:14.0,how:'api'},
+  {n:'Прямые заходы',l:71,t:34,s:6,sp:0,rv:680000,d:1.2,how:'api'},
+  {n:'Соцсети: ВК, Telegram, Instagram',l:64,t:22,s:2,sp:34000,rv:235000,d:-11.5,how:'api'},
+  {n:'Zoon',l:47,t:18,s:2,sp:9000,rv:230000,d:-3.0,how:'man'},
+  {n:'Не разметилось',l:42,t:11,s:1,sp:0,rv:120000,hole:1,d:9.4,how:'man'},
+  {n:'Нейросети: ChatGPT, Perplexity',l:29,t:17,s:4,sp:0,rv:450000,d:41.3,how:'api'},
+  {n:'Парсинг лидов',l:24,t:6,s:0,sp:8000,rv:0,d:-18.0,how:'part'},
+  {n:'Заявки с почты',l:19,t:9,s:1,sp:0,rv:115000,d:2.7,how:'api'},
+  {n:'Рекомендации',l:14,t:8,s:2,sp:0,rv:240000,d:16.0,how:'part'},
+  {n:'СМИ и публикации',l:11,t:3,s:0,sp:40000,rv:0,d:-30.0,how:'part'}
+];
+var HOW={api:{t:'По API',c:'chip--ok'},part:{t:'Обходом',c:'chip--warn'},man:{t:'Руками',c:'chip--bad'}};
+
+var FM=[{l:'Новый лид',n:2},{l:'Взяли в работу',n:6},{l:'Не дозвонился',n:3},{l:'Корпоративные',n:1},
+        {l:'Квалификация',n:4},{l:'Передача МП',n:520},{l:'Передача МП от 50',n:130},{l:'Показ площадки',n:9,drop:1}];
+var FC=[{l:'Новый лид',n:1},{l:'Клиент в работу',n:15},{l:'Квалификация',n:5},{l:'Отправлено КП',n:8},
+        {l:'Передача МП',n:80},{l:'Показ площадки',n:3,drop:1}];
+
+var SL=[48,52,41,63,57,44,39,58,66,51,47,72,61,55];
+var SS=[2,3,1,4,3,2,1,3,5,2,3,6,4,3];
+var SD=['10.09','11.09','12.09','13.09','14.09','15.09','16.09','17.09','18.09','19.09','20.09','21.09','22.09','23.09'];
+
+var SCR=['Представился и назвал площадку','Уточнил дату мероприятия','Уточнил количество гостей',
+         'Предложил показ площадки','Предложил дегустацию','Зафиксировал контакт','Назначил следующий шаг'];
+var RATE=[93,71,88,23,11,90,34];
+
+/* темы разговора для цветного таймлайна */
+var TOPIC={greet:{n:'Знакомство',c:'#d8d2c6'},need:{n:'Выясняет запрос',c:'#c7d6c9'},
+           offer:{n:'Рассказывает о зале',c:'#e2d3ae'},price:{n:'Цена и смета',c:'#d3cbdd'},
+           next:{n:'Договорённость',c:'#b7cfc0'},dead:{n:'Разговор буксует',c:'#e3c4bf'}};
+
+var CALLS=[
+ {id:1,tm:'09:42',op:'Мария Ковалёва',du:'4:12',x:'12480',sc:88,g:'best',dn:[1,1,1,1,0,1,1],wpm:142,
+  tl:[['greet',10],['need',26],['offer',30],['next',34]],
+  v:'Разговор по скрипту. Показ площадки назначен на четверг, дата свадьбы зафиксирована. Не предложена дегустация — единственный пропуск.',
+  ln:[['Оператор','КРЫМ terrace, Мария, здравствуйте!','good','Представился и назвал площадку'],
+      ['Клиент','Здравствуйте, мы ищем зал на свадьбу, человек на сто двадцать.',null,null],
+      ['Оператор','Поздравляю! На какую дату планируете?','good','Уточнил дату мероприятия'],
+      ['Клиент','Двадцать третье мая.',null,null],
+      ['Оператор','Под сто двадцать гостей отлично подойдёт WHITE hall — пятиметровые окна на Москву-реку. Давайте покажу вживую, в четверг или в пятницу?','good','Предложил показ площадки'],
+      ['Клиент','Давайте в четверг вечером.',null,null],
+      ['Оператор','Записала на четверг в 19:00, отправлю подтверждение в мессенджер.','good','Назначил следующий шаг']]},
+ {id:4,tm:'11:47',op:'Дина Сафина',du:'1:12',x:'12491',sc:38,g:'bad',dn:[0,0,1,0,0,1,0],wpm:198,
+  tl:[['dead',22],['need',18],['dead',60]],
+  v:'Клиент дважды прямо попросил посмотреть зал — оператор оба раза ушёл от ответа и отправил презентацию на почту. Показ не назначен, дата свадьбы не зафиксирована. Это типовая причина, по которой сделка застревает на этапе «Передача МП».',
+  ln:[['Оператор','Алло, слушаю вас.','bad','Не представился и не назвал площадку'],
+      ['Клиент','Здравствуйте, я по поводу свадьбы в мае, хотела узнать про залы.',null,null],
+      ['Оператор','На сколько человек?','good','Уточнил количество гостей'],
+      ['Клиент','Около ста двадцати. А можно приехать посмотреть?',null,null],
+      ['Оператор','Я вам скину на почту презентацию, там всё есть.','bad','Запрос на показ проигнорирован'],
+      ['Клиент','А посмотреть-то вживую можно?',null,null],
+      ['Оператор','Да, в принципе можно, вы почту напишите.','bad','Повторный запрос проигнорирован'],
+      ['Оператор','Всё, записал, до свидания.','bad','Дата не выяснена, следующий шаг не назначен']]},
+ {id:2,tm:'10:15',op:'Артём Лыков',du:'2:38',x:'12483',sc:54,g:'bad',dn:[1,0,1,0,0,1,0],wpm:171,
+  tl:[['greet',14],['need',34],['dead',52]],
+  v:'Оператор не уточнил дату и не предложил следующий шаг. Клиент ушёл подумать без назначенного показа.',
+  ln:[['Оператор','КРЫМ terrace, Артём, слушаю.','good','Представился и назвал площадку'],
+      ['Клиент','Хотел узнать про корпоратив, человек восемьдесят.',null,null],
+      ['Оператор','Восемьдесят — это LOFT hall. Бюджет какой примерно?','good','Уточнил количество гостей'],
+      ['Клиент','Пока считаем. А когда можно приехать?',null,null],
+      ['Оператор','Да в любое время, вы позвоните заранее.','bad','Показ предложен без конкретной даты'],
+      ['Оператор','Хорошо, до свидания.','bad','Следующий шаг не назначен']]},
+ {id:3,tm:'11:03',op:'Мария Ковалёва',du:'6:20',x:'12488',sc:91,g:'best',dn:[1,1,1,1,1,1,1],wpm:134,
+  tl:[['greet',8],['need',22],['offer',28],['price',16],['next',26]],
+  v:'Эталонный разговор. Все пункты скрипта выполнены, назначены показ и дегустация. Такой звонок стоит добавить в обучение операторов.',
+  ln:[['Оператор','КРЫМ terrace, Мария, здравствуйте!','good','Представился и назвал площадку'],
+      ['Клиент','Добрый день, интересует юбилей, сто человек, в ноябре.',null,null],
+      ['Оператор','Ноябрь — хорошее время, терраса у нас крытая и с обогревом. Число уже определили?','good','Уточнил дату мероприятия'],
+      ['Клиент','Четырнадцатое.',null,null],
+      ['Оператор','Предлагаю приехать посмотреть зал и заодно продегустировать меню. Суббота подойдёт?','good','Предложил показ и дегустацию'],
+      ['Клиент','Отлично, давайте в субботу.',null,null]]},
+ {id:5,tm:'12:30',op:'Артём Лыков',du:'5:04',x:'12495',sc:72,g:'ok',dn:[1,1,1,1,0,1,0],wpm:158,
+  tl:[['greet',12],['need',30],['offer',36],['dead',22]],
+  v:'Показ предложен, но без конкретного дня. Следующий шаг остался за клиентом, а должен оставаться за нами.',
+  ln:[['Оператор','КРЫМ terrace, Артём, добрый день.','good','Представился и назвал площадку'],
+      ['Клиент','Нужна площадка на выпускной, сто пятьдесят человек, конец июня.',null,null],
+      ['Оператор','Сто пятьдесят — WHITE hall. Приезжайте посмотреть на неделе.','bad','Показ предложен без конкретной даты'],
+      ['Клиент','Хорошо, я уточню у коллег и напишу.',null,null]]},
+ {id:6,tm:'13:18',op:'Дина Сафина',du:'3:47',x:'12499',sc:66,g:'ok',dn:[1,1,1,1,0,1,0],wpm:165,
+  tl:[['greet',14],['need',40],['offer',30],['dead',16]],
+  v:'Основное по скрипту отработано, показ предложен. Не зафиксирован следующий шаг.',
+  ln:[['Оператор','КРЫМ terrace, Дина, здравствуйте.','good','Представился и назвал площадку'],
+      ['Клиент','Нам нужна конференция на двести человек в октябре.',null,null],
+      ['Оператор','Число уже есть? И нужна ли техника — экраны, звук?','good','Уточнил дату мероприятия'],
+      ['Оператор','Всё есть. Хотите посмотреть зал?','good','Предложил показ площадки'],
+      ['Клиент','Да, наверное. Я перезвоню.',null,null]]},
+ {id:7,tm:'14:05',op:'—',du:'0:00',x:null,sc:null,g:'miss',dn:null,tl:null,
+  v:'Звонок не принят. Перезвона в течение дня не было — заявка потеряна.',ln:null},
+ {id:8,tm:'15:22',op:'Артём Лыков',du:'7:55',x:'12506',sc:84,g:'best',dn:[1,1,1,1,1,1,0],wpm:148,
+  tl:[['greet',9],['need',24],['offer',32],['price',18],['next',17]],
+  v:'Сильный разговор: показ и дегустация назначены. Не отправлено письменное подтверждение.',
+  ln:[['Оператор','КРЫМ terrace, Артём, здравствуйте!','good','Представился и назвал площадку'],
+      ['Клиент','Ищем зал на годовщину компании, сто восемьдесят человек.',null,null],
+      ['Оператор','Дата известна? И формат — банкет или фуршет?','good','Уточнил дату мероприятия'],
+      ['Клиент','Двадцатое декабря, банкет.',null,null],
+      ['Оператор','WHITE hall держит до трёхсот пятидесяти на банкет. Приглашаю в субботу посмотреть зал и попробовать меню.','good','Предложил показ и дегустацию'],
+      ['Клиент','Договорились, в субботу в два.',null,null]]}
+];
+var CF=[{id:'all',n:'Все'},{id:'bad',n:'С нарушениями'},{id:'miss',n:'Пропущенные'},{id:'best',n:'Лучшие'}];
+
+var STG={'Бронь':'ok','Показ площадки':'ok','Отправлено КП':'warn','Квалификация':'warn','Новый лид':'warn','Передача МП':'bad','Отказ':'bad'};
+var CLI=[
+ {id:12480,n:'Екатерина Резник',g:'23.09',c:'Яндекс.Директ',e:'Свадьба',dt:'23.05.2027',p:120,b:4080000,st:'Показ площадки',m:'Ольга Ильина',
+  tl:[['23.09, 09:42','Входящий звонок, оператор Мария Ковалёва, 88 баллов',1],['23.09, 10:05','Передана менеджеру',1],['23.09, 10:30','Отправлено коммерческое предложение',1],['25.09, 19:00','Показ WHITE hall — назначен',1],['—','Дегустация меню',0],['—','Бронь и предоплата',0]]},
+ {id:12491,n:'Анна Мирошник',g:'23.09',c:'Без метки канала',e:'Свадьба',dt:'16.05.2027',p:120,b:4080000,st:'Передача МП',m:'не назначен',
+  tl:[['23.09, 11:47','Входящий звонок, оператор Дина Сафина, 38 баллов',1],['23.09, 11:49','Отправлена презентация на почту',1],['—','Показ не назначен — клиент просил дважды',0],['—','Менеджер не назначен третьи сутки',0]]},
+ {id:12483,n:'ООО «Праксис»',g:'23.09',c:'Соцсети: ВК',e:'Корпоратив',dt:'19.12.2026',p:80,b:2720000,st:'Передача МП',m:'не назначен',
+  tl:[['23.09, 10:15','Входящий звонок, 54 балла',1],['23.09, 10:20','Передана в чат менеджерам',1],['—','Никто не взял в работу',0]]},
+ {id:12488,n:'Сергей Долгов',g:'23.09',c:'Нейросети: ChatGPT',e:'Юбилей',dt:'14.11.2026',p:100,b:3400000,st:'Показ площадки',m:'Ольга Ильина',
+  tl:[['23.09, 11:03','Входящий звонок, 91 балл — эталонный разговор',1],['23.09, 11:20','Назначены показ и дегустация',1],['26.09, 12:00','Показ площадки',1],['—','Бронь',0]]},
+ {id:12520,n:'Ирина Бек',g:'22.09',c:'Без метки канала',e:'Крестины',dt:'11.10.2026',p:45,b:1080000,st:'Новый лид',m:'не назначен',
+  tl:[['22.09','Входящий звонок на общий номер',1],['—','Канал не определён — поле «как узнали» пустое',0],['—','Менеджер не назначен',0]]},
+ {id:12495,n:'ООО «Вектор»',g:'23.09',c:'Яндекс.Карты',e:'Выпускной',dt:'25.06.2027',p:150,b:4500000,st:'Отправлено КП',m:'Никита Ерохин',
+  tl:[['23.09, 12:30','Входящий звонок, 72 балла',1],['23.09, 14:10','Отправлено коммерческое предложение',1],['—','Показ — без конкретной даты',0]]},
+ {id:12499,n:'Ассоциация «Синара»',g:'23.09',c:'Органика и SEO',e:'Конференция',dt:'17.10.2026',p:200,b:2600000,st:'Квалификация',m:'Вера Гончар',
+  tl:[['23.09, 13:18','Входящий звонок, 66 баллов',1],['23.09, 13:25','Уточняется техническое оснащение',1],['—','Коммерческое предложение',0]]},
+ {id:12506,n:'Группа «Аквилон»',g:'23.09',c:'2GIS',e:'Годовщина компании',dt:'20.12.2026',p:180,b:6120000,st:'Показ площадки',m:'Никита Ерохин',
+  tl:[['23.09, 15:22','Входящий звонок, 84 балла',1],['23.09, 16:00','Назначены показ и дегустация',1],['26.09, 14:00','Показ WHITE hall',1],['—','Бронь',0]]},
+ {id:12511,n:'Марина Ахметова',g:'18.09',c:'Агрегаторы: Горько',e:'Свадьба',dt:'26.09.2026',p:180,b:6480000,st:'Бронь',m:'Ольга Ильина',
+  tl:[['18.09','Заявка с Горько.ру, письмом на почту',1],['18.09','Показ WHITE hall',1],['19.09','Дегустация меню',1],['20.09','Бронь и предоплата 30%',1],['26.09, 18:00','Мероприятие — в эту субботу',0]]},
+ {id:12290,n:'ПАО «Синара Девелопмент»',g:'02.09',c:'Рекомендации',e:'Корпоратив',dt:'25.09.2026',p:90,b:3060000,st:'Бронь',m:'Вера Гончар',
+  tl:[['02.09','Рекомендация от клиента, кодовое слово',1],['05.09','Показ LOFT hall',1],['11.09','Бронь и предоплата',1],['25.09, 19:00','Мероприятие — в эту пятницу',0]]},
+ {id:12455,n:'Дмитрий Кравец',g:'15.09',c:'Zoon',e:'День рождения',dt:'07.11.2026',p:60,b:1800000,st:'Отправлено КП',m:'Ольга Ильина',
+  tl:[['15.09','Заявка с Zoon, зафиксирована администратором вручную',1],['21.09','Показ TERRACE',1],['22.09','Отправлено коммерческое предложение',1],['—','Ответ клиента',0]]},
+ {id:12331,n:'Семья Асланян',g:'28.08',c:'Яндекс.Директ',e:'Юбилей',dt:'23.09.2026',p:140,b:4760000,st:'Бронь',m:'Никита Ерохин',
+  tl:[['28.08','Звонок с рекламы',1],['02.09','Показ WHITE hall',1],['08.09','Бронь и предоплата',1],['23.09, 18:00','Мероприятие — сегодня вечером',1]]},
+ {id:12502,n:'Тимур Насыров',g:'17.09',c:'СМИ и публикации',e:'Презентация',dt:'05.11.2026',p:110,b:1650000,st:'Отказ',m:'Вера Гончар',
+  tl:[['17.09','Переход из публикации по метке',1],['25.09','Дегустация меню',1],['—','Отказ: не устроила дата, зал занят',1]]}
+];
+var CLF=[{id:'all',n:'Все'},{id:'work',n:'В работе'},{id:'stuck',n:'Без менеджера'},{id:'won',n:'Забронировано'}];
+
+var SRC=[
+ {c:'Яндекс.Директ',h:'Официальный API, отчёты по кампаниям и ключевым словам',w:'Расход, показы, клики, конверсии',l:'Сутки',s:'api'},
+ {c:'Яндекс.Метрика',h:'Журнал визитов, отдаёт идентификатор посетителя',w:'Визиты, источник, связка заявки с рекламной кампанией',l:'2–3 суток',s:'api'},
+ {c:'Яндекс.Карты',h:'Счётчик, который Яндекс заводит организации автоматически',w:'Показы карточки, переходы, маршруты, нажатия на телефон',l:'До 3 суток',s:'api'},
+ {c:'Формы и чат на сайте',h:'Наш скрипт плюс вебхук АмоCRM',w:'Заявка с меткой канала и номером визита',l:'Мгновенно',s:'api'},
+ {c:'Нейросети',h:'Правило разметки по адресу перехода. Обычная сквозная аналитика этот источник не выделяет',w:'Визиты и заявки отдельным каналом',l:'2–3 суток',s:'api'},
+ {c:'Соцсети',h:'Метки в ссылках плюс Метрика',w:'Переходы и заявки',l:'2–3 суток',s:'api'},
+ {c:'Почта',h:'Выделенный ящик, автоматический разбор писем',w:'Заявка целиком',l:'Минуты',s:'api'},
+ {c:'Звонки',h:'API вашего оператора телефонии',w:'Запись разговора, номер, длительность, оператор',l:'Минуты',s:'api'},
+ {c:'2GIS',h:'API статистики для владельца бизнеса не существует. Ставим подменный номер и ссылку с меткой',w:'Звонки и переходы точно, показы карточки — выгрузкой раз в месяц',l:'Звонки сразу',s:'part'},
+ {c:'Горько.ру',h:'API нет. «Быстрый запрос» приходит письмом — заводим под него отдельный ящик',w:'Заявка целиком из письма',l:'Минуты',s:'part'},
+ {c:'Рестоклаб',h:'API нет, но есть кабинет и собственный коллтрекинг',w:'Звонки и заявки',l:'Уточняется',s:'part'},
+ {c:'СМИ и публикации',h:'Отдельная ссылка с меткой и кодовое слово в тексте',w:'Переходы и обращения по коду',l:'Мгновенно',s:'part'},
+ {c:'Zoon',h:'API нет, и свой номер поставить нельзя: Zoon подменяет телефон собственным',w:'Только выгрузка из их кабинета',l:'Раз в месяц',s:'man'},
+ {c:'4банкет',h:'Ни API, ни кабинета. Заявку передаёт их банкетный консультант',w:'Фиксируется администратором вручную',l:'Вручную',s:'man'},
+ {c:'Офлайн: вывеска, рекомендации',h:'Обязательное поле «как узнали о нас» и кодовые слова',w:'Источник со слов гостя',l:'Вручную',s:'man'}
+];
+var PLAN=[
+ ['Свой номер на каждую площадку','Один подменный номер — один канал. Гость звонит с карточки 2GIS, и звонок попадает в CRM с готовой меткой, без участия оператора. Работает везде, кроме Zoon.'],
+ ['Отдельный ящик на агрегатор','В профиле Горько.ру и Рестоклаба указываем не общую почту, а служебный адрес. Письмо разбирается автоматически.'],
+ ['Кодовое слово со скидкой','«Скидка 5% по слову ГОРЬКО» в карточке площадки. Гость называет источник сам — и охотнее доводит разговор до брони.'],
+ ['Обязательное поле «как узнали»','Сделку нельзя перевести дальше квалификации, пока поле пустое.'],
+ ['QR с меткой в офлайне','На вывеске, в меню, на пригласительных. Переход из офлайна становится обычным размеченным визитом.'],
+ ['Сверка раз в месяц','Пятнадцать минут: администратор переносит показы карточек 2GIS и Zoon в систему. Единственная ручная операция, которая остаётся.']
+];
+
+/* ══ НАВИГАЦИЯ ══ */
+var page='leads';
+function buildNav(){
+  var n=$('#nav'), b=$('#tabbar');
+  PAGES.forEach(function(p){
+    var x=el('button','slink','<span class="slink__b"></span><span>'+p.nav+'</span>'+(p.bad?'<span class="slink__c">'+p.bad+'</span>':''));
+    x.type='button'; x.dataset.n=p.id; x.addEventListener('click',function(){go(p.id);}); n.appendChild(x);
+    var t=el('button',null,'<span>'+p.nav.split(' ')[0]+'</span>');
+    t.type='button'; t.dataset.t=p.id; t.addEventListener('click',function(){go(p.id);}); b.appendChild(t);
+  });
+}
+function go(id){
+  page=id;
+  PAGES.forEach(function(p){
+    $('#v-'+p.id).hidden=(p.id!==id);
+    $('[data-n="'+p.id+'"]').setAttribute('aria-current',p.id===id?'true':'false');
+    $('[data-t="'+p.id+'"]').setAttribute('aria-current',p.id===id?'true':'false');
+  });
+  var p=PAGES.filter(function(x){return x.id===id;})[0];
+  $('#pgT').textContent=p.t; $('#pgS').textContent=p.s;
+  $('#pgA').innerHTML='';
+  if(id==='leads') mountPeriod();
+  if(id==='schedule') renderSched();
+  window.scrollTo(0,0);
+  if(id==='leads') chart();
+}
+document.addEventListener('click',function(e){
+  var t=e.target; if(!t||!t.closest) return;
+  var g=t.closest('[data-go]'); if(g) go(g.dataset.go);
+});
+function seg(items,cur,cb){
+  var w=el('div','seg');
+  items.forEach(function(i){
+    var b=el('button',null,i.n); b.type='button';
+    b.setAttribute('aria-pressed',i.id===cur?'true':'false');
+    b.addEventListener('click',function(){cb(i.id);});
+    w.appendChild(b);
+  });
+  return w;
+}
+
+/* ══ 1. ЗАЯВКИ ══ */
+var PER={week:{k:.24,n:'неделю'},month:{k:1,n:'месяц'},quarter:{k:2.9,n:'квартал'}};
+var per='month', sk='l', sd=-1;
+function mountPeriod(){
+  $('#pgA').appendChild(seg([{id:'week',n:'Неделя'},{id:'month',n:'Месяц'},{id:'quarter',n:'Квартал'}],per,
+    function(v){per=v; renderLeads(); mountPeriod();}));
+}
+function leadRows(){
+  var k=PER[per].k;
+  return CH.map(function(c){
+    var r={n:c.n,hole:c.hole,how:c.how,d:c.d,l:Math.round(c.l*k),t:Math.round(c.t*k),s:Math.round(c.s*k),
+           sp:Math.round(c.sp*k),rv:Math.round(c.rv*k)};
+    r.sh=r.l?r.t/r.l*100:0; r.cv=r.l?r.s/r.l*100:0; r.cpl=r.t?r.sp/r.t:0;
+    return r;
+  });
+}
+function renderLeads(){
+  var rows=leadRows();
+  var tot=rows.reduce(function(a,c){a.l+=c.l;a.t+=c.t;a.s+=c.s;a.sp+=c.sp;return a;},{l:0,t:0,s:0,sp:0});
+  /* цену целевой считаем только там, где есть расход — иначе бесплатные каналы занижают её */
+  var paid=rows.filter(function(r){return r.sp>0;}).reduce(function(a,r){a.sp+=r.sp; a.t+=r.t; return a;},{sp:0,t:0});
+  var hole=rows.filter(function(r){return r.hole;}).reduce(function(a,r){return a+r.l;},0);
+
+  var h='<div class="kpis">'
+    + kpi('Заявок за '+PER[per].n, fmt(tot.l), 'из шестнадцати источников',
+        "Сумма заявок по шестнадцати источникам из вашего списка за выбранный период. <i>В макете числа выдуманы, а неделя и квартал получены пересчётом месяца — чтобы было видно, как работает переключатель.</i>")
+    + kpi('Целевых', fmt(tot.t), pct(tot.t/tot.l*100)+' от всех заявок',
+        "<b>Целевые ÷ все заявки.</b> Целевой считаем заявку, где есть дата, формат и число гостей — её можно вести дальше. Точный критерий зададите вы: он совпадёт с вашим этапом квалификации в АмоСRM.")
+    + kpi('Показов площадки', fmt(tot.s), pct(tot.s/tot.t*100)+' от целевых',
+        "<b>Показы ÷ целевые заявки.</b> Показом считается сделка, дошедшая до этапа «Показ площадки» в воронке. Это самый важный переход: после показа сделки закрываются в разы чаще.")
+    + kpi('Рекламный расход', fmt(tot.sp)+'<i> ₽</i>', 'размечено '+pct(100-hole/tot.l*100)+' заявок',
+        "Расход из рекламных кабинетов за период. <b>Размечено</b> — доля заявок, у которых источник определён: (все заявки − без метки − не разметилось) ÷ все заявки.")
+    + kpi('Цена целевой заявки', fmt(Math.round(paid.sp/paid.t))+'<i> ₽</i>', 'только по платным каналам',
+        "<b>Расход ÷ целевые заявки — только по каналам, где есть расход.</b> Органика, прямые заходы и рекомендации в знаменатель не попадают, иначе цена получается красивее, чем есть.")
+    + '</div>';
+
+  h+='<div class="cols">'
+   + '<div class="panel"><div class="panel__h"><p class="panel__t">Заявки и показы по дням'+qm("Две разные шкалы: заявки считаются по левой оси (десятки в день), показы — по правой (единицы). Если положить их на одну шкалу, столбик показов превратится в невидимую полоску.")+'</p></div><div class="panel__b"><div id="ch"></div></div></div>'
+   + '<div class="panel"><div class="panel__h"><p class="panel__t">Кто приносит больше всего'+qm("Восемь источников с наибольшим числом заявок за период. Длина полосы — доля от первого места, а не от всех заявок.")+'</p><span class="panel__s">восемь первых</span></div><div class="panel__b"><ul class="bars" id="bars"></ul></div></div>'
+   + '</div>';
+
+  h+='<div class="panel"><div class="panel__h"><p class="panel__t">Все источники</p>'
+   + '<span class="panel__s">столбец «откуда данные» показывает, чем канал подключается</span>'
+   + '<label class="msort">Порядок<select id="msort">'
+   + [['l','по заявкам'],['t','по целевым'],['s','по показам'],['sh','по доле целевых'],['sp','по расходу'],['cpl','по цене целевой'],['d','по росту к прошлому'],['n','по алфавиту']].map(function(o){
+       return '<option value="'+o[0]+'"'+(o[0]===sk?' selected':'')+'>'+o[1]+'</option>';}).join('')
+   + '</select></label></div>'
+   + '<div class="panel__b panel__b--flush"><div class="scroll"><table id="ct"><thead><tr>'
+   + '<th data-s="n">Источник</th><th class="r" data-s="l" aria-sort="descending">Заявок</th>'
+   + '<th class="r" data-s="d">Δ к прошлому'+qm("Изменение числа заявок к предыдущему такому же периоду: (стало − было) ÷ было. Месяц к месяцу, неделя к неделе.")+'</th><th class="r" data-s="t">Целевых</th>'
+   + '<th class="r" data-s="sh">Доля целевых'+qm("Целевые ÷ заявки этого канала. Показывает качество трафика: канал может давать много заявок и мало толка.")+'</th><th class="r" data-s="s">Показов</th>'
+   + '<th class="r" data-s="sp">Расход</th><th class="r" data-s="cpl">Цена целевой'+qm("Расход канала ÷ его целевые заявки. У бесплатных каналов стоит прочерк: делить ноль на заявки бессмысленно.")+'</th>'
+   + '<th>Откуда данные'+qm("Чем канал подключается: <b>по API</b> — цифры тянутся сами, <b>обходом</b> — через подменный номер, метку или разбор писем, <b>руками</b> — только полем в карточке сделки. Подробно — в разделе «Источники данных».")+'</th></tr></thead><tbody></tbody><tfoot></tfoot></table></div></div></div>';
+
+  h+='<div class="note"><b>В этом примере 15% заявок пришли без определённого источника.</b> '
+   + 'Какая доля у вас на самом деле, сегодня не знает никто: в АмоCRM источник заполнен не у всех сделок, '
+   + 'а звонки и мессенджеры меток не несут вовсе. Это первое, что мы измерим после подключения. '
+   + '<button class="btn" style="margin-top:9px" data-go="sources" type="button">Что и как подключается</button></div>';
+
+  h+='<div class="cols"><div class="panel"><div class="panel__h"><p class="panel__t">Воронка «Основная»'+qm("Этапы взяты с ваших скриншотов АмоСRM — это единственные настоящие данные, которые у нас есть. <i>Числа на макете условные: страница лежит в открытом доступе, а ваши цифры туда выкладывать нельзя.")+'</p>'
+   + '<span class="panel__s">сделок на этапе сейчас</span></div><div class="panel__b"><ul class="fun" id="fm"></ul></div></div>'
+   + '<div class="panel"><div class="panel__h"><p class="panel__t">Воронка «Холодная»</p>'
+   + '<span class="panel__s">сделок на этапе сейчас</span></div><div class="panel__b"><ul class="fun" id="fc"></ul></div></div></div>';
+
+  h+='<div class="note" style="background:var(--bad-wash); border-color:var(--bad-line); color:#7d2424">'
+   + '<b>Сотни сделок копятся на этапах «Передача МП», а до показа площадки доходят единицы.</b> '
+   + 'Этапы до передачи почти пустые — значит заявки не задерживаются в обработке, а накапливаются сразу после неё. '
+   + 'Разрыв проходит там, где заявка уходит из CRM в чат менеджерам. Ровно такая картина видна и на ваших скриншотах. '
+   + '<button class="btn" style="margin-top:9px" data-go="calls" type="button">Послушать, что происходит в разговоре</button></div>';
+
+  $('#v-leads').innerHTML=h;
+
+  var top=rows.slice().sort(function(a,b){return b.l-a.l;}).slice(0,8), mx=top[0].l;
+  $('#bars').innerHTML=top.map(function(r){
+    return '<li'+(r.hole?' data-hole="1"':'')+'><div><span class="bars__l">'+r.n+'</span>'
+      +'<span class="bars__t"><span class="bars__f" style="width:'+(r.l/mx*100)+'%"></span></span></div>'
+      +'<span class="bars__n">'+fmt(r.l)+'</span></li>';
+  }).join('');
+
+  rows.sort(function(a,b){var x=a[sk],y=b[sk]; return typeof x==='string'?sd*x.localeCompare(y,'ru'):sd*(x-y);});
+  $('#ct tbody').innerHTML=rows.map(function(r){
+    var w=HOW[r.how];
+    return '<tr'+(r.hole?' data-hole="1"':'')+'><td class="wrapok">'+r.n+'</td>'
+      +'<td class="r">'+fmt(r.l)+'</td>'
+      +'<td class="r" style="color:'+(r.d>0?'var(--ok)':(r.d<0?'var(--bad)':'var(--ink-3)'))+'">'+(r.d>0?'+':'')+String(r.d).replace('.',',')+'%</td>'
+      +'<td class="r">'+fmt(r.t)+'</td><td class="r">'+pct(r.sh)+'</td><td class="r">'+fmt(r.s)+'</td>'
+      +'<td class="r">'+(r.sp?rub(r.sp):'—')+'</td><td class="r">'+(r.sp&&r.t?rub(r.cpl):'—')+'</td>'
+      +'<td><span class="chip '+w.c+'">'+w.t+'</span></td></tr>';
+  }).join('');
+  $('#ct tfoot').innerHTML='<tr><td>Итого по шестнадцати источникам</td><td class="r">'+fmt(tot.l)+'</td><td></td>'
+    +'<td class="r">'+fmt(tot.t)+'</td><td class="r">'+pct(tot.t/tot.l*100)+'</td><td class="r">'+fmt(tot.s)+'</td>'
+    +'<td class="r">'+rub(tot.sp)+'</td><td class="r">'+rub(tot.sp/tot.t)+'</td><td></td></tr>';
+
+  Array.prototype.forEach.call(document.querySelectorAll('#ct th[data-s]'),function(th){
+    th.addEventListener('click',function(e){
+      if(e.target.closest&&e.target.closest('.qm')) return;
+      var k=this.dataset.s;
+      if(sk===k) sd=-sd; else {sk=k; sd=(k==='n'?1:-1);}
+      renderLeads();
+    });
+  });
+  tcards($('#ct'));
+  $('#msort').addEventListener('change',function(){ sk=this.value; sd=(sk==='n'?1:-1); renderLeads(); });
+  fun('#fm',FM); fun('#fc',FC); chart();
+}
+function kpi(k,v,d,q){return '<div class="kpi"><span class="kpi__k">'+k+(q?qm(q):'')+'</span><span class="kpi__v">'+v+'</span><span class="kpi__d">'+d+'</span></div>';}
+function fun(id,data){
+  var mx=Math.max.apply(null,data.map(function(d){return d.n;}))||1;
+  $(id).innerHTML=data.map(function(d){
+    return '<li'+(d.drop?' data-drop="1"':'')+'><span class="fun__l">'+d.l+'</span>'
+      +'<span class="fun__t"><span class="fun__f" style="width:'+Math.max(d.n/mx*100,.8)+'%"></span></span>'
+      +'<span class="fun__n">'+fmt(d.n)+'</span></li>';
+  }).join('');
+}
+function chart(){
+  var box=$('#ch'); if(!box) return;
+  /* рисуем в реальную ширину блока: на телефоне подписи не сжимаются в нечитаемые */
+  var W=Math.max(300,Math.round(box.clientWidth||700)), narrow=W<480;
+  var H=narrow?262:238,L=30,R=W-30,T=12,B=178,mx=80,ms=8,n=SL.length,st=(R-L)/n;
+  var every=Math.max(1,Math.ceil(40/st));
+  function cx(i){return L+st*(i+.5);}
+  function y(v){return B-v/mx*(B-T);}          /* левая шкала — заявки */
+  function y2(v){return B-v/ms*(B-T);}         /* правая шкала — показы */
+  var s='<svg viewBox="0 0 '+W+' '+H+'" width="100%" style="display:block;max-width:100%" role="img" aria-label="Заявки и показы площадки по дням">';
+  [20,40,60,80].forEach(function(v,i){
+    s+='<line x1="'+L+'" y1="'+y(v)+'" x2="'+R+'" y2="'+y(v)+'" stroke="#dfdad4" stroke-dasharray="2 4"/>'
+     +'<text x="'+(L-8)+'" y="'+(y(v)+4)+'" text-anchor="end" font-size="10" font-family="IBM Plex Mono,monospace" fill="#9a938a">'+v+'</text>'
+     +'<text x="'+(R+8)+'" y="'+(y(v)+4)+'" font-size="10" font-family="IBM Plex Mono,monospace" fill="#967850">'+((i+1)*2)+'</text>';
+  });
+  var bw=Math.min(st*.33,13), gap=2;
+  SL.forEach(function(v,i){
+    var h1=B-y(v), h2=B-y2(SS[i]);
+    s+='<rect x="'+(cx(i)-bw-gap/2)+'" y="'+y(v)+'" width="'+bw+'" height="'+Math.max(h1,1)+'" fill="#353230">'
+     +'<title>'+SD[i]+' — '+v+' заявок</title></rect>'
+     +'<rect x="'+(cx(i)+gap/2)+'" y="'+y2(SS[i])+'" width="'+bw+'" height="'+Math.max(h2,1)+'" fill="#967850">'
+     +'<title>'+SD[i]+' — показов площадки: '+SS[i]+'</title></rect>';
+  });
+  s+='<line x1="'+L+'" y1="'+B+'" x2="'+R+'" y2="'+B+'" stroke="#c9c2ba"/>';
+  SD.forEach(function(l,i){ if((n-1-i)%every===0)
+    s+='<text x="'+cx(i)+'" y="'+(B+16)+'" text-anchor="middle" font-size="10" font-family="IBM Plex Mono,monospace" fill="#9a938a">'+l+'</text>';});
+  var lx=narrow?0:150, ly=narrow?20:0;
+  s+='<g transform="translate('+L+',214)">'
+   +'<rect x="0" y="-10" width="10" height="10" fill="#353230"/>'
+   +'<text x="16" y="0" font-size="11" fill="#6b655e">Заявки, левая шкала</text>'
+   +'<rect x="'+lx+'" y="'+(ly-10)+'" width="10" height="10" fill="#967850"/>'
+   +'<text x="'+(lx+16)+'" y="'+ly+'" font-size="11" fill="#6b655e">Показы площадки, правая шкала</text></g></svg>';
+  box.innerHTML=s;
+}
+
+
+/* ══ 2. ГРАФИК ══ */
+var view='month', curW=wk(TODAY), curD=TODAY, flagD=null, ISS=[];
+var HB=8, HE=24, PXH=38;   /* окно суток в сетке часов и высота часа */
+
+function mountSchedControls(){
+  var a=$('#schA'); if(!a) return;
+  a.innerHTML='';
+  a.appendChild(seg([{id:'month',n:'Месяц'},{id:'week',n:'Неделя'},{id:'day',n:'День'},{id:'people',n:'Сотрудники'},{id:'halls',n:'Залы'}],view,
+    function(v){view=v; renderSched();}));
+  var r=el('div','schbar__r');
+  var b=el('button','btn','Разложить заново'); b.type='button';
+  b.title='Система расставит смены по правилам: закроет показы менеджерами и снимет переработку';
+  b.addEventListener('click',autofill); r.appendChild(b);
+  var c=el('button','btn btn--go','Новая смена'); c.type='button';
+  c.addEventListener('click',function(){editShift(null,{d:pivot()});}); r.appendChild(c);
+  a.appendChild(r);
+}
+function pivot(){ if(view==='week'){var d=curW*7+3; return d<1?1:(d>MD?MD:d);} return curD; }
+function openDay(d){ curD=d; curW=wk(d); view='day'; renderSched(); }
+
+/* ── счёт часов и смен: всё считается по реальному времени смены ── */
+function dur(s){return s.t-s.f;}
+function nh(x){return (Math.round(x*10)/10).toString().replace('.',',');}
+function nhf(x){var v=Math.round(x*10)/10, i=Math.floor(v); return fmt(i)+(v>i?','+Math.round((v-i)*10):'');}
+function emp(id){return EMP.filter(function(e){return e.id===id;})[0];}
+function byId(sid){return SH.filter(function(s){return s.id===sid;})[0];}
+function ofEmp(id){return SH.filter(function(s){return s.e===id;});}
+function ofDay(d){return SH.filter(function(s){return s.d===d;}).sort(function(a,b){return a.f-b.f||a.t-b.t;});}
+function has(id,d){return SH.some(function(s){return s.e===id&&s.d===d;});}
+function hrs(id){return ofEmp(id).reduce(function(a,s){return a+dur(s);},0);}
+function shf(id){return ofEmp(id).length;}
+function dayH(d){return ofDay(d).reduce(function(a,s){return a+dur(s);},0);}
+function shortn(n){var p=n.split(' '); return p.length>1? p[0]+' '+p[1].charAt(0)+'.' : n;}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+function tsk(n){return n+' '+pl(n,'задача','задачи','задач');}
+function showsOn(d){return EV.filter(function(e){return e.d===d&&e.k==='show';}).length;}
+function evOn(d){return EV.filter(function(e){return e.d===d;}).length;}
+function mgrOn(d){return EMP.filter(function(e){return e.d==='mg'&&has(e.id,d);}).length;}
+
+function issues(){
+  var out=[];
+  for(var d=1;d<=MD;d++){
+    if(showsOn(d)>=3&&mgrOn(d)<2) out.push({d:d,tone:'bad',
+      t:DW[wd(d)]+', '+d+' сентября: показов площадки — '+showsOn(d)+', менеджеров в смене — '+mgrOn(d),
+      r:'Нарушено правило <code>на показ площадки нужен свободный менеджер</code>. Показ — последний шаг перед сделкой.'});
+  }
+  EMP.forEach(function(e){
+    var run=0, hit=0;
+    for(var d=1;d<=MD;d++){
+      if(has(e.id,d)){run++; if(run>=6&&!hit) hit=d;} else run=0;
+    }
+    if(hit) out.push({d:hit,tone:'bad', t:e.n+': шестой день подряд без выходного',
+      r:'Нарушено правило <code>не более пяти смен подряд</code>. К шестой смене заметно падает качество разговоров.'});
+  });
+  var over=EMP.filter(function(e){return hrs(e.id)>NORM;});
+  if(over.length) out.push({d:null,tone:'warn',
+    t:'Переработка у '+over.length+' '+pl(over.length,'сотрудника','сотрудников','сотрудников')+' за месяц',
+    r:'Нарушено правило <code>норма месяца 176 часов</code>. '
+      +over.map(function(e){return e.n+' — '+nh(hrs(e.id))+' ч';}).join(', ')+'.'});
+  return out;
+}
+
+function renderSched(){
+  ISS=issues();
+  var totH=0, totS=0, over=0, dr=SH.filter(function(s){return !s.pub;}).length;
+  EMP.forEach(function(e){var x=hrs(e.id); totH+=x; totS+=shf(e.id); if(x>NORM)over++;});
+  var bd=$('[data-n="schedule"] .slink__c');
+  if(bd){ bd.textContent=ISS.length; bd.style.display=ISS.length?'':'none'; }
+
+  var h='<div class="kpis">'
+    + kpi('Часов в сентябре', nhf(totH), 'по девяти сотрудникам, по времени смен',
+        "Сумма длительностей всех смен месяца: <b>конец минус начало</b> по каждой. Перерыв внутри смены сейчас не вычитается — если у вас его вычитают, правило меняется в настройках.")
+    + kpi('Смен', String(totS), 'в среднем '+nh(totH/totS)+' ч в смене',
+        "Число смен за месяц по всем сотрудникам. Средняя длина смены = часы ÷ смены.")
+    + kpi('Выше нормы', over+'<i> чел.</i>', 'норма месяца '+NORM+' часов',
+        "Сколько сотрудников набрали больше нормы. <b>176 часов</b> — это сентябрь 2026 по производственному календарю: 22 рабочих дня × 8 часов. <i>Для сменного графика норму чаще считают за квартал или год — поставим тот учётный период, по которому работаете вы.</i>")
+    + kpi('Черновики', dr+'<i> смен</i>', dr?'сотрудники их пока не видят':'всё опубликовано',
+        "Смены, которые поставлены, но не опубликованы: видны только здесь и не уходят сотруднику в бот. В календаре у них пунктирная рамка.")
+    + '</div>';
+
+  h+='<div class="panel"><div class="panel__h"><p class="panel__t">'
+   + (ISS.length? ISS.length+' '+pl(ISS.length,'проблема','проблемы','проблем')+' в графике' : 'График сходится')
+   + qm("Проверяем три правила: норма месяца 176 часов; не более пяти смен подряд; в день, где три и больше показов площадки, нужны минимум два менеджера в смене. <i>Правила предложены нами и проверяют будущие дни — в этом смысл планирования. На внедрении заменим на ваши.</i>")
+   + '</p><span class="panel__s">каждое предупреждение называет нарушенное правило</span></div>';
+  h+= ISS.length
+    ? '<ul class="issues" id="iss">'+ISS.map(function(c,i){
+        return '<li data-tone="'+c.tone+'"><span class="bar"></span>'
+          +'<span><span class="issues__t">'+c.t+'</span><span class="issues__r">'+c.r+'</span></span>'
+          +(c.d?'<button class="btn" type="button" data-i="'+i+'">Открыть день</button>':'<span></span>')+'</li>';
+      }).join('')+'</ul>'
+    : '<div class="panel__b" style="color:var(--ok)">Все показы площадки обеспечены менеджерами, ни у кого нет шести смен подряд, переработок за месяц не осталось.</div>';
+  h+='</div>';
+
+  var bar='<div class="schbar" id="schA"></div>';
+  var lg='<div class="legend">'
+   + '<span><i class="dp-cc"></i>Колл-центр</span>'
+   + '<span><i class="dp-mg"></i>Менеджеры площадки</span>'
+   + '<span><i class="dp-bq"></i>Банкетная служба</span>'
+   + '<span><i class="dp-cc draft"></i>Пунктир — смена не опубликована</span></div>';
+
+  var mob=M();
+  if(view==='month'){
+    h+='<div class="panel">'+bar+'<div class="panel__h"><p class="panel__t">Сентябрь 2026</p>'
+     + '<span class="panel__s">'+(mob?'точка — смена, цвет — подразделение, «мер.» — мероприятия и показы в залах. Нажмите день, чтобы увидеть, кто работает'
+                                    :'нажмите день, чтобы открыть его по часам; смену можно перетащить на другой день')+'</span></div>'
+     + '<div class="panel__b panel__b--flush">'+(mob?'<div class="mm" id="mm"></div><div class="agenda" id="ag"></div>'
+                                                    :'<div class="scroll"><div class="mcal" id="mc"></div></div>')
+     + lg+'<div style="height:16px"></div></div></div>';
+  } else if(view==='week'){
+    h+='<div class="panel">'+bar+'<div class="panel__h"><p class="panel__t" id="wl"></p>'
+     + '<span class="panel__s" id="wh"></span><div class="panel__a">'
+     + '<button class="btn btn--q" type="button" id="wp">Раньше</button>'
+     + '<button class="btn btn--q" type="button" id="wn">Позже</button></div></div>'
+     + '<div class="panel__b panel__b--flush"><div class="scroll"><div class="wag'+(mob?' wag--m':'')+'" id="wag"></div></div>'
+     + lg+'<div style="height:16px"></div></div></div>';
+  } else if(view==='day'){
+    h+='<div class="panel">'+bar+'<div class="panel__h"><p class="panel__t" id="dl"></p>'
+     + '<span class="panel__s" id="dh"></span><div class="panel__a">'
+     + '<button class="btn btn--q" type="button" id="dp1">Вчера</button>'
+     + '<button class="btn btn--q" type="button" id="dn1">Завтра</button></div></div>'
+     + '<div class="panel__b panel__b--flush">'+(mob?'<div class="dm" id="dmx"></div>':'<div class="scroll"><div class="cal" id="cal"></div></div>')
+     + '<p style="margin:14px 16px 0; font-size:12px; color:var(--ink-3)">'+(mob
+         ?'Строка — сотрудник, полоса — его смена по часам. Нажмите на смену, чтобы открыть её, или на пустую полосу, чтобы поставить новую.'
+         :'Колонка — сотрудник. Нажмите на свободное место, чтобы поставить смену на это время; смену можно перетащить на другого сотрудника или на другой час.')+'</p>'
+     + '<div class="legend"><span><i class="dp-cc"></i>Колл-центр</span><span><i class="dp-mg"></i>Менеджеры площадки</span>'
+     + '<span><i class="dp-bq"></i>Банкетная служба</span>'
+     + '<span><i style="background:var(--bronze-wash); border-color:var(--bronze-line)"></i>Мероприятие из АмоCRM внутри смены</span></div>'
+     + '<div style="height:16px"></div></div></div>';
+  } else if(view==='people'){
+    h+='<div class="panel">'+bar+'<div class="panel__h"><p class="panel__t">Часы по сотрудникам</p>'
+     + '<span class="panel__s">'+(mob?'часы за сентябрь против нормы; в клетках — дни месяца, закрашены рабочие'
+                                    :'в клетке — часы этой смены, справа их сумма за месяц')+'</span></div>'
+     + '<div class="panel__b panel__b--flush">'+(mob?'<div class="pm" id="pmx"></div>':'<div class="scroll"><div class="mon" id="mg"></div></div>')
+     + lg+'<div style="height:16px"></div></div></div>';
+  } else {
+    h+='<div class="panel">'+bar+'<div class="panel__h"><p class="panel__t">Расписание залов</p>'
+     + '<div class="panel__a" id="dp"></div></div>'
+     + '<div class="panel__b panel__b--flush">'+(mob?'<div class="hm" id="hmx"></div>':'<div class="scroll"><div class="halls" id="hg"></div></div>')
+     + '<div class="legend"><span><i style="background:var(--bronze-wash); border-color:var(--bronze-line)"></i>Показ площадки и дегустация</span>'
+     + '<span><i style="background:var(--ok-wash); border-color:var(--ok-line)"></i>Мероприятие</span>'
+     + '<span><i style="background:var(--surface-2); border-color:var(--line); border-style:dashed"></i>Монтаж</span></div>'
+     + '<div style="height:16px"></div></div></div>';
+  }
+  $('#v-schedule').innerHTML=h;
+  mountSchedControls();
+
+  if(ISS.length) Array.prototype.forEach.call(document.querySelectorAll('#iss [data-i]'),function(b){
+    b.addEventListener('click',function(){ var c=ISS[+this.dataset.i]; flagD=c.d; openDay(c.d); });
+  });
+  if(view==='month') (mob?monthM:month)();
+  if(view==='week') week();
+  if(view==='day') (mob?dayM:day)();
+  if(view==='people') (mob?peopleM:people)();
+  if(view==='halls'){dayPick(); (mob?hallsM:halls)();}
+}
+
+/* ── месяц ── */
+function month(){
+  var g=$('#mc'); if(!g) return;
+  g.innerHTML='';
+  DW.forEach(function(n){ g.appendChild(el('div','mcal__h',n)); });
+  var lead=wd(1), i;
+  for(i=0;i<lead;i++) g.appendChild(el('div','mcal__c mcal__c--out',''));
+  for(var d=1;d<=MD;d++){
+    (function(d){
+      var list=ofDay(d);
+      var c=el('div','mcal__c'+(wd(d)>=5?' mcal__c--we':'')+(d===TODAY?' mcal__c--now':''));
+      c.dataset.d=d;
+      c.innerHTML='<div class="mcal__t"><span class="mcal__n">'+d+'</span>'
+        +(list.length?'<span class="mcal__s"><i class="q">'+list.length+' '+pl(list.length,'смена','смены','смен')+' · </i>'+nh(dayH(d))+' ч</span>':'')
+        +'<button class="mcal__a" type="button" title="Добавить смену на этот день">+</button></div>';
+      $('.mcal__a',c).addEventListener('click',function(ev){ev.stopPropagation(); editShift(null,{d:d});});
+      list.slice(0,3).forEach(function(s){
+        var e=emp(s.e);
+        var b=el('button','mchip dp-'+e.d+(s.pub?'':' draft'),'<b>'+hh(s.f)+'</b><span>'+esc(shortn(e.n))+'</span>');
+        b.type='button'; b.draggable=true; b.dataset.s=s.id;
+        b.title=e.n+', '+e.r+', '+hh(s.f)+'–'+hh(s.t)+' — '+nh(dur(s))+' ч'+(s.pub?'':' (черновик)');
+        b.addEventListener('click',function(ev){ev.stopPropagation(); editShift(s.id);});
+        b.addEventListener('dragstart',dstart); b.addEventListener('dragend',dend);
+        c.appendChild(b);
+      });
+      if(list.length>3){
+        var m=el('button','mcal__m','ещё '+(list.length-3)+' '+pl(list.length-3,'смена','смены','смен'));
+        m.type='button'; m.addEventListener('click',function(ev){ev.stopPropagation(); openDay(d);});
+        c.appendChild(m);
+      }
+      c.addEventListener('click',function(){openDay(d);});
+      c.addEventListener('dragover',dover); c.addEventListener('dragleave',dleave);
+      c.addEventListener('drop',function(ev){dropOn(ev,this,d,null,null);});
+      g.appendChild(c);
+    })(d);
+  }
+  var tail=(7-((lead+MD)%7))%7;
+  for(i=0;i<tail;i++) g.appendChild(el('div','mcal__c mcal__c--out',''));
+}
+
+function wchip(s){
+  var e=emp(s.e), nt=s.tasks.length;
+  var b=el('button','wchip dp-'+e.d+(s.pub?'':' draft'),
+    '<b>'+hh(s.f)+' – '+hh(s.t)+'</b><span>'+esc(e.n)+'</span>'
+    +'<small>'+esc(e.r)+' · '+nh(dur(s))+' ч'+(nt?' · '+tsk(nt):'')+(s.pub?'':' · черновик')+'</small>');
+  b.type='button'; b.draggable=true; b.dataset.s=s.id;
+  b.addEventListener('click',function(ev){ev.stopPropagation(); editShift(s.id);});
+  b.addEventListener('dragstart',dstart); b.addEventListener('dragend',dend);
+  return b;
+}
+
+/* ── неделя: колонка на день, смены списком по времени ── */
+function week(){
+  var g=$('#wag'); if(!g) return;
+  g.innerHTML='';
+  var days=[]; for(var i=0;i<7;i++) days.push(curW*7+i);
+
+  var mob=M(), HD=[], CC=[];
+  days.forEach(function(d){
+    var inM=d>=1&&d<=MD, n=inM?ofDay(d).length:0;
+    var hd=el('div','wag__h'+(d===TODAY?' wag__h--now':'')+(flagD===d?' wag__h--flag':''),
+      '<b>'+(inM?d:(d<1?31+d:d-MD))+'</b><span>'+DW[wd(d)]+'</span>'
+      +'<em>'+(inM?(n?n+' '+pl(n,'смена','смены','смен')+' · '+nh(dayH(d))+' ч':'нет смен'):'—')+'</em>');
+    if(inM) hd.addEventListener('click',function(){openDay(d);});
+    if(inM) hd.style.cursor='pointer';
+    HD.push(hd);
+  });
+
+  days.forEach(function(d){
+    var inM=d>=1&&d<=MD;
+    var c=el('div','wag__c'+(wd(d)>=5?' wag__c--we':'')+(inM?'':' wag__c--out'));
+    c.dataset.d=d;
+    if(inM){
+      ofDay(d).forEach(function(s){ c.appendChild(wchip(s)); });
+      var a=el('button','wag__add','Добавить смену'); a.type='button';
+      a.addEventListener('click',function(ev){ev.stopPropagation(); editShift(null,{d:d});});
+      c.appendChild(a);
+      c.addEventListener('dragover',dover); c.addEventListener('dragleave',dleave);
+      c.addEventListener('drop',function(ev){dropOn(ev,this,d,null,null);});
+    }
+    CC.push(c);
+  });
+  if(mob) days.forEach(function(d,i){ if(d>=1&&d<=MD){ g.appendChild(HD[i]); g.appendChild(CC[i]); } });
+  else { HD.forEach(function(x){g.appendChild(x);}); CC.forEach(function(x){g.appendChild(x);}); }
+
+  var f=days[0], l=days[6];
+  $('#wl').textContent=(f<1?(31+f)+' августа':f+' сентября')+' — '+(l>MD?(l-MD)+' октября':l+' сентября');
+  var wh=0,wc=0;
+  days.forEach(function(d){ if(d>=1&&d<=MD){ wh+=dayH(d); wc+=ofDay(d).length; } });
+  $('#wh').textContent=nh(wh)+' '+pl(Math.round(wh),'час','часа','часов')+', '+wc+' '+pl(wc,'смена','смены','смен');
+  $('#wp').addEventListener('click',function(){curW=Math.max(0,curW-1); renderSched();});
+  $('#wn').addEventListener('click',function(){curW=Math.min(4,curW+1); renderSched();});
+}
+
+/* ── день: сетка часов, колонка на сотрудника ── */
+function day(){
+  var g=$('#cal'); if(!g) return;
+  g.innerHTML='';
+  g.style.setProperty('--hh',PXH+'px');
+  g.style.setProperty('--ch',((HE-HB)*PXH)+'px');
+  g.style.gridTemplateColumns='54px repeat('+EMP.length+',minmax(122px,1fr))';
+
+  g.appendChild(el('div','cal__corner',''));
+  EMP.forEach(function(e){
+    var s=ofDay(curD).filter(function(x){return x.e===e.id;})[0];
+    g.appendChild(el('div','cal__h cal__h--res','<b>'+esc(shortn(e.n))+'</b><span>'+esc(e.r)+'</span>'
+      +'<em>'+(s?hh(s.f)+'–'+hh(s.t)+' · '+nh(dur(s))+' ч':'выходной')+'</em>'));
+  });
+
+  var gut=el('div','cal__gut');
+  for(var x=HB;x<=HE;x++){ var lb=el('i',null,hh(x)); lb.style.top=((x-HB)*PXH)+'px'; gut.appendChild(lb); }
+  g.appendChild(gut);
+
+  EMP.forEach(function(e){
+    var col=el('div','cal__col');
+    col.dataset.e=e.id;
+    ofDay(curD).filter(function(x){return x.e===e.id;}).forEach(function(s){
+      var top=(Math.max(s.f,HB)-HB)*PXH, hgt=(Math.min(s.t,HE)-Math.max(s.f,HB))*PXH-3;
+      var nt=s.tasks.length;
+      var b=el('button','shb dp-'+e.d+(s.pub?'':' draft'),
+        '<b>'+hh(s.f)+' – '+hh(s.t)+'</b><span>'+nh(dur(s))+' ч'+(s.pub?'':', черновик')+'</span>'
+        +(nt?'<small>'+tsk(nt)+'</small>':'')+(s.note?'<small>'+esc(s.note)+'</small>':''));
+      b.type='button'; b.draggable=true; b.dataset.s=s.id;
+      b.style.top=top+'px'; b.style.height=Math.max(hgt,24)+'px'; b.style.left='2px'; b.style.width='calc(100% - 6px)';
+      b.title=e.n+', '+hh(s.f)+'–'+hh(s.t)+' — '+nh(dur(s))+' ч';
+      b.addEventListener('click',function(ev){ev.stopPropagation(); editShift(s.id);});
+      b.addEventListener('dragstart',dstart); b.addEventListener('dragend',dend);
+      col.appendChild(b);
+    });
+    EV.filter(function(v){return v.d===curD&&v.w===e.n;}).forEach(function(v){
+      var hl=HALL.filter(function(z){return z.id===v.h;})[0];
+      var top=(Math.max(v.a,HB)-HB)*PXH, hgt=(Math.min(v.b,HE)-Math.max(v.a,HB))*PXH-3;
+      var n=el('div','evb'+(v.k==='tech'?' evb--tech':''),
+        '<b>'+hh(v.a)+'–'+hh(v.b)+'</b><span>'+esc(v.t)+'</span><small>'+hl.n+(v.x?', № '+v.x:'')+'</small>');
+      n.style.top=top+'px'; n.style.height=Math.max(hgt,24)+'px';
+      n.title=v.t+', '+hl.n+', '+hh(v.a)+'–'+hh(v.b);
+      col.appendChild(n);
+    });
+    col.addEventListener('click',function(ev){
+      if(ev.target!==this) return;
+      var r=this.getBoundingClientRect(), f=snap((ev.clientY-r.top)/PXH+HB);
+      editShift(null,{e:e.id, d:curD, f:f, t:Math.min(f+9,HE)});
+    });
+    col.addEventListener('dragover',dover); col.addEventListener('dragleave',dleave);
+    col.addEventListener('drop',function(ev){dropOn(ev,this,curD,this.getBoundingClientRect(),e.id);});
+    g.appendChild(col);
+  });
+
+  var n=ofDay(curD).length;
+  $('#dl').textContent=curD+' сентября, '+DW[wd(curD)].toLowerCase()+(curD===TODAY?' — сегодня':'');
+  $('#dh').textContent=n? n+' '+pl(n,'смена','смены','смен')+' · '+nh(dayH(curD))+' '+pl(Math.round(dayH(curD)),'час','часа','часов')
+                          +(evOn(curD)?' · '+evOn(curD)+' '+pl(evOn(curD),'мероприятие','мероприятия','мероприятий')+' в залах':'')
+                        : 'смен не поставлено';
+  $('#dp1').addEventListener('click',function(){ if(curD>1){curD--; curW=wk(curD); renderSched();} });
+  $('#dn1').addEventListener('click',function(){ if(curD<MD){curD++; curW=wk(curD); renderSched();} });
+}
+function snap(x){var v=Math.round(x*2)/2; return v<HB?HB:(v>HE-1?HE-1:v);}
+
+/* ── сотрудники: часы и смены за месяц ── */
+function people(){
+  var g=$('#mg'); if(!g) return;
+  g.style.gridTemplateColumns='198px repeat('+MD+',minmax(30px,1fr)) 58px 46px';
+  g.innerHTML='';
+  g.appendChild(el('div','mon__c',''));
+  for(var d=1;d<=MD;d++){
+    (function(d){
+      var c=el('div','mon__d'+(wd(d)>=5?' mon__d--we':'')+(d===TODAY?' mon__d--now':''),
+        '<span class="mon__dn">'+d+'</span><span class="mon__dw">'+DW[wd(d)][0]+'</span>');
+      c.style.cursor='pointer'; c.title=d+' сентября — открыть день';
+      c.addEventListener('click',function(){openDay(d);});
+      g.appendChild(c);
+    })(d);
+  }
+  g.appendChild(el('div','mon__d','<span class="mon__dw" style="padding-top:12px">Часы</span>'));
+  g.appendChild(el('div','mon__d','<span class="mon__dw" style="padding-top:12px">Смен</span>'));
+
+  DEPT.forEach(function(dp){
+    g.appendChild(el('div','mon__g',dp.n));
+    EMP.filter(function(e){return e.d===dp.id;}).forEach(function(e){
+      g.appendChild(el('div','mon__n', e.n+'<span class="mon__r">'+e.r+'</span>'));
+      for(var d=1;d<=MD;d++){
+        (function(d){
+          var c=el('div','mon__x'+(wd(d)>=5?' mon__x--we':''));
+          var s=ofDay(d).filter(function(x){return x.e===e.id;})[0];
+          if(s){
+            var b=el('button','mon__s dp-'+e.d+(s.pub?'':' draft'), nh(dur(s)));
+            b.type='button'; b.title=e.n+', '+d+' сентября, '+hh(s.f)+'–'+hh(s.t)+' — '+nh(dur(s))+' ч'+(s.pub?'':' (черновик)');
+            b.addEventListener('click',function(){editShift(s.id);});
+            c.appendChild(b);
+          } else {
+            var z=el('button','mon__e',''); z.type='button'; z.title='Выходной — нажмите, чтобы поставить смену';
+            z.addEventListener('click',function(){editShift(null,{e:e.id,d:d});});
+            c.appendChild(z);
+          }
+          g.appendChild(c);
+        })(d);
+      }
+      var H=hrs(e.id);
+      g.appendChild(el('div','mon__tot'+(H>NORM?' mon__tot--over':''),nh(H)));
+      g.appendChild(el('div','mon__tot',String(shf(e.id))));
+    });
+  });
+}
+
+/* ── перенос смены ── */
+var drag=null;
+function dstart(e){
+  var r=this.getBoundingClientRect();
+  drag={id:this.dataset.s, off:(e.clientY-r.top)/PXH};
+  this.classList.add('shb--drag');
+  try{e.dataTransfer.setData('text/plain','s'); e.dataTransfer.effectAllowed='move';}catch(x){}
+}
+function dend(){this.classList.remove('shb--drag'); drag=null;}
+function dover(e){if(!drag)return; e.preventDefault(); this.dataset.drop='on';}
+function dleave(){delete this.dataset.drop;}
+function dropOn(e,node,d,rect,empId){
+  e.preventDefault(); delete node.dataset.drop;
+  if(!drag) return;
+  var s=byId(drag.id); if(!s){drag=null; return;}
+  var len=dur(s);
+  if(rect){
+    var f=snap((e.clientY-rect.top)/PXH-drag.off+HB);
+    if(f+len>HE) f=HE-len;
+    if(f<HB) f=HB;
+    s.f=f; s.t=f+len;
+  }
+  if(empId) s.e=empId;
+  s.d=d; drag=null; renderSched();
+}
+
+/* ── создание и правка смены ── */
+function ph(v){var p=String(v||'').split(':'); var a=+p[0], m=+p[1]; return (isNaN(a)?0:a)+(isNaN(m)?0:m)/60;}
+function editShift(sid,pre){
+  pre=pre||{};
+  var s=sid?byId(sid):null;
+  var st={ e:s?s.e:(pre.e||EMP[0].id), d:s?s.d:(pre.d||TODAY),
+           f:s?s.f:(pre.f!=null?pre.f:12), t:s?s.t:(pre.t!=null?pre.t:21),
+           note:s?s.note:'', pub:s?s.pub:false,
+           tasks:(s?s.tasks:[]).map(function(x){return {t:x.t,done:x.done};}) };
+
+  var opts=DEPT.map(function(dp){
+    return '<optgroup label="'+dp.n+'">'+EMP.filter(function(e){return e.d===dp.id;}).map(function(e){
+      return '<option value="'+e.id+'"'+(e.id===st.e?' selected':'')+'>'+esc(e.n)+' — '+esc(e.r)+'</option>';
+    }).join('')+'</optgroup>';
+  }).join('');
+  var days=''; for(var d=1;d<=MD;d++) days+='<option value="'+d+'"'+(d===st.d?' selected':'')+'>'+d+' сентября, '+DW[wd(d)]+'</option>';
+
+  var b='<button class="btn btn--q sheet__c" type="button" id="xc">Закрыть</button>'
+   +'<p style="margin:0 0 4px; font-size:12.5px; color:var(--ink-3)">График смен</p>'
+   +'<h2 style="margin:0 0 20px; font-size:19px; font-weight:600">'+(s?'Смена':'Новая смена')+'</h2>'
+   +'<div class="f"><label for="fe">Сотрудник</label><select id="fe">'+opts+'</select></div>'
+   +'<div class="f"><label for="fd">Дата</label><select id="fd">'+days+'</select></div>'
+   +'<div class="frow"><div class="f"><label for="ff">Начало</label><input type="time" id="ff" step="900" value="'+hh(st.f)+'"></div>'
+   +'<div class="f"><label for="ft">Окончание</label><input type="time" id="ft" step="900" value="'+hh(st.t)+'"></div></div>'
+   +'<p class="fhint" id="fh"></p>'
+   +'<div class="f"><label for="fn">Заметка к смене</label><textarea id="fn" rows="3" placeholder="Например: гость юбилея просил встретить лично">'+esc(st.note)+'</textarea></div>'
+   +'<p class="fsec">Задачи на смену</p><ul class="tasks" id="tl"></ul>'
+   +'<div class="tadd"><input id="ti" placeholder="Что нужно сделать в эту смену"><button class="btn" type="button" id="tb">Добавить</button></div>'
+   +'<label class="chk"><input type="checkbox" id="fp"'+(st.pub?' checked':'')+'><span>Опубликовать смену — сотрудник увидит её и задачи у себя в боте</span></label>'
+   +'<div id="fev"></div>'
+   +'<div class="facts">'
+   +'<button class="btn btn--go" type="button" id="ok">'+(s?'Сохранить':'Поставить смену')+'</button>'
+   +(s?'<button class="btn" type="button" id="del">Снять смену</button>':'')
+   +'<button class="btn btn--q" type="button" id="no">Отмена</button></div>';
+
+  sheet(b,function(p,close){
+    var fe=$('#fe',p), fd=$('#fd',p), ff=$('#ff',p), ft=$('#ft',p), fn=$('#fn',p), fp=$('#fp',p), ok=$('#ok',p);
+
+    function len(){return ph(ft.value)-ph(ff.value);}
+    function hint(){
+      var L=len(), id=fe.value, was=(s&&s.e===id)?dur(s):0;
+      var tot=hrs(id)-was+(L>0?L:0);
+      if(L<=0){
+        $('#fh',p).className='fhint fhint--bad';
+        $('#fh',p).innerHTML='Окончание смены должно быть позже начала.';
+        ok.disabled=true; ok.style.opacity='.5'; return;
+      }
+      ok.disabled=false; ok.style.opacity='';
+      $('#fh',p).className='fhint';
+      $('#fh',p).innerHTML='Длительность — <b>'+nh(L)+' '+pl(Math.round(L),'час','часа','часов')+'</b>. '
+        +'С этой сменой у сотрудника выйдет <b>'+nh(tot)+' ч</b> за сентябрь при норме '+NORM+' ч'
+        +(tot>NORM?' — переработка на '+nh(tot-NORM)+' ч.':'.');
+    }
+    function evs(){
+      var e=emp(fe.value), d=+fd.value;
+      var mine=EV.filter(function(v){return v.d===d&&v.w===e.n;});
+      $('#fev',p).innerHTML= mine.length
+        ? '<p class="fsec">Мероприятия на эту смену</p><ul class="tline">'+mine.map(function(v){
+            var hl=HALL.filter(function(z){return z.id===v.h;})[0].n;
+            return '<li data-on="1"><span class="tline__t">'+hh(v.a)+'</span>'+esc(v.t)+' — '+hl+(v.x?', сделка № '+v.x:'')+'</li>';
+          }).join('')+'</ul>'
+        : '<p class="fhint" style="margin:0 0 18px">За этим сотрудником на эту дату мероприятий из АмоCRM не закреплено.</p>';
+    }
+    function tasks(){
+      var l=$('#tl',p);
+      l.innerHTML= st.tasks.length
+        ? st.tasks.map(function(x,i){
+            return '<li data-done="'+(x.done?1:0)+'"><label><input type="checkbox" data-c="'+i+'"'+(x.done?' checked':'')+'>'
+              +'<span>'+esc(x.t)+'</span></label><button class="rm" type="button" data-r="'+i+'" title="Убрать задачу">×</button></li>';
+          }).join('')
+        : '<li class="e">Задач пока нет. Опубликованная смена придёт сотруднику в бот вместе со списком задач.</li>';
+      Array.prototype.forEach.call(l.querySelectorAll('[data-c]'),function(c){
+        c.addEventListener('change',function(){st.tasks[+this.dataset.c].done=this.checked; tasks();});
+      });
+      Array.prototype.forEach.call(l.querySelectorAll('[data-r]'),function(c){
+        c.addEventListener('click',function(){st.tasks.splice(+this.dataset.r,1); tasks();});
+      });
+    }
+    function add(){
+      var v=$('#ti',p).value.replace(/^\s+|\s+$/g,'');
+      if(!v) return;
+      st.tasks.push({t:v,done:false}); $('#ti',p).value=''; tasks(); $('#ti',p).focus();
+    }
+
+    hint(); evs(); tasks();
+    fe.addEventListener('change',function(){hint(); evs();});
+    fd.addEventListener('change',function(){evs();});
+    ff.addEventListener('change',hint); ft.addEventListener('change',hint);
+    $('#tb',p).addEventListener('click',add);
+    $('#ti',p).addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault(); add();}});
+    $('#xc',p).addEventListener('click',close);
+    $('#no',p).addEventListener('click',close);
+    if($('#del',p)) $('#del',p).addEventListener('click',function(){
+      SH=SH.filter(function(x){return x.id!==s.id;}); close(); renderSched();
+    });
+    ok.addEventListener('click',function(){
+      if(len()<=0) return;
+      var o=s||mk(fe.value,+fd.value,ph(ff.value),ph(ft.value),false);
+      o.e=fe.value; o.d=+fd.value; o.f=ph(ff.value); o.t=ph(ft.value);
+      o.note=fn.value; o.pub=fp.checked; o.tasks=st.tasks;
+      if(!s) SH.push(o);
+      close();
+      curD=o.d; curW=wk(o.d);
+      renderSched();
+      var n=document.querySelector('[data-s="'+o.id+'"]');
+      if(n) n.classList.add('shb--new');
+    });
+  });
+}
+
+/* ── «разложить заново»: правила вместо ручной перекройки ── */
+function autofill(){
+  for(var d=1;d<=MD;d++){
+    var g=0;
+    while(showsOn(d)>=3&&mgrOn(d)<2&&g++<4){
+      var free=EMP.filter(function(e){return e.d==='mg'&&!has(e.id,d);}).sort(function(a,b){return hrs(a.id)-hrs(b.id);});
+      if(!free.length) break;
+      SH.push(mk(free[0].id,d,free[0].f,free[0].t,false,
+        'Смена добавлена автоматически: в этот день '+showsOn(d)+' показа площадки, а менеджеров не хватало.',[]));
+    }
+  }
+  EMP.forEach(function(e){
+    var g=0;
+    while(hrs(e.id)>NORM&&g++<40){
+      var mine=ofEmp(e.id).slice().sort(function(a,b){return evOn(a.d)-evOn(b.d);});
+      var cut=null;
+      for(var i=0;i<mine.length;i++){
+        var s=mine[i];
+        if(e.d==='mg'&&showsOn(s.d)>=3&&mgrOn(s.d)<=2) continue;
+        cut=s; break;
+      }
+      if(!cut) break;
+      SH=SH.filter(function(x){return x!==cut;});
+    }
+  });
+  flagD=null; renderSched();
+  Array.prototype.forEach.call(document.querySelectorAll('.shb, .mchip, .wchip'),function(n,i){
+    n.classList.add('shb--new'); n.style.animationDelay=Math.min(i*16,600)+'ms';
+  });
+}
+
+var curDH=TODAY;
+function dayPick(){
+  var w=$('#dp'); w.innerHTML='';
+  w.appendChild(seg([21,22,23,24,25,26,27].map(function(d){return {id:d,n:DW[wd(d)]+' '+d};}),curDH,
+    function(v){curDH=v; dayPick(); (M()?hallsM:halls)();}));
+}
+function halls(){
+  var g=$('#hg'), A=10,B=24, sp=B-A;
+  g.innerHTML=''; g.style.setProperty('--hs',(100/sp)+'%');
+  var sc=el('div','halls__s'); sc.style.gridTemplateColumns='repeat('+sp+',1fr)';
+  for(var h=A;h<B;h++) sc.appendChild(el('span',null,(h<10?'0':'')+h));
+  g.appendChild(el('div',null,'')); g.appendChild(sc);
+  HALL.forEach(function(hl){
+    g.appendChild(el('div','halls__n','<span class="halls__t">'+hl.n+'</span><span class="halls__c">'+hl.c+'</span>'));
+    var ln=el('div','halls__l');
+    EV.filter(function(v){return v.d===curDH&&v.h===hl.id;}).forEach(function(v){
+      var b=el('button','ev ev--'+(v.k==='show'?'show':(v.k==='ban'?'ban':'tech')),
+        '<b>'+v.t+'</b><small>'+hh(v.a)+'–'+hh(v.b)+', '+v.w+'</small>'+(v.x?'<small>АмоCRM, сделка № '+v.x+'</small>':''));
+      b.type='button'; b.style.left=((v.a-A)/sp*100)+'%'; b.style.width='calc('+((v.b-v.a)/sp*100)+'% - 4px)';
+      ln.appendChild(b);
+    });
+    g.appendChild(ln);
+  });
+}
+
+/* ══ ГРАФИК НА ТЕЛЕФОНЕ ══ */
+function hallN(id){return HALL.filter(function(z){return z.id===id;})[0].n;}
+function evsOf(d){return EV.filter(function(v){return v.d===d;}).sort(function(a,b){return a.a-b.a;});}
+
+/* месяц: сетка с точками смен, под ней — кто работает в выбранный день */
+function monthM(){
+  var g=$('#mm'); if(!g) return;
+  g.innerHTML='';
+  DW.forEach(function(n){ g.appendChild(el('div','mm__h',n)); });
+  var lead=wd(1), i, flags={};
+  ISS.forEach(function(c){ if(c.d) flags[c.d]=1; });
+  for(i=0;i<lead;i++) g.appendChild(el('div','mm__c mm__c--out',''));
+  for(var d=1;d<=MD;d++){
+    (function(d){
+      var list=ofDay(d), ne=evOn(d);
+      var b=el('button','mm__c'+(wd(d)>=5?' mm__c--we':'')+(d===TODAY?' mm__c--now':''),
+        '<span class="mm__n">'+d+'</span>'
+        +'<span class="mm__d">'+list.map(function(s){return '<i class="dp-'+emp(s.e).d+(s.pub?'':' draft')+'"></i>';}).join('')+'</span>'
+        +(ne?'<span class="mm__e'+(flags[d]?' mm__e--bad':'')+'">'+ne+' мер.</span>':''));
+      b.type='button'; b.setAttribute('aria-pressed',d===curD?'true':'false');
+      b.setAttribute('aria-label',d+' сентября: '+list.length+' '+pl(list.length,'смена','смены','смен'));
+      b.addEventListener('click',function(){ curD=d; curW=wk(d); monthM(); });
+      g.appendChild(b);
+    })(d);
+  }
+  var tail=(7-((lead+MD)%7))%7;
+  for(i=0;i<tail;i++) g.appendChild(el('div','mm__c mm__c--out',''));
+  agendaM(curD);
+}
+function agendaM(d){
+  var a=$('#ag'); if(!a) return;
+  var list=ofDay(d), evs=evsOf(d);
+  a.innerHTML='<div class="agenda__h"><b>'+d+' сентября, '+DW[wd(d)].toLowerCase()+(d===TODAY?' — сегодня':'')+'</b>'
+    +'<span>'+(list.length?list.length+' '+pl(list.length,'смена','смены','смен')+', '+nh(dayH(d))+' ч':'смен не поставлено')+'</span></div>'
+    +'<div class="agenda__l" id="agl"></div>'
+    +(evs.length?'<ul class="agenda__ev">'+evs.map(function(v){
+        return '<li><span class="t">'+hh(v.a)+'</span><span>'+esc(v.t)+'<small>'+hallN(v.h)+', '+esc(v.w)+(v.x?', сделка № '+v.x:'')+'</small></span></li>';
+      }).join('')+'</ul>':'')
+    +'<div class="agenda__b"><button class="btn" type="button" id="agd">День по часам</button>'
+    +'<button class="btn" type="button" id="aga">Добавить смену</button></div>';
+  var l=$('#agl');
+  list.forEach(function(s){ l.appendChild(wchip(s)); });
+  $('#agd').addEventListener('click',function(){ openDay(d); });
+  $('#aga').addEventListener('click',function(){ editShift(null,{d:d}); });
+}
+
+/* день: строка на сотрудника, полоса смены на шкале суток */
+function dayM(){
+  var g=$('#dmx'); if(!g) return;
+  var sp=HE-HB;
+  function x(h){return (Math.max(Math.min(h,HE),HB)-HB)/sp*100;}
+  g.style.setProperty('--hs',(200/sp)+'%');
+  var h='<div class="dm__sc">'+[8,12,16,20,24].map(function(v){return '<span style="left:'+x(v)+'%">'+hh(v)+'</span>';}).join('')+'</div>';
+  DEPT.forEach(function(dp){
+    h+='<div class="dm__g">'+dp.n+'</div>';
+    EMP.filter(function(e){return e.d===dp.id;}).forEach(function(e){
+      var mine=ofDay(curD).filter(function(s){return s.e===e.id;});
+      var evs=EV.filter(function(v){return v.d===curD&&v.w===e.n;}).sort(function(a,b){return a.a-b.a;});
+      h+='<div class="dm__r"><div class="dm__t"><b>'+esc(e.n)+'</b><span>'+esc(e.r)+'</span>'
+        +(mine.length?'<em>'+mine.map(function(s){return hh(s.f)+'–'+hh(s.t);}).join(', ')+'</em>':'<em class="off">выходной</em>')+'</div>'
+        +'<div class="dm__k" data-e="'+e.id+'" title="Поставить смену">'
+        +mine.map(function(s){
+            return '<button type="button" class="dm__s dp-'+e.d+(s.pub?'':' draft')+'" data-s="'+s.id+'" style="left:'+x(s.f)+'%; width:'+(x(s.t)-x(s.f))+'%">'
+              +nh(dur(s))+' ч'+(s.pub?'':', черновик')+'</button>';
+          }).join('')
+        +evs.map(function(v){
+            return '<span class="dm__e'+(v.k==='tech'?' dm__e--tech':'')+'" style="left:'+x(v.a)+'%; width:'+(x(v.b)-x(v.a))+'%"></span>';
+          }).join('')
+        +'</div>';
+      var notes=[];
+      evs.forEach(function(v){ notes.push('<li><b>'+hh(v.a)+'</b><span>'+esc(v.t)+', '+hallN(v.h)+'</span></li>'); });
+      mine.forEach(function(s){
+        if(s.tasks.length) notes.push('<li><span>'+tsk(s.tasks.length)+' на смену'+(s.note?': '+esc(s.note):'')+'</span></li>');
+        else if(s.note) notes.push('<li><span>'+esc(s.note)+'</span></li>');
+      });
+      if(notes.length) h+='<ul class="dm__x">'+notes.join('')+'</ul>';
+      h+='</div>';
+    });
+  });
+  g.innerHTML=h;
+  Array.prototype.forEach.call(g.querySelectorAll('.dm__s'),function(b){
+    b.addEventListener('click',function(ev){ ev.stopPropagation(); editShift(this.dataset.s); });
+  });
+  Array.prototype.forEach.call(g.querySelectorAll('.dm__k'),function(k){
+    k.addEventListener('click',function(){ var e=emp(this.dataset.e); editShift(null,{e:e.id, d:curD, f:e.f, t:e.t}); });
+  });
+  var n=ofDay(curD).length;
+  $('#dl').textContent=curD+' сентября, '+DW[wd(curD)].toLowerCase()+(curD===TODAY?' — сегодня':'');
+  $('#dh').textContent=n? n+' '+pl(n,'смена','смены','смен')+' · '+nh(dayH(curD))+' '+pl(Math.round(dayH(curD)),'час','часа','часов')
+                          +(evOn(curD)?' · '+evOn(curD)+' '+pl(evOn(curD),'мероприятие','мероприятия','мероприятий')+' в залах':'')
+                        : 'смен не поставлено';
+  $('#dp1').addEventListener('click',function(){ if(curD>1){curD--; curW=wk(curD); renderSched();} });
+  $('#dn1').addEventListener('click',function(){ if(curD<MD){curD++; curW=wk(curD); renderSched();} });
+}
+
+/* сотрудники: часы против нормы и полоса месяца на каждого */
+function peopleM(){
+  var g=$('#pmx'); if(!g) return;
+  var h='';
+  DEPT.forEach(function(dp){
+    h+='<div class="pm__g">'+dp.n+'</div>';
+    EMP.filter(function(e){return e.d===dp.id;}).forEach(function(e){
+      var H=hrs(e.id), over=H>NORM, top=Math.max(H,NORM);
+      h+='<div class="pm__r"><div class="pm__t"><b>'+esc(e.n)+'</b><span>'+esc(e.r)+'</span>'
+        +'<span class="pm__h'+(over?' pm__h--over':'')+'">'+nh(H)+'<i> из '+NORM+' ч</i></span></div>'
+        +'<span class="pm__bar"><span style="width:'+(Math.min(H,NORM)/top*100)+'%"></span>'
+        +(over?'<span class="over" style="left:'+(NORM/top*100)+'%; right:0"></span>':'')+'</span>'
+        +'<div class="pm__m">';
+      for(var d=1;d<=MD;d++){
+        var s=ofDay(d).filter(function(x){return x.e===e.id;})[0];
+        h+='<button type="button" data-e="'+e.id+'" data-d="'+d+'"'+(s?' data-s="'+s.id+'"':'')
+          +' class="'+(s?'dp-'+e.d+(s.pub?'':' draft'):(wd(d)>=5?'we':''))+(d===TODAY?' now':'')+'"'
+          +' title="'+d+' сентября'+(s?', '+hh(s.f)+'–'+hh(s.t)+' — '+nh(dur(s))+' ч':' — выходной')+'">'+d+'</button>';
+      }
+      h+='</div></div>';
+    });
+  });
+  g.innerHTML=h;
+  Array.prototype.forEach.call(g.querySelectorAll('.pm__m button'),function(b){
+    b.addEventListener('click',function(){
+      if(this.dataset.s) editShift(this.dataset.s); else editShift(null,{e:this.dataset.e, d:+this.dataset.d});
+    });
+  });
+}
+
+/* залы: что и когда идёт в каждом зале выбранного дня */
+function hallsM(){
+  var g=$('#hmx'); if(!g) return;
+  g.innerHTML=HALL.map(function(hl){
+    var evs=EV.filter(function(v){return v.d===curDH&&v.h===hl.id;}).sort(function(a,b){return a.a-b.a;});
+    return '<div class="hm__r"><div class="hm__t">'+hl.n+'</div><div class="hm__c">'+hl.c+'</div><div class="hm__l">'
+      +(evs.length?evs.map(function(v){
+          return '<div class="ev ev--'+(v.k==='show'?'show':(v.k==='ban'?'ban':'tech'))+'"><span class="t">'+hh(v.a)+'–'+hh(v.b)+'</span>'
+            +'<b>'+esc(v.t)+'</b><small>'+esc(v.w)+(v.x?', АмоCRM, сделка № '+v.x:'')+'</small></div>';
+        }).join(''):'<span class="hm__0">Свободен весь день</span>')
+      +'</div></div>';
+  }).join('');
+}
+
+/* ══ 3. ЗВОНКИ ══ */
+var cf='all', cs=4;
+function renderCalls(){
+  var sc2=CALLS.filter(function(c){return c.sc!==null;});
+  var avg=Math.round(sc2.reduce(function(a,c){return a+c.sc;},0)/sc2.length);
+  var h='<div class="kpis">'
+   + kpi('Звонков за месяц','61','из них 8 за сегодня','Сколько разговоров система разобрала за месяц: берём все записи из телефонии длиннее десяти секунд. <i>В макете число выдумано: ваших звонков мы не слышали.</i>')
+   + kpi('Средний балл',String(avg),'<b class="down">−9</b> за неделю','Среднее арифметическое баллов всех разобранных разговоров за период. Цифра под ним — разница с прошлой неделей. Как собирается сам балл — написано в карточке разговора.')
+   + kpi('Показ не предложен','47<i> из 61</i>','до показа дошло 2 заявки','Разговоры, где оператор ни разу не предложил приехать на площадку — это пункт скрипта «Предложил показ площадки». Показ — последний шаг перед сделкой, поэтому мы считаем его отдельно.')
+   + kpi('Пропущено без перезвона','6','потерянные заявки','Входящие, на которые не ответили и ни с одного номера не перезвонили до конца дня. Берётся из журнала телефонии, без участия оператора.')
+   + '</div>';
+
+  h+='<div class="note">Все разговоры на этом экране придуманы. Ваших звонков мы не слышали и оператора '
+   + 'вашей телефонии пока не знаем. Чтобы разбирать настоящие записи, нужны доступ к ним и ваш скрипт '
+   + 'продаж в письменном виде — без скрипта сверять не с чем.</div>';
+
+  h+='<div class="panel"><div class="panel__h"><p class="panel__t">Выполнение скрипта за месяц'+qm('По каждому пункту: <b>разговоры, где пункт выполнен, ÷ все разобранные разговоры за месяц.</b> Выполнение определяет модель по расшифровке. <i>Сам список из семи пунктов мы придумали для примера — его заменит ваш скрипт продаж.</i>')+'</p>'
+   + '<span class="panel__s">по 61 разговору</span></div><div class="panel__b"><ul class="bars" id="sb"></ul></div></div>';
+
+  h+='<div class="panel"><div class="panel__h"><p class="panel__t">Звонки за 23 сентября</p>'
+   + '<div class="panel__a" id="cflt"></div></div><div class="panel__b panel__b--flush">'
+   + '<div class="calls"><ul class="clist" id="cl"></ul><div class="cdet" id="cd"></div></div></div></div>';
+
+  $('#v-calls').innerHTML=h;
+  $('#sb').innerHTML=SCR.map(function(s,i){
+    var v=RATE[i];
+    return '<li'+(v<50?' data-hole="1"':'')+'><div><span class="bars__l">'+s+'</span>'
+      +'<span class="bars__t"><span class="bars__f" style="width:'+v+'%"></span></span></div>'
+      +'<span class="bars__n">'+v+'%</span></li>';
+  }).join('');
+  cFilter(); cList(); cDetail();
+}
+function cFilter(){
+  var w=$('#cflt'); if(!w)return; w.innerHTML='';
+  w.appendChild(seg(CF.map(function(f){
+    var n=f.id==='all'?CALLS.length:CALLS.filter(function(c){return c.g===f.id;}).length;
+    return {id:f.id,n:f.n+' '+n};
+  }),cf,function(v){cf=v; cFilter(); cList();}));
+}
+function cList(){
+  var L=CALLS.filter(function(c){return cf==='all'||c.g===cf;});
+  $('#cl').innerHTML=L.map(function(c){
+    var k=c.sc===null?'s-b':(c.sc>=80?'s-ok':(c.sc>=60?'s-w':'s-b'));
+    return '<li><button class="crow" type="button" data-c="'+c.id+'"'+(c.id===cs?' aria-current="true"':'')+'>'
+      +'<span><span class="crow__w">'+(c.op==='—'?'Пропущенный звонок':c.op)+'</span>'
+      +'<span class="crow__m">'+c.tm+' · '+c.du+(c.x?' · № '+c.x:'')+'</span></span>'
+      +'<span class="crow__s '+k+'">'+(c.sc===null?'—':c.sc)+'</span></button></li>';
+  }).join('')||'<li style="padding:16px; font-size:13px; color:var(--ink-3)">В этой выборке звонков нет.</li>';
+  Array.prototype.forEach.call(document.querySelectorAll('[data-c]'),function(b){
+    b.addEventListener('click',function(){
+      cs=+this.dataset.c; cList(); cDetail();
+      if(M()){ var d=$('#cd'); if(d) window.scrollTo({top:d.getBoundingClientRect().top+window.pageYOffset-56, behavior:'smooth'}); }
+    });
+  });
+}
+function cDetail(){
+  var c=CALLS.filter(function(x){return x.id===cs;})[0], box=$('#cd'); if(!box)return;
+  if(!c.ln){box.innerHTML='<div class="note" style="background:var(--bad-wash); border-color:var(--bad-line); color:#7d2424; margin:0"><b>Звонок в '+c.tm+' не принят.</b> '+c.v+'</div>'; return;}
+  var done=c.dn.reduce(function(a,b){return a+b;},0);
+  var tot=c.tl.reduce(function(a,t){return a+t[1];},0);
+  var tl='<p class="gauge__h" style="margin:0 0 2px">Форма разговора — на что ушло время'+qm('Каждый отрезок — доля времени разговора на одну тему. Темы размечает модель по расшифровке, длина = секунды темы ÷ длительность разговора.')+'</p>'
+   +'<div class="tl" id="tlb">'+c.tl.map(function(t,i){
+    return '<span data-t="'+i+'" title="'+TOPIC[t[0]].n+'" style="width:'+(t[1]/tot*100)+'%; background:'+TOPIC[t[0]].c+'"></span>';
+  }).join('')+'</div>';
+  var keys={}; c.tl.forEach(function(t){keys[t[0]]=1;});
+  var lg='<div class="tl__k">'+Object.keys(keys).map(function(k){
+    return '<span><i style="background:'+TOPIC[k].c+'"></i>'+TOPIC[k].n+'</span>';
+  }).join('')+'</div>';
+
+  var out=c.wpm<100||c.wpm>180;
+  function pos(v){return Math.min(Math.max((v-60)/160*100,0),100);}
+  var gauge='<div class="gauge"><p class="gauge__h">Темп речи оператора — сравнение с коридором'+qm('<b>Коридор 100–180 слов в минуту — это настройка по умолчанию, а не отраслевой норматив.</b> Мы взяли его от темпа обычной разговорной речи: медленнее ста слов речь тянется, быстрее ста восьмидесяти клиент начинает переспрашивать. <i>Настоящий коридор посчитаем по вашим записям: возьмём разговоры, закончившиеся показом, и посмотрим, в каком темпе говорят те, у кого получается. Сам темп считается просто: слова оператора в расшифровке ÷ его время речи.</i>')+'</p>'
+   +'<span class="gauge__l"><span>Говорил со скоростью</span><b>'+c.wpm+' слов в минуту</b></span>'
+   +'<span class="gauge__t">'
+   +'<span class="gauge__z" style="left:'+pos(100)+'%; right:'+(100-pos(180))+'%"></span>'
+   +'<span class="gauge__p'+(out?' out':'')+'" style="left:'+pos(c.wpm)+'%"></span></span>'
+   +'<span class="gauge__sc">'
+   +'<span style="left:0%">60</span><span style="left:'+pos(100)+'%">100</span>'
+   +'<span style="left:'+pos(180)+'%">180</span><span style="left:100%">220</span></span>'
+   +'<span class="gauge__c'+(out?' out':'')+'">Зелёный коридор — от 100 до 180 слов в минуту, это настройка по умолчанию. '
+   +(out
+      ? (c.wpm>180?'<b>Оператор частит: клиент не успевает за речью и переспрашивает.</b>':'<b>Оператор говорит слишком медленно: клиент теряет нить.</b>')
+      : 'Этот разговор в коридоре.')
+   +'</span></div>';
+
+  box.innerHTML='<div style="display:flex; align-items:baseline; gap:11px; flex-wrap:wrap">'
+   +'<span class="num" style="font-size:17px; font-weight:500">'+c.tm+'</span>'
+   +'<span style="font-size:13px; color:var(--ink-2)">'+c.op+', '+c.du+(c.x?', сделка № '+c.x:'')+'</span>'
+   +'<span style="margin-left:auto"></span>'
+   +'<span class="chip '+(c.sc>=80?'chip--ok':(c.sc>=60?'chip--warn':'chip--bad'))+'">'+c.sc+' из 100</span>'+qm('<b>Балл собирается из трёх частей:</b> выполнение пунктов скрипта — 70 баллов, темп речи и паузы — 15, реакция на прямые запросы клиента — 15. <i>Веса предложены нами и согласуются с вами на внедрении. В этом макете баллы проставлены рукой.</i>')+'</div>'
+   + gauge + tl + lg
+   +'<div class="cols" style="gap:24px">'
+   +'<div><p style="margin:0 0 9px; font-size:12.5px; font-weight:600">Расшифровка</p><ul class="tr" id="trl">'
+   + c.ln.map(function(l,i){
+       return '<li data-s="'+(l[2]||(l[0]==='Оператор'?'op':''))+'" data-i="'+i+'">'
+         +'<span class="tr__w">'+l[0]+'</span><span class="tr__x">'+l[1]
+         +(l[3]?'<span class="tr__f">'+(l[2]==='good'?'✓ ':'✗ ')+l[3]+'</span>':'')+'</span></li>';
+     }).join('')
+   +'</ul></div>'
+   +'<div><p style="margin:0 0 9px; font-size:12.5px; font-weight:600">Скрипт продаж, '+done+' из '+SCR.length+qm('Процент справа — как часто этот пункт выполняется во всех разговорах смены, а не в этом одном. Галочка или крестик слева — про текущий разговор.')+'</p><ul class="ck">'
+   + SCR.map(function(s,i){var y=c.dn[i]===1;
+       return '<li data-d="'+(y?1:0)+'"><span class="m '+(y?'y':'n')+'">'+(y?'✓':'✗')+'</span><span>'+s+'</span>'
+         +'<span class="rate">'+RATE[i]+'% по смене</span></li>';
+     }).join('')
+   +'</ul><p style="margin:20px 0 8px; font-size:12.5px; font-weight:600">Вывод</p>'
+   +'<p style="margin:0; font-size:13px; color:var(--ink-2); line-height:1.6">'+c.v+'</p></div></div>';
+
+  Array.prototype.forEach.call(document.querySelectorAll('#trl li'),function(li){
+    li.addEventListener('click',function(){
+      Array.prototype.forEach.call(document.querySelectorAll('#trl li'),function(x){x.removeAttribute('data-on');});
+      this.setAttribute('data-on','1');
+    });
+  });
+}
+
+/* ══ 4. КЛИЕНТЫ ══ */
+var clf='all';
+function clMatch(c){
+  if(clf==='all')return true;
+  if(clf==='work')return ['Показ площадки','Отправлено КП','Квалификация'].indexOf(c.st)>=0;
+  if(clf==='stuck')return c.m==='не назначен';
+  if(clf==='won')return c.st==='Бронь';
+  return true;
+}
+function renderClients(){
+  var bk=CLI.filter(function(c){return c.st==='Бронь';});
+  var st=CLI.filter(function(c){return c.m==='не назначен';});
+  var sum=bk.reduce(function(a,c){return a+c.b;},0);
+  var gs=CLI.reduce(function(a,c){return a+c.p;},0);
+  var h='<div class="kpis">'
+   + kpi('Обращений в работе',String(CLI.length),'за сентябрь','Сделки в АмоСRM за сентябрь, кроме закрытых. Одно обращение = одна сделка, даже если клиент звонил несколько раз.')
+   + kpi('Забронировано',String(bk.length),fmt(sum)+' ₽ подтверждённой выручки','Сделки на этапе «Бронь» и сумма их бюджетов. <b>В вашей CRM поле суммы пустое у всех сделок</b>, поэтому здесь бюджет посчитан по числу гостей и формату — это оценка, а не факт. Чтобы цифра стала настоящей, сумму нужно вести в сделке.')
+   + kpi('Без менеджера',String(st.length),'<b class="down">висят более суток</b>','Обращения без ответственного в карточке, которые висят дольше суток с момента обращения. Именно здесь заявки теряются на передаче из CRM в чат.')
+   + kpi('Гостей в заявках',fmt(gs),'в среднем '+Math.round(gs/CLI.length)+' на мероприятие','Сумма поля «гостей» по всем обращениям месяца. Среднее = сумма ÷ число обращений. По этому полю видно, какие залы вообще нужны спросу.')
+   + '</div>';
+  h+='<div class="note">Клиенты и суммы вымышленные. Бюджеты посчитаны по числу гостей и формату — '
+   + 'в вашей АмоCRM это поле пустое у всех сделок, поэтому настоящих сумм взять неоткуда.</div>';
+  h+='<div class="panel"><div class="panel__h"><p class="panel__t">Обращения</p>'
+   + '<div class="panel__a" id="clf"></div></div><div class="panel__b panel__b--flush">'
+   + '<div class="scroll"><table id="clt"><thead><tr><th>Клиент</th><th>Обратился</th><th>Источник</th>'
+   + '<th>Мероприятие</th><th>Дата события</th><th class="r">Гостей</th><th class="r">Бюджет</th>'
+   + '<th>Этап</th><th>Менеджер</th></tr></thead><tbody></tbody></table></div></div></div>';
+  $('#v-clients').innerHTML=h;
+  clFilter(); clTable();
+}
+function clFilter(){
+  var w=$('#clf'); w.innerHTML='';
+  w.appendChild(seg(CLF.map(function(f){
+    var old=clf; clf=f.id; var n=CLI.filter(clMatch).length; clf=old;
+    return {id:f.id,n:f.n+' '+n};
+  }),clf,function(v){clf=v; clFilter(); clTable();}));
+}
+function clTable(){
+  var rows=CLI.filter(clMatch);
+  $('#clt tbody').innerHTML=rows.map(function(c){
+    var t=STG[c.st]||'flat', no=c.m==='не назначен';
+    return '<tr data-cl="'+c.id+'" style="cursor:pointer"><td><b style="font-weight:500">'+c.n+'</b>'
+      +'<span class="num" style="display:block; font-size:11px; color:var(--ink-3)">№ '+c.id+'</span></td>'
+      +'<td class="num">'+c.g+'</td>'
+      +'<td>'+(c.c==='Без метки канала'?'<span class="chip chip--warn">Без метки</span>':c.c)+'</td>'
+      +'<td>'+c.e+'</td><td class="num">'+c.dt+'</td><td class="r">'+c.p+'</td><td class="r">'+rub(c.b)+'</td>'
+      +'<td><span class="chip chip--'+t+'">'+c.st+'</span></td>'
+      +'<td'+(no?' style="color:var(--bad); font-weight:500"':'')+'>'+c.m+'</td></tr>';
+  }).join('')||'<tr><td colspan="9" style="color:var(--ink-3)">В этой выборке обращений нет.</td></tr>';
+  tcards($('#clt'));
+  Array.prototype.forEach.call(document.querySelectorAll('[data-cl]'),function(tr){
+    tr.addEventListener('click',function(){openClient(+this.dataset.cl);});
+  });
+}
+function openClient(id){
+  var c=CLI.filter(function(x){return x.id===id;})[0]; if(!c)return;
+  var t=STG[c.st]||'flat';
+  var b='<button class="btn btn--q sheet__c" type="button" id="sc">Закрыть</button>'
+   +'<p class="num" style="margin:0 0 4px; font-size:12px; color:var(--ink-3)">Сделка № '+c.id+'</p>'
+   +'<h2 style="margin:0 0 11px; font-size:19px; font-weight:600">'+c.n+'</h2>'
+   +'<span class="chip chip--'+t+'">'+c.st+'</span>'
+   +'<dl class="kv" style="margin-top:18px"><dt>Мероприятие</dt><dd>'+c.e+'</dd>'
+   +'<dt>Дата события</dt><dd class="n">'+c.dt+'</dd><dt>Гостей</dt><dd class="n">'+c.p+'</dd>'
+   +'<dt>Бюджет</dt><dd class="n">'+rub(c.b)+'</dd><dt>Источник</dt><dd>'+c.c+'</dd>'
+   +'<dt>Обратился</dt><dd class="n">'+c.g+' сентября</dd>'
+   +'<dt>Менеджер</dt><dd'+(c.m==='не назначен'?' style="color:var(--bad); font-weight:500"':'')+'>'+c.m+'</dd></dl>'
+   +'<p style="margin:22px 0 9px; font-size:12.5px; font-weight:600">История работы</p>'
+   +'<ul class="tline">'+c.tl.map(function(x){
+       return '<li data-on="'+x[2]+'"><span class="tline__t">'+x[0]+'</span>'+x[1]+'</li>';
+     }).join('')+'</ul>';
+  sheet(b,function(p,close){ $('#sc',p).addEventListener('click',close); });
+}
+
+/* ══ 5. ИСТОЧНИКИ ══ */
+function renderSources(){
+  var g={api:0,part:0,man:0}; SRC.forEach(function(r){g[r.s]++;});
+  var h='<p style="margin:-4px 0 14px; font-size:13px; color:var(--ink-2)">Сколько каналов в какую группу попало'+qm('Считаем каналы из вашего списка по способу подключения. <b>Это не выдумка:</b> каждый канал мы проверили по его публичной документации и личному кабинету на 23 сентября 2026 года. Если площадка откроет API позже, канал переедет в первую группу.')+'</p><div class="src">'
+   +'<div class="scard scard--a"><h3>Забираем автоматически</h3><span class="scard__n">'+g.api+'</span>'
+   +'<p>Официальный программный доступ. Данные приходят сами, без участия людей.</p>'
+   +'<ul><li>АмоCRM — сделки, воронки, история</li><li>Яндекс.Директ — расход и клики</li>'
+   +'<li>Метрика — визиты и связка с заявкой</li><li>Телефония — записи разговоров</li></ul></div>'
+   +'<div class="scard scard--p"><h3>Подключаем обходом</h3><span class="scard__n">'+g.part+'</span>'
+   +'<p>Своего интерфейса у площадки нет, но данные добываются надёжно — номером, письмом или меткой.</p>'
+   +'<ul><li>2GIS — подменный номер и метка</li><li>Горько.ру — разбор писем</li>'
+   +'<li>Рестоклаб — их коллтрекинг</li><li>СМИ — метка и кодовое слово</li></ul></div>'
+   +'<div class="scard scard--m"><h3>Остаётся за человеком</h3><span class="scard__n">'+g.man+'</span>'
+   +'<p>Технических способов нет. Закрывается регламентом и полем в карточке сделки.</p>'
+   +'<ul><li>Zoon — свой номер поставить нельзя</li><li>4банкет — заявку передаёт их менеджер</li>'
+   +'<li>Офлайн — вывеска и рекомендации</li></ul></div></div>';
+
+  h+='<div class="panel"><div class="panel__h"><p class="panel__t">Канал за каналом</p></div>'
+   +'<div class="panel__b panel__b--flush"><div class="scroll"><table id="srt"><thead><tr>'
+   +'<th>Источник</th><th>Как получаем</th><th>Что именно</th><th>Задержка'+qm('Через сколько данные оказываются у нас после события. У рекламных кабинетов это их собственный срок обновления статистики, у звонков и писем — почти мгновенно. Сроки взяты из документации площадок.')+'</th><th>Статус</th>'
+   +'</tr></thead><tbody>'
+   + SRC.map(function(r){var w=HOW[r.s];
+       return '<tr'+(r.s==='man'?' data-hole="1"':'')+'><td><b style="font-weight:500">'+r.c+'</b></td>'
+         +'<td class="wrapok" style="color:var(--ink-2)">'+r.h+'</td>'
+         +'<td class="wrapok" style="color:var(--ink-2)">'+r.w+'</td>'
+         +'<td>'+r.l+'</td><td><span class="chip '+w.c+'">'+w.t+'</span></td></tr>';
+     }).join('')
+   +'</tbody></table></div></div></div>';
+
+  h+='<div class="panel"><div class="panel__h"><p class="panel__t">Что делаем с тем, что не отследить</p>'
+   +'<span class="panel__s">часть гостей приходит «просто так» — это нормально, ненормально терять их в общей куче</span></div>'
+   +'<div class="panel__b"><div class="plan">'
+   + PLAN.map(function(p){return '<div class="pcard"><b>'+p[0]+'</b><p>'+p[1]+'</p></div>';}).join('')
+   +'</div></div></div>';
+
+  h+='<div class="note" style="background:var(--ok-wash); border-color:var(--ok-line); color:#255c3d">'
+   +'<b>Проверяемая цель: снизить долю заявок без источника и удерживать её.</b> '
+   +'Показатель считается ежедневно и выводится на первый экран. Точную цель в процентах назовём после '
+   +'первого замера — сейчас никто не знает, какая эта доля сегодня.</div>';
+  $('#v-sources').innerHTML=h;
+  tcards($('#srt'),[1,2]);
+}
+
+/* ══ панель ══ */
+function sheet(html,wire){
+  var s=el('div','sheet');
+  var sc=el('button','sheet__s'); sc.type='button'; sc.setAttribute('aria-label','Закрыть');
+  var p=el('div','sheet__p',html);
+  s.appendChild(sc); s.appendChild(p); document.body.appendChild(s);
+  function close(){s.remove();}
+  sc.addEventListener('click',close);
+  wire(p,close);
+}
+
+/* ══ СТАРТ ══ */
+buildNav();
+renderLeads();
+renderSched();
+renderCalls();
+renderClients();
+renderSources();
+go('leads');
+var wasM=M();
+window.addEventListener('resize',function(){
+  chart();
+  if(M()!==wasM){ wasM=M(); renderSched(); }
+});
+})();
+</script>

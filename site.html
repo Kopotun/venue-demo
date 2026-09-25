@@ -1,0 +1,1195 @@
+<!doctype html>
+<html lang="ru">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>КРЫМ terrace · экраны нового сайта</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Golos+Text:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  /* известь и бетон набережной — холодная база, не кремовая */
+  --stone:#e4e6e4;
+  --stone-2:#d7dad8;
+  --plane:#ffffff;
+  --hair:#ccd1cf;
+  --hair-2:#b9c0be;
+  --ink:#14181a;
+  --ink-2:#555e60;
+  --ink-3:#8a9295;
+  /* кирпич цеха 1890 года — только на действии и выборе */
+  --brick:#8f3e31;
+  --brick-d:#6d2e24;
+  --night:#1b2123;
+  --disp:'Cormorant Garamond',Georgia,'Times New Roman',serif;
+  --ui:'Golos Text',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--stone);color:var(--ink);font-family:var(--ui);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;font-variant-numeric:lining-nums;font-feature-settings:'lnum' 1}
+img{display:block;max-width:100%}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--brick);outline-offset:3px}
+h1,h2,h3{margin:0}
+
+/* ─────────── обвязка прототипа (не часть сайта) ─────────── */
+.proto{position:sticky;top:46px;z-index:60;background:var(--night);color:#e8ecea}
+.proto__in{max-width:1240px;margin:0 auto;padding:10px 28px;display:flex;align-items:center;gap:22px;flex-wrap:wrap}
+.proto__l{font-size:12.5px;color:#9aa5a3;max-width:34ch;line-height:1.45;margin:0}
+.proto__l b{color:#e8ecea;font-weight:600}
+.proto__tabs{display:flex;gap:2px;margin-left:auto;flex-wrap:wrap}
+.proto__tab{padding:7px 14px;font-size:13.5px;color:#a8b2b0;border:1px solid transparent;border-radius:2px}
+.proto__tab:hover{color:#fff;background:#ffffff14}
+.proto__tab[aria-current="page"]{color:var(--night);background:#e8ecea;font-weight:600}
+/* на узких экранах пояснение читается один раз сверху и уезжает, залипает только ряд вкладок */
+.protonote{display:none}
+
+/* ─────────── шапка сайта ─────────── */
+.head{background:var(--stone);border-bottom:1px solid var(--hair)}
+.head__in{max-width:1240px;margin:0 auto;padding:0 28px;height:78px;display:flex;align-items:center;gap:34px}
+.mark{line-height:1;text-decoration:none;flex:none}
+.mark b{display:block;font-family:var(--disp);font-size:27px;font-weight:500;letter-spacing:.09em}
+.mark i{display:block;font-style:normal;font-size:10px;letter-spacing:.2em;color:var(--ink-3);margin-top:4px}
+.head nav{display:flex;gap:26px;font-size:14.5px}
+.head nav button{color:var(--ink-2);padding:4px 0;border-bottom:1px solid transparent}
+.head nav button:hover{color:var(--ink);border-bottom-color:var(--brick)}
+.head nav button[aria-current="page"]{color:var(--ink);font-weight:500;border-bottom-color:var(--ink)}
+.head__r{margin-left:auto;display:flex;align-items:center;gap:20px}
+.head__tel{font-size:16px;font-weight:600;text-decoration:none;white-space:nowrap}
+.head__sub{font-size:12px;color:var(--ink-3);display:block;font-weight:400;margin-top:2px}
+
+.wrap{max-width:1240px;margin:0 auto;padding:0 28px}
+.screen{display:none}
+.screen.on{display:block}
+
+/* ─────────── обложка ─────────── */
+.cover>img{width:100%;height:clamp(300px,46vh,500px);object-fit:cover;display:block}
+.cover__txt{background:var(--night);color:#fff}
+.cover__txt .wrap{padding-top:46px;padding-bottom:48px;display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:52px;align-items:end}
+.cover h1{font-family:var(--disp);font-weight:300;font-size:clamp(34px,4.9vw,60px);line-height:1.04;letter-spacing:-.005em;max-width:17ch;text-wrap:balance}
+.cover p{margin:16px 0 0;font-size:17px;color:#b9c3c1;max-width:46ch}
+.cover__where{margin:0;font-size:14.5px;color:#a3aeac;line-height:1.7}
+.cover__where b{display:block;color:#fff;font-size:16px;font-weight:600;margin-bottom:6px}
+@media (max-width:860px){.cover__txt .wrap{grid-template-columns:1fr;gap:24px;padding-top:32px;padding-bottom:34px}}
+
+/* ─────────── паспорт площадки ─────────── */
+.spec{background:var(--plane);border-bottom:1px solid var(--hair)}
+.spec dl{max-width:1240px;margin:0 auto;padding:0 28px;display:grid;grid-template-columns:repeat(6,1fr)}
+.spec div{padding:24px 22px 26px;border-left:1px solid var(--hair)}
+.spec div:first-child{border-left:none;padding-left:0}
+.spec dt{font-size:12.5px;color:var(--ink-3);margin-bottom:9px}
+.spec dd{margin:0;font-size:19px;font-weight:600;line-height:1.25;letter-spacing:-.01em}
+.spec dd small{display:block;font-size:12.5px;font-weight:400;color:var(--ink-2);margin-top:5px;line-height:1.45}
+
+/* ─────────── секции ─────────── */
+.sec{padding:84px 0 0}
+.sec--tight{padding-top:60px}
+.sec__h{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:50px;align-items:end;padding-bottom:26px;border-bottom:1px solid var(--hair)}
+h2{font-family:var(--disp);font-weight:400;font-size:clamp(30px,4.3vw,46px);line-height:1.07;letter-spacing:-.008em;text-wrap:balance}
+.sec__h p{margin:0;color:var(--ink-2);font-size:16px;max-width:52ch}
+
+/* ─────────── подбор зала ─────────── */
+.fit{background:var(--plane);border:1px solid var(--hair);margin-top:30px}
+.fit__top{padding:28px 30px 24px;border-bottom:1px solid var(--hair);display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:44px;align-items:center}
+.fit__q{font-family:var(--disp);font-size:31px;font-weight:400;line-height:1.12;margin:0 0 8px}
+.fit__q+p{margin:0;font-size:14px;color:var(--ink-2);max-width:38ch}
+.ctl{display:grid;gap:18px}
+.ctl__lab{font-size:13px;color:var(--ink-3);display:block;margin-bottom:9px}
+.seg{display:flex;gap:0;border:1px solid var(--hair-2);width:fit-content}
+.seg button{padding:9px 20px;font-size:14px;color:var(--ink-2);border-right:1px solid var(--hair-2)}
+.seg button:last-child{border-right:none}
+.seg button:hover{background:var(--stone)}
+.seg button[aria-pressed="true"]{background:var(--brick);color:#fff;font-weight:500}
+.slide{display:flex;align-items:center;gap:20px}
+.slide input{flex:1;accent-color:var(--brick);height:26px}
+.slide output{font-family:var(--disp);font-size:44px;font-weight:400;line-height:1;min-width:2.6ch;text-align:right;font-variant-numeric:tabular-nums}
+.slide span{font-size:13px;color:var(--ink-3);width:7ch;line-height:1.3}
+
+.fit__halls{display:grid;grid-template-columns:1fr 1fr}
+.fitcard{padding:26px 30px 28px;border-right:1px solid var(--hair)}
+.fitcard:last-child{border-right:none}
+.fitcard h4{margin:0;font-family:var(--disp);font-size:26px;font-weight:500;letter-spacing:.01em}
+.fitcard__cap{font-size:13px;color:var(--ink-2);margin:5px 0 16px}
+.verdict{font-size:14px;font-weight:600;display:flex;align-items:baseline;gap:9px;margin-bottom:14px}
+.verdict s{text-decoration:none;width:7px;height:7px;border-radius:50%;flex:none;transform:translateY(-1px)}
+.ok{color:var(--brick-d)} .ok s{background:var(--brick)}
+.no{color:var(--ink-3)} .no s{background:var(--hair-2)}
+.gauge{height:9px;background:var(--stone-2);position:relative;overflow:hidden}
+.gauge i{position:absolute;inset:0 auto 0 0;background:var(--brick);transition:width .18s ease}
+.fitcard.dim .gauge i{background:var(--hair-2)}
+.gauge__l{display:flex;justify-content:space-between;font-size:12px;color:var(--ink-3);margin-top:8px}
+.fit__sum{padding:22px 30px;border-top:1px solid var(--hair);background:var(--stone);display:flex;gap:40px;flex-wrap:wrap;align-items:flex-end}
+.fit__sum dl{margin:0;display:flex;gap:36px;flex-wrap:wrap}
+.fit__sum dt{font-size:12.5px;color:var(--ink-3);margin-bottom:5px}
+.fit__sum dd{margin:0;font-size:20px;font-weight:600;font-variant-numeric:tabular-nums}
+.fit__note{margin:0 0 0 auto;font-size:13px;color:var(--ink-2);max-width:40ch;line-height:1.5}
+
+.btn{display:inline-block;padding:13px 26px;background:var(--night);color:#fff;font-size:14.5px;font-weight:500;text-decoration:none;border:1px solid var(--night)}
+.btn:hover{background:#000}
+.btn--ghost{background:none;color:var(--ink);border-color:var(--hair-2)}
+.btn--ghost:hover{background:var(--plane);border-color:var(--ink)}
+
+/* ─────────── карточки залов на главной ─────────── */
+.rooms{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;margin-top:30px}
+.room{background:var(--plane);border:1px solid var(--hair);display:flex;flex-direction:column}
+.room img{width:100%;aspect-ratio:4/3;object-fit:cover}
+.room__b{padding:22px 24px 26px;display:flex;flex-direction:column;flex:1}
+.room h3{font-family:var(--disp);font-size:29px;font-weight:500;letter-spacing:.01em}
+.room__d{font-size:14px;color:var(--ink-2);margin:7px 0 18px;line-height:1.55}
+.room dl{margin:0 0 20px;font-size:14px;border-top:1px solid var(--hair)}
+.room dl div{display:flex;justify-content:space-between;gap:14px;padding:9px 0;border-bottom:1px solid var(--stone-2)}
+.room dt{color:var(--ink-2)}
+.room dd{margin:0;font-weight:600;text-align:right}
+.room .btn{margin-top:auto;align-self:flex-start}
+
+/* ─────────── список включённого ─────────── */
+.incl{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:30px;border-top:1px solid var(--hair)}
+.incl div{padding:20px 22px 22px;border-right:1px solid var(--hair);border-bottom:1px solid var(--hair)}
+.incl div:nth-child(4n){border-right:none}
+.incl b{display:block;font-size:15px;font-weight:600;margin-bottom:6px}
+.incl p{margin:0;font-size:13.5px;color:var(--ink-2);line-height:1.5}
+
+/* ─────────── место ─────────── */
+.place{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:0;margin-top:30px;background:var(--plane);border:1px solid var(--hair)}
+.place img{width:100%;height:100%;min-height:340px;object-fit:cover}
+.place__t{padding:36px 38px 38px}
+.place__t h3{font-family:var(--disp);font-size:30px;font-weight:400;line-height:1.14;margin-bottom:14px;max-width:18ch}
+.place__t p{margin:0 0 16px;font-size:15px;color:var(--ink-2);max-width:44ch}
+.place ul{margin:20px 0 0;padding:0;list-style:none;border-top:1px solid var(--hair);font-size:14.5px}
+.place li{padding:11px 0;border-bottom:1px solid var(--stone-2);display:flex;gap:14px}
+.place li b{flex:none;width:10ch;font-weight:600}
+.place li span{color:var(--ink-2)}
+
+/* ─────────── кухня ─────────── */
+.food{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:28px}
+.food img{width:100%;aspect-ratio:5/4;object-fit:cover}
+.food figcaption{font-size:13px;color:var(--ink-2);margin-top:9px}
+.food figure{margin:0}
+
+/* ─────────── команда ─────────── */
+.crew{display:grid;grid-template-columns:repeat(5,1fr);gap:18px;margin-top:30px}
+.crew figure{margin:0}
+.crew img{width:100%;aspect-ratio:3/4;object-fit:cover;filter:grayscale(.15)}
+.crew b{display:block;font-size:14.5px;font-weight:600;margin-top:11px}
+.crew span{display:block;font-size:12.5px;color:var(--ink-2);margin-top:2px}
+
+/* ─────────── награды ─────────── */
+.awards{display:grid;grid-template-columns:repeat(4,1fr);margin-top:30px;border-top:1px solid var(--hair)}
+.awards div{padding:22px 22px 24px;border-right:1px solid var(--hair);border-bottom:1px solid var(--hair)}
+.awards div:last-child{border-right:none}
+.awards b{display:block;font-family:var(--disp);font-size:23px;font-weight:500;margin-bottom:7px}
+.awards p{margin:0;font-size:13px;color:var(--ink-2);line-height:1.5}
+
+/* ─────────── сравнение залов ─────────── */
+.cmp{width:100%;border-collapse:collapse;margin-top:30px;background:var(--plane);font-size:15px}
+.cmp caption{text-align:left;font-size:13px;color:var(--ink-3);padding-bottom:12px}
+.cmp th,.cmp td{padding:15px 20px;border-bottom:1px solid var(--hair);text-align:left;vertical-align:top}
+.cmp thead th{font-size:13px;color:var(--ink-3);font-weight:500;border-bottom:1px solid var(--hair-2)}
+.cmp thead th:first-child{width:22%}
+.cmp tbody th{font-weight:400;color:var(--ink-2);width:22%}
+.cmp td{font-weight:600}
+.cmp td small{display:block;font-weight:400;font-size:13px;color:var(--ink-2);margin-top:4px}
+.cmp tbody tr:hover{background:var(--stone)}
+
+/* ─────────── паспорт зала ─────────── */
+.hall{margin-top:72px;background:var(--plane);border:1px solid var(--hair)}
+.hall__top{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr)}
+.hall__ph img{width:100%;height:100%;min-height:400px;object-fit:cover}
+.hall__i{padding:36px 38px 34px;border-left:1px solid var(--hair)}
+.hall__i h3{font-family:var(--disp);font-size:36px;font-weight:400;letter-spacing:.01em}
+.hall__i>p{margin:10px 0 22px;font-size:15px;color:var(--ink-2);max-width:42ch}
+.hall dl{margin:0;font-size:14.5px;border-top:1px solid var(--hair)}
+.hall dl div{display:flex;justify-content:space-between;gap:16px;padding:11px 0;border-bottom:1px solid var(--stone-2)}
+.hall dt{color:var(--ink-2)}
+.hall dd{margin:0;font-weight:600;text-align:right;max-width:26ch;text-wrap:pretty}
+.hall__strip{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--hair)}
+.hall__strip img{width:100%;aspect-ratio:3/2;object-fit:cover;border-left:1px solid var(--hair)}
+.hall__strip img:first-child{border-left:none}
+.hall__plan{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);border-top:1px solid var(--hair)}
+.hall__plan img{width:100%;background:#eef2f6;object-fit:contain}
+.hall__plan--dark{background:#0d1012}
+.hall__plan--dark img{background:#0d1012}
+.hall__plan--dark>div{background:var(--plane)}
+.hall__plan div{padding:32px 38px 34px;border-left:1px solid var(--hair)}
+.hall__plan h4{margin:0 0 6px;font-size:16px;font-weight:600}
+.hall__plan p{margin:0 0 18px;font-size:14px;color:var(--ink-2);max-width:40ch}
+.seats{display:flex;gap:8px;flex-wrap:wrap}
+.seats span{padding:7px 14px;border:1px solid var(--hair-2);font-size:13.5px;color:var(--ink-2);background:var(--stone)}
+
+/* ─────────── тарифы ─────────── */
+.tar{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin-top:30px;border:1px solid var(--hair);background:var(--plane)}
+.tar section{padding:32px 30px 34px;border-left:1px solid var(--hair)}
+.tar section:first-child{border-left:none}
+.tar h3{font-family:var(--disp);font-size:30px;font-weight:500;letter-spacing:.01em}
+.tar__p{font-family:var(--disp);font-size:46px;font-weight:400;line-height:1;margin:16px 0 4px;font-variant-numeric:tabular-nums}
+.tar__u{font-size:13px;color:var(--ink-3)}
+.tar__d{margin:20px 0 0;font-size:14.5px;color:var(--ink-2);line-height:1.55;padding-top:18px;border-top:1px solid var(--hair)}
+
+.calc{margin-top:26px;background:var(--plane);border:1px solid var(--hair);padding:28px 30px 30px}
+.calc h3{font-family:var(--disp);font-size:27px;font-weight:400;margin-bottom:4px}
+.calc>p{margin:0 0 22px;font-size:14px;color:var(--ink-2);max-width:54ch}
+.calc__grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:44px;align-items:center}
+.calc__out{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--hair)}
+.calc__out div{padding:16px 0;border-right:1px solid var(--hair)}
+.calc__out div:last-child{border-right:none;padding-left:0}
+.calc__out div+div{padding-left:20px}
+.calc__out dt{font-size:12.5px;color:var(--ink-3);margin-bottom:6px}
+.calc__out dd{margin:0;font-size:22px;font-weight:600;font-variant-numeric:tabular-nums}
+.calc__out dd b{font-weight:600}
+.calc__hint{margin:20px 0 0;font-size:13px;color:var(--ink-2);padding-top:16px;border-top:1px solid var(--hair)}
+
+.extra{display:grid;grid-template-columns:repeat(3,1fr);margin-top:30px;border-top:1px solid var(--hair)}
+.extra div{padding:20px 24px 22px;border-right:1px solid var(--hair);border-bottom:1px solid var(--hair)}
+.extra div:nth-child(3n){border-right:none}
+.extra b{display:block;font-size:15px;margin-bottom:6px}
+.extra p{margin:0;font-size:13.5px;color:var(--ink-2);line-height:1.5}
+
+.offers{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:30px;background:var(--night);color:#e8ecea}
+.offers div{padding:26px 26px 28px;border-left:1px solid #ffffff1f}
+.offers div:first-child{border-left:none}
+.offers b{display:block;font-family:var(--disp);font-size:25px;font-weight:500;margin-bottom:8px}
+.offers p{margin:0;font-size:13.5px;color:#a9b3b1;line-height:1.5}
+
+/* ─────────── свадьба ─────────── */
+.steps{margin-top:30px;border-top:1px solid var(--hair)}
+.steps div{display:grid;grid-template-columns:13ch minmax(0,1fr) minmax(0,1.2fr);gap:28px;padding:22px 0;border-bottom:1px solid var(--hair)}
+.steps b{font-family:var(--disp);font-size:24px;font-weight:500}
+.steps h4{margin:0;font-size:16px;font-weight:600}
+.steps p{margin:0;font-size:14.5px;color:var(--ink-2)}
+
+.quotes{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:26px;margin-top:30px}
+.q{margin:0;background:var(--plane);border:1px solid var(--hair);padding:30px 32px 32px}
+.q blockquote{margin:0;font-family:var(--disp);font-size:22px;line-height:1.42;font-weight:400}
+.q--sm blockquote{font-size:18px}
+.q figcaption{margin-top:16px;padding-top:14px;border-top:1px solid var(--hair);font-size:13px;color:var(--ink-3)}
+.qstack{display:grid;gap:26px}
+
+.gal{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:30px}
+.gal img{width:100%;aspect-ratio:1/1;object-fit:cover}
+.gal img:first-child{grid-column:span 2;grid-row:span 2;aspect-ratio:1/1}
+
+/* ─────────── заявка ─────────── */
+.ask{margin-top:84px;background:var(--night);color:#e8ecea}
+.ask__in{max-width:1240px;margin:0 auto;padding:60px 28px 64px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:60px;align-items:start}
+.ask h2{color:#fff}
+.ask__l p{margin:14px 0 0;color:#a9b3b1;font-size:15.5px;max-width:40ch}
+.ask__f{display:grid;gap:16px}
+.ask__row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.ask label{display:block;font-size:12.5px;color:#8e9a98;margin-bottom:7px}
+.ask input,.ask select{width:100%;padding:12px 14px;background:#ffffff0f;border:1px solid #ffffff2b;color:#fff;font:inherit;font-size:16px;border-radius:0}
+.ask input::placeholder{color:#7d8987}
+.ask select option{color:#14181a}
+.ask .btn{background:#fff;color:var(--night);border-color:#fff;justify-self:start}
+.ask .btn:hover{background:#e8ecea}
+.ask small{font-size:12px;color:#7d8987;line-height:1.5;display:block}
+
+/* ─────────── подвал ─────────── */
+.foot{background:var(--stone);border-top:1px solid var(--hair)}
+.foot__in{max-width:1240px;margin:0 auto;padding:44px 28px 52px;display:grid;grid-template-columns:repeat(4,1fr);gap:34px}
+.foot h4{margin:0 0 12px;font-size:12.5px;color:var(--ink-3);font-weight:500}
+.foot p,.foot a{margin:0 0 7px;font-size:14.5px;color:var(--ink-2);text-decoration:none;display:block}
+.foot a:hover{color:var(--ink)}
+.foot b{font-size:18px;font-weight:600;color:var(--ink);display:block;margin-bottom:8px}
+.foot__legal{max-width:1240px;margin:0 auto;padding:18px 28px 40px;border-top:1px solid var(--hair);font-size:12.5px;color:var(--ink-3)}
+
+/* ─────────── сноска о материале ─────────── */
+.src{max-width:1240px;margin:0 auto;padding:26px 28px 48px;font-size:13px;color:var(--ink-2);line-height:1.6}
+.src b{font-weight:600;color:var(--ink)}
+
+@media (max-width:1080px){
+  .spec dl{grid-template-columns:repeat(3,1fr)}
+  .spec div{border-left:1px solid var(--hair);border-top:1px solid var(--hair);padding-left:22px}
+  .spec div:first-child{padding-left:22px}
+  .spec div:nth-child(3n+1){border-left:none;padding-left:0}
+  .rooms,.food,.extra,.tar,.awards,.offers{grid-template-columns:1fr 1fr}
+  .tar section:nth-child(odd){border-left:none}
+  .crew{grid-template-columns:repeat(3,1fr)}
+  .incl{grid-template-columns:1fr 1fr}
+  .incl div:nth-child(4n){border-right:1px solid var(--hair)}
+  .incl div:nth-child(2n){border-right:none}
+  .offers div{border-left:none;border-top:1px solid #ffffff1f}
+  .offers div:first-child{border-top:none}
+}
+@media (max-width:860px){
+  .proto__l{display:none}
+  .proto__in{padding-top:7px;padding-bottom:7px}
+  .protonote{display:block;margin:0;background:var(--night);color:#9aa5a3;font-size:12.5px;
+    line-height:1.45;padding:0 20px 13px}
+  .protonote b{color:#e8ecea;font-weight:600}
+  .head__in{height:auto;padding:14px 20px;flex-wrap:wrap;gap:14px}
+  .head nav{order:3;width:100%;gap:18px;overflow-x:auto;padding-bottom:2px}
+  .wrap,.proto__in,.ask__in,.foot__in,.foot__legal,.src,.spec dl{padding-left:20px;padding-right:20px}
+  .sec{padding-top:56px}
+  .sec__h,.fit__top,.place,.hall__top,.hall__plan,.calc__grid,.ask__in,.quotes{grid-template-columns:1fr;gap:26px}
+  .fit__top{gap:24px}
+  .hall__i,.hall__plan div{border-left:none;border-top:1px solid var(--hair);padding:26px 22px 28px}
+  .place__t{padding:26px 22px 30px}
+  .place img{min-height:240px}
+  .hall__ph img{min-height:260px}
+  .steps div{grid-template-columns:1fr;gap:6px}
+  .foot__in{grid-template-columns:1fr 1fr}
+  .rooms,.food{grid-template-columns:1fr}
+  .cmp thead{display:none}
+  .cmp tbody th{display:block;width:auto;padding-bottom:4px;border-bottom:none;font-size:13px;color:var(--ink-3)}
+  .cmp tbody td{display:block;border-bottom:none;padding:2px 20px 10px}
+  .cmp tbody td::before{content:attr(data-h);display:block;font-size:12.5px;color:var(--ink-3);font-weight:400;margin-bottom:2px}
+  .cmp tbody tr{display:block;border-bottom:1px solid var(--hair);padding:12px 0}
+  .gal{grid-template-columns:1fr 1fr}
+  .slide output{font-size:36px}
+  .ask__row{grid-template-columns:1fr}
+}
+@media (max-width:560px){
+  .incl,.extra,.awards,.tar,.offers,.rooms,.crew{grid-template-columns:1fr}
+  .incl div,.extra div,.awards div{border-right:none}
+  .tar section{border-left:none;border-top:1px solid var(--hair)}
+  .tar section:first-child{border-top:none}
+  .fit__halls{grid-template-columns:1fr}
+  .fitcard{border-right:none;border-bottom:1px solid var(--hair)}
+  .calc__out{grid-template-columns:1fr}
+  .calc__out div{border-right:none;border-bottom:1px solid var(--hair);padding-left:0}
+  .calc__out div+div{padding-left:0}
+  .foot__in{grid-template-columns:1fr}
+  .spec dl{grid-template-columns:1fr 1fr}
+  .spec div:nth-child(3n+1){border-left:1px solid var(--hair);padding-left:22px}
+  .spec div:nth-child(2n+1){border-left:none;padding-left:0}
+  .q{padding:22px 20px 22px}
+  .q blockquote{font-size:20px}
+  .q--sm blockquote{font-size:17px}
+  /* переключатель экранов эскиза — одной строкой с прокруткой, а не в две */
+  .proto__tabs{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
+  .proto__tabs::-webkit-scrollbar{display:none}
+  .proto__tab{flex:none;white-space:nowrap}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+/* ─── сквозная навигация по пакету материалов ─── */
+.pkgnav{position:sticky; top:0; z-index:50; background:#2b2724; display:flex; align-items:stretch;
+  font-family:'IBM Plex Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;
+  overflow-x:auto; scrollbar-width:none}
+.pkgnav::-webkit-scrollbar{display:none}
+.pkgnav__b{display:flex; flex-direction:column; justify-content:center; padding:0 17px 0 22px;
+  text-decoration:none; color:#f2ece4; font-size:13px; font-weight:600; line-height:1.15;
+  white-space:nowrap; border-right:1px solid #443d37; flex:none}
+.pkgnav__b span{font-size:10px; font-weight:400; color:#9c9189; letter-spacing:.09em; margin-top:3px}
+.pkgnav__b:hover{background:#35302b}
+.pkgnav__l{display:flex; align-items:stretch; flex:none}
+.pkgnav__l a{display:flex; align-items:center; padding:0 15px; height:46px; text-decoration:none;
+  color:#b3a99f; font-size:13.5px; white-space:nowrap; border-bottom:2px solid transparent}
+.pkgnav__l a:hover{color:#f2ece4; background:#35302b}
+.pkgnav__l a[aria-current="page"]{color:#f2ece4; border-bottom-color:#c99b58; font-weight:500}
+.pkgnav__l a:focus-visible{outline:2px solid #c99b58; outline-offset:-3px}
+@media (max-width:660px){
+  .pkgnav__b{padding:0 12px 0 15px; font-size:12.5px}
+  .pkgnav__b span{display:none}
+  .pkgnav__l a{padding:0 11px; font-size:13px}
+}
+/* на телефоне все пять разделов помещаются без прокрутки: знак ведёт туда же, куда «Обзор» */
+@media (max-width:560px){
+  .pkgnav__b{display:none}
+  .pkgnav__l{flex:1; justify-content:space-between}
+  .pkgnav__l a{padding:0 8px; font-size:13px}
+}
+</style>
+
+<nav class="pkgnav" aria-label="Разделы пакета">
+  <a class="pkgnav__b" href="index.html">КРЫМ terrace<span>МАТЕРИАЛЫ</span></a>
+  <div class="pkgnav__l">
+    <a href="index.html">Обзор</a>
+    <a href="tz.html">Техзадание</a>
+    <a href="portal.html">Прототип</a>
+    <a href="site.html" aria-current="page">Сайт</a>
+    <a href="restaurant.html">Ресторан</a>
+  </div>
+</nav>
+
+
+<!-- ══════════════ обвязка прототипа ══════════════ -->
+<div class="proto">
+  <div class="proto__in">
+    <p class="proto__l"><b>Эскиз нового сайта.</b> Четыре экрана. Фотографии, цифры и тексты — с действующего сайта crimea.moscow.</p>
+    <div class="proto__tabs" role="tablist">
+      <button class="proto__tab" data-go="home" aria-current="page">Главная</button>
+      <button class="proto__tab" data-go="halls">Залы и вместимость</button>
+      <button class="proto__tab" data-go="prices">Цены</button>
+      <button class="proto__tab" data-go="wedding">Свадьбы</button>
+    </div>
+  </div>
+</div>
+<p class="protonote"><b>Эскиз нового сайта.</b> Четыре экрана. Фотографии, цифры и тексты — с действующего сайта crimea.moscow.</p>
+
+<!-- ══════════════ шапка сайта ══════════════ -->
+<header class="head">
+  <div class="head__in">
+    <a class="mark" href="#" data-go="home"><b>КРЫМ</b><i>terrace moscow</i></a>
+    <nav>
+      <button data-go="home" aria-current="page">Площадка</button>
+      <button data-go="halls">Залы</button>
+      <button data-go="prices">Цены</button>
+      <button data-go="wedding">Свадьбы</button>
+    </nav>
+    <div class="head__r">
+      <a class="head__tel" href="tel:+74953084959">+7 495 308‑49‑59<span class="head__sub">банкетная служба 10:00–22:00</span></a>
+    </div>
+  </div>
+</header>
+
+<!-- ══════════════════════════════════════════════════════════════
+     ЭКРАН 1 — ГЛАВНАЯ
+     ══════════════════════════════════════════════════════════════ -->
+<main class="screen on" id="s-home">
+
+  <div class="cover">
+    <img src="https://static.tildacdn.com/tild3966-3330-4338-b731-353232383837/-/resize/1600x/zof68eaeekzgbqiwik4n.jpg" alt="Накрытый стол у панорамного окна с видом на памятник Петру I на закате">
+    <div class="cover__txt"><div class="wrap">
+      <div>
+        <h1>Банкетная площадка на крыше «Красного Октября»</h1>
+        <p>Два зала и круглогодичная веранда в бывшем цехе шоколадной фабрики — с окнами на Москву‑реку и памятник Петру I.</p>
+      </div>
+      <p class="cover__where"><b>Болотная набережная, 3с1</b>Арт‑кластер «Красный Октябрь», Болотный остров.<br>Парковка на 150 мест, четыре минуты пешком от Кремля.</p>
+    </div></div>
+  </div>
+
+  <section class="spec">
+    <dl>
+      <div><dt>Залы</dt><dd>2 и веранда<small>Белый, Лофт, терраса на крыше</small></dd></div>
+      <div><dt>Гостей</dt><dd>от 30 до 800<small>банкет, фуршет, конференция</small></dd></div>
+      <div><dt>Площадь</dt><dd>1180 м²<small>включая веранду 200 м²</small></dd></div>
+      <div><dt>Меню</dt><dd>207 блюд<small>средиземноморская кухня</small></dd></div>
+      <div><dt>Тариф</dt><dd>от 5 000 ₽<small>за гостя, три пакета</small></dd></div>
+      <div><dt>Подготовка</dt><dd>от 3 дней<small>берёмся и за срочные даты</small></dd></div>
+    </dl>
+  </section>
+
+  <div class="wrap">
+
+    <!-- ── подбор зала ── -->
+    <section class="sec sec--tight">
+      <div class="fit">
+        <div class="fit__top">
+          <div>
+            <p class="fit__q">Сколько у вас гостей?</p>
+            <p>Скажите число — покажем, какой зал подойдёт и во сколько это обойдётся. Без звонка и без формы.</p>
+          </div>
+          <div class="ctl">
+            <div>
+              <span class="ctl__lab" id="fmtlab">Формат вечера</span>
+              <div class="seg" role="group" aria-labelledby="fmtlab">
+                <button data-fmt="banquet" aria-pressed="true">Банкет за столами</button>
+                <button data-fmt="buffet" aria-pressed="false">Фуршет</button>
+              </div>
+            </div>
+            <div>
+              <label class="ctl__lab" for="guests">Количество гостей</label>
+              <div class="slide">
+                <input id="guests" type="range" min="20" max="500" step="10" value="180">
+                <output for="guests" id="gout">180</output>
+                <span>гостей</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="fit__halls">
+          <article class="fitcard" id="card-white">
+            <h4>Белый зал</h4>
+            <p class="fitcard__cap" id="cap-white">Банкет 50–350, фуршет 50–500</p>
+            <p class="verdict ok" id="v-white"><s></s><span>Подходит</span></p>
+            <div class="gauge"><i id="g-white" style="width:51%"></i></div>
+            <div class="gauge__l"><span id="gl-white">180 из 350 мест</span><span id="gr-white">заполнение 51%</span></div>
+          </article>
+          <article class="fitcard" id="card-loft">
+            <h4>Лофт</h4>
+            <p class="fitcard__cap" id="cap-loft">Банкет до 90, фуршет до 130</p>
+            <p class="verdict no" id="v-loft"><s></s><span>Слишком много гостей</span></p>
+            <div class="gauge"><i id="g-loft" style="width:100%"></i></div>
+            <div class="gauge__l"><span id="gl-loft">максимум 90 мест</span><span id="gr-loft"></span></div>
+          </article>
+        </div>
+
+        <div class="fit__sum">
+          <dl>
+            <div><dt>Ориентир по бюджету</dt><dd id="budget">1 440 000 ₽</dd></div>
+            <div><dt>Тариф</dt><dd id="tariff">Банкет, 8 000 ₽ за гостя</dd></div>
+          </dl>
+          <p class="fit__note" id="fitnote">При бронировании Белого зала веранда 200 м² на крыше входит в стоимость.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── залы ── -->
+    <section class="sec">
+      <div class="sec__h">
+        <h2>Три пространства в одном здании</h2>
+        <p>Залы автономны: в Белом можно играть свадьбу, пока в Лофте идёт корпоратив. Веранда на крыше работает круглый год — под навесом, с обогревателями.</p>
+      </div>
+      <div class="rooms">
+        <article class="room">
+          <img loading="lazy" src="https://static.tildacdn.com/tild3630-3265-4164-a330-323063383937/-/resize/800x/IMG_4961.jpg" alt="Белый зал, накрытые круглые столы у панорамных окон">
+          <div class="room__b">
+            <h3>Белый зал</h3>
+            <p class="room__d">Неоклассика в светлых тонах, пятиметровые окна на Москву‑реку, сцена и выход прямо на веранду.</p>
+            <dl>
+              <div><dt>Банкет</dt><dd>50–350 гостей</dd></div>
+              <div><dt>Фуршет</dt><dd>50–500 гостей</dd></div>
+              <div><dt>Сцена</dt><dd>6 × 3 м, экран 6 × 2,5 м</dd></div>
+            </dl>
+            <button class="btn btn--ghost" data-go="halls">Смотреть план зала</button>
+          </div>
+        </article>
+        <article class="room">
+          <img loading="lazy" src="https://static.tildacdn.com/tild6663-6431-4732-b638-333966346133/-/resize/800x/0008.jpg" alt="Зал Лофт с кирпичной кладкой и накрытыми столами">
+          <div class="room__b">
+            <h3>Лофт</h3>
+            <p class="room__d">Бывший цех готовой шоколадной продукции: кирпичная кладка и детали интерьера 1890 года сохранены.</p>
+            <dl>
+              <div><dt>Банкет</dt><dd>до 90 гостей</dd></div>
+              <div><dt>Фуршет</dt><dd>до 130 гостей</dd></div>
+              <div><dt>Площадь</dt><dd>250 м²</dd></div>
+            </dl>
+            <button class="btn btn--ghost" data-go="halls">Смотреть план зала</button>
+          </div>
+        </article>
+        <article class="room">
+          <img loading="lazy" src="https://static.tildacdn.com/tild3563-3332-4937-b162-343466393336/-/resize/800x/IMG_5069_1.jpg" alt="Крытая веранда на крыше с видом на памятник Петру I">
+          <div class="room__b">
+            <h3>Веранда</h3>
+            <p class="room__d">Терраса на крыше арт‑кластера. Выездные церемонии, барбекю, кинотеатр под открытым небом.</p>
+            <dl>
+              <div><dt>Площадь</dt><dd>200 м²</dd></div>
+              <div><dt>Закрытая часть</dt><dd>70 м²</dd></div>
+              <div><dt>Зимой</dt><dd>обогреватели, пледы</dd></div>
+            </dl>
+            <button class="btn btn--ghost" data-go="halls">Смотреть план зала</button>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- ── что уже есть на площадке ── -->
+    <section class="sec">
+      <div class="sec__h">
+        <h2>Что уже стоит в зале и не требует аренды</h2>
+        <p>Свет, звук, экраны, мебель и декор — наши. Привозить приходится только то, чего действительно нет: обычно это цветы и типографика.</p>
+      </div>
+      <div class="incl">
+        <div><b>Сцена 6 × 3 метра</b><p>Стационарная, в Белом зале. Рядом — светодиодный экран 6 × 2,5 метра.</p></div>
+        <div><b>Концертный звук и свет</b><p>Мощные акустические системы, световая заливка стен, два светодиодных экрана.</p></div>
+        <div><b>Барная стойка 11 метров</b><p>В Белом зале. Отдельный бар работает на веранде.</p></div>
+        <div><b>Караоке AST100</b><p>С микрофонами и подключением ноутбука.</p></div>
+        <div><b>Мебель и декор</b><p>Полный комплект под любую из рассадок, входит в аренду зала.</p></div>
+        <div><b>Гардероб и гримёрка</b><p>Плюс фотозона и помещение под подарки.</p></div>
+        <div><b>VIP‑зона до 35 гостей</b><p>Закрытая часть для after‑party или отдельного стола руководства.</p></div>
+        <div><b>Парковка на 150 мест</b><p>У здания, гостям не нужно искать место на набережной.</p></div>
+      </div>
+    </section>
+
+    <!-- ── место ── -->
+    <section class="sec">
+      <div class="place">
+        <img loading="lazy" src="https://static.tildacdn.com/tild3935-6166-4635-b338-616231386638/-/resize/1200x/photo_2022-05-27_13-.jpg" alt="Закат над Москвой-рекой и памятником Петру I, вид с крыши площадки">
+        <div class="place__t">
+          <h3>Золотой остров, четыре минуты пешком от Кремля</h3>
+          <p>Площадка стоит на Болотном острове — между Москвой‑рекой и водоотводным каналом. Из окон видно памятник Петру I, парк «Музеон» и набережную Старой Москвы.</p>
+          <ul>
+            <li><b>Адрес</b><span>Болотная набережная, 3с1, арт‑кластер «Красный Октябрь»</span></li>
+            <li><b>Парковка</b><span>150 мест у здания</span></li>
+            <li><b>Шум</b><span>жилых домов рядом нет — музыка может играть круглые сутки</span></li>
+            <li><b>Здание</b><span>бывший цех шоколадной фабрики, постройка 1890 года</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── кухня ── -->
+    <section class="sec">
+      <div class="sec__h">
+        <h2>207 блюд средиземноморской кухни</h2>
+        <p>Меню собирается под вечер: банкетное, фуршетное или смешанное. Шеф‑повар Алёна Коновалова приглашает попробовать всё заранее — дегустация бесплатная, как и экскурсия по залам.</p>
+      </div>
+      <div class="food">
+        <figure><img loading="lazy" src="https://static.tildacdn.com/tild3339-3166-4431-a137-396134316535/-/resize/700x/fotozdance_ru-0006_1.webp" alt="Холодная закуска с авторской подачей"><figcaption>Авторская подача, свежие продукты</figcaption></figure>
+        <figure><img loading="lazy" src="https://static.tildacdn.com/tild6438-6638-4338-a434-393031363038/-/resize/700x/Rectangle_10440.webp" alt="Фуршетный стол с канапе"><figcaption>Фуршетная линия и канапе</figcaption></figure>
+        <figure><img loading="lazy" src="https://static.tildacdn.com/tild6637-6134-4861-a436-393137646530/-/resize/700x/Rectangle_1578.webp" alt="Десертный стол"><figcaption>Анимационные станции — готовят при гостях</figcaption></figure>
+      </div>
+    </section>
+
+    <!-- ── команда ── -->
+    <section class="sec">
+      <div class="sec__h">
+        <h2>Кто будет вести ваш вечер</h2>
+        <p>Площадкой занимаются девять человек — от управляющей до су‑шефа. Менеджер закрепляется за мероприятием и остаётся с вами до конца вечера.</p>
+      </div>
+      <div class="crew">
+        <figure><img loading="lazy" src="https://static.tildacdn.com/tild6130-3161-4435-b437-396437616261/-/resize/400x/_36.webp" alt="Алина Чумакова"><b>Алина Чумакова</b><span>Управляющая площадкой</span></figure>
+        <figure><img loading="lazy" src="https://static.tildacdn.com/tild3666-3131-4438-b466-353538393830/-/resize/400x/_34.webp" alt="Алёна Коновалова"><b>Алёна Коновалова</b><span>Шеф‑повар</span></figure>
+        <figure><img loading="lazy" src="https://static.tildacdn.com/tild6439-3037-4534-a466-666137616637/-/resize/400x/_38.webp" alt="Ирина Кулик"><b>Ирина Кулик</b><span>Банкетный менеджер</span></figure>
+        <figure><img loading="lazy" src="https://static.tildacdn.com/tild6633-6166-4135-a530-383831393630/-/resize/400x/_35.webp" alt="Дарья Яковлева"><b>Дарья Яковлева</b><span>Банкетный менеджер</span></figure>
+        <figure><img loading="lazy" src="https://static.tildacdn.com/tild3538-3237-4461-b465-653431616365/-/resize/400x/_39.webp" alt="Алексей Коровин"><b>Алексей Коровин</b><span>Технический специалист</span></figure>
+        <figure><img loading="lazy" src="https://static.tildacdn.com/tild3561-3366-4535-a136-323866626138/-/resize/400x/_33.webp" alt="Ирина Никитюк"><b>Ирина Никитюк</b><span>Су‑шеф</span></figure>
+        <figure><img loading="lazy" src="https://static.tildacdn.com/tild3332-3236-4139-b565-613834376434/-/resize/400x/_.webp" alt="Елизавета Кулова"><b>Елизавета Кулова</b><span>Кондитер</span></figure>
+        <figure><img loading="lazy" src="https://static.tildacdn.com/tild3761-3131-4361-b439-343536323832/-/resize/400x/Frame_15.png" alt="Нурс Кимсанов"><b>Нурс Кимсанов</b><span>Хаус‑мастер</span></figure>
+        <figure><img loading="lazy" src="https://static.tildacdn.com/tild6363-6366-4331-b935-393230643833/-/resize/400x/_37.webp" alt="Маша Базарбаева"><b>Маша Базарбаева</b><span>Фея чистоты</span></figure>
+      </div>
+    </section>
+
+    <!-- ── награды ── -->
+    <section class="sec">
+      <div class="sec__h">
+        <h2>Чем площадку отметили</h2>
+        <p>Награды свадебной и event‑индустрии за последние годы.</p>
+      </div>
+      <div class="awards">
+        <div><b>Wedding Awards</b><p>Неоднократные обладатели главной премии свадебной индустрии.</p></div>
+        <div><b>TOP‑15 Moscow</b><p>Постоянные публикации в издании для невест и сообществе свадебных профессионалов.</p></div>
+        <div><b>TOP100 Awards</b><p>Победитель всероссийской премии среди wedding и event‑площадок.</p></div>
+        <div><b>Столичный банкет</b><p>Призёр конкурса на лучшую банкетную площадку — народное голосование и экспертное жюри.</p></div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<!-- ══════════════════════════════════════════════════════════════
+     ЭКРАН 2 — ЗАЛЫ И ВМЕСТИМОСТЬ
+     ══════════════════════════════════════════════════════════════ -->
+<main class="screen" id="s-halls">
+  <div class="wrap">
+    <section class="sec sec--tight">
+      <div class="sec__h">
+        <h2>Залы и вместимость</h2>
+        <p>Всё, что обычно приходится выяснять по телефону: сколько гостей помещается, что уже стоит в зале, где сцена и куда выходят окна. Планы — те же, что менеджер присылает в переписке.</p>
+      </div>
+
+      <table class="cmp">
+        <caption>Сравнение по основным параметрам</caption>
+        <thead>
+          <tr><th scope="col">Параметр</th><th scope="col">Белый зал</th><th scope="col">Лофт</th><th scope="col">Веранда</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">Банкет за столами</th>
+            <td data-h="Белый зал">50–350 гостей</td>
+            <td data-h="Лофт">до 90 гостей</td>
+            <td data-h="Веранда">церемонии и фуршет<small>рассадка рядами</small></td></tr>
+          <tr><th scope="row">Фуршет</th>
+            <td data-h="Белый зал">50–500 гостей</td>
+            <td data-h="Лофт">до 130 гостей</td>
+            <td data-h="Веранда">на 200 м² открытой части</td></tr>
+          <tr><th scope="row">Площадь</th>
+            <td data-h="Белый зал">часть из 1180 м² площадки</td>
+            <td data-h="Лофт">250 м²</td>
+            <td data-h="Веранда">200 м²<small>закрытая часть 70 м²</small></td></tr>
+          <tr><th scope="row">Сцена и экран</th>
+            <td data-h="Белый зал">сцена 6 × 3 м, экран 6 × 2,5 м</td>
+            <td data-h="Лофт">сцена есть</td>
+            <td data-h="Веранда">свет и звук выведены</td></tr>
+          <tr><th scope="row">Бар</th>
+            <td data-h="Белый зал">стойка 11 метров</td>
+            <td data-h="Лофт">барная зона</td>
+            <td data-h="Веранда">отдельный бар</td></tr>
+          <tr><th scope="row">Характер</th>
+            <td data-h="Белый зал">неоклассика, светлые тона<small>пятиметровые панорамные окна</small></td>
+            <td data-h="Лофт">кирпич 1890 года<small>бывший шоколадный цех</small></td>
+            <td data-h="Веранда">открытое небо<small>обогреватели и пледы зимой</small></td></tr>
+        </tbody>
+      </table>
+
+      <!-- Белый зал -->
+      <article class="hall">
+        <div class="hall__top">
+          <div class="hall__ph"><img loading="lazy" src="https://static.tildacdn.com/tild6563-6462-4261-a364-623463613930/-/resize/1200x/826bf056867eb5672fae.jpg" alt="Белый зал в фуршетной расстановке, панорамные окна во всю стену"></div>
+          <div class="hall__i">
+            <h3>Белый зал</h3>
+            <p>Создан для масштабных вечеров: свадеб, юбилеев, презентаций, корпоративов. Из зала есть выход прямо на веранду, поэтому церемонию можно провести на крыше, а банкет — внутри.</p>
+            <dl>
+              <div><dt>Банкет за столами</dt><dd>50–350 гостей</dd></div>
+              <div><dt>Фуршет</dt><dd>50–500 гостей</dd></div>
+              <div><dt>Окна</dt><dd>панорамные, 5 метров</dd></div>
+              <div><dt>Сцена</dt><dd>6 × 3 метра</dd></div>
+              <div><dt>Светодиодный экран</dt><dd>6 × 2,5 метра</dd></div>
+              <div><dt>Барная стойка</dt><dd>11 метров</dd></div>
+              <div><dt>Своё на этаже</dt><dd>кухня, гримёрка, VIP‑зона, гардероб, фотозона</dd></div>
+            </dl>
+          </div>
+        </div>
+        <div class="hall__strip">
+          <img loading="lazy" src="https://static.tildacdn.com/tild3362-3763-4366-b238-316339326166/-/resize/700x/IMG_9942.jpg" alt="Белый зал, банкетная рассадка круглыми столами">
+          <img loading="lazy" src="https://static.tildacdn.com/tild3634-3631-4966-a166-636236356633/-/resize/700x/Frame_110.jpg" alt="Белый зал в свадебном оформлении">
+          <img loading="lazy" src="https://static.tildacdn.com/tild6263-6530-4663-a133-346638366333/-/resize/700x/IMG_0010-4.jpg" alt="Белый зал с включённым светодиодным экраном на сцене">
+        </div>
+        <div class="hall__plan">
+          <img loading="lazy" src="https://static.tildacdn.com/tild3338-3063-4562-b138-373637613536/-/resize/1100x/15_.jpg" alt="План Белого зала: барная стойка 11 метров, фотозона, сцена, VIP-зона, гримёрка, кухня, выход на веранду">
+          <div>
+            <h4>План зала</h4>
+            <p>Входная группа и гардероб — со стороны лестницы, сцена — у дальней стены, панорамные окна выходят на реку. Кухня на этом же этаже, поэтому горячее доезжает горячим.</p>
+            <h4>Готовые схемы рассадки</h4>
+            <p>Менеджер пришлёт расстановку столов под ваше число гостей.</p>
+            <div class="seats"><span>50 гостей</span><span>80</span><span>100</span><span>120</span><span>150</span><span>180</span><span>200</span><span>300 и больше</span></div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Лофт -->
+      <article class="hall">
+        <div class="hall__top">
+          <div class="hall__ph"><img loading="lazy" src="https://static.tildacdn.com/tild6364-3531-4131-b432-333137623661/-/resize/1200x/005LOFT.jpg" alt="Зал Лофт: кирпичная кладка, накрытые столы, люстры"></div>
+          <div class="hall__i">
+            <h3>Лофт</h3>
+            <p>Зал на месте цеха готовой шоколадной продукции. Красную кирпичную кладку и детали интерьера 1890 года оставили как есть — декор ложится на них почти без доработки.</p>
+            <dl>
+              <div><dt>Площадь</dt><dd>250 м²</dd></div>
+              <div><dt>Банкет за столами</dt><dd>до 90 гостей</dd></div>
+              <div><dt>Фуршет</dt><dd>до 130 гостей</dd></div>
+              <div><dt>Оснащение</dt><dd>сцена, звук, свет, экраны</dd></div>
+              <div><dt>Кухня</dt><dd>на этаже</dd></div>
+              <div><dt>Год постройки</dt><dd>1890</dd></div>
+            </dl>
+          </div>
+        </div>
+        <div class="hall__strip">
+          <img loading="lazy" src="https://static.tildacdn.com/tild6663-6431-4732-b638-333966346133/-/resize/700x/0008.jpg" alt="Лофт с банкетной рассадкой у окон">
+          <img loading="lazy" src="https://static.tildacdn.com/tild3866-3532-4635-b730-386230353861/-/resize/700x/055LOFT.jpg" alt="Лаунж-зона Лофта с диванами">
+          <img loading="lazy" src="https://static.tildacdn.com/tild3630-3265-4164-a330-323063383937/-/resize/700x/IMG_4961.jpg" alt="Оформленный стол в Лофте">
+        </div>
+        <div class="hall__plan hall__plan--dark">
+          <img loading="lazy" src="https://static.tildacdn.com/tild3338-6533-4533-a161-323539336634/-/resize/1100x/2021-04-27-155528.png" alt="План Лофта: вход, гардероб, фотозона, сцена, бар, кухня, запасной выход, выход на набережную">
+          <div>
+            <h4>План зала</h4>
+            <p>Вход с торца, гардероб и фотозона сразу за ним. Сцена и бар — вдоль дальней стены, запасной выход ведёт к парковке, окна смотрят на набережную.</p>
+            <h4>Готовые схемы рассадки</h4>
+            <p>Зал легко перестраивается: столами, рядами или полностью под танцпол.</p>
+            <div class="seats"><span>50 гостей</span><span>70</span><span>90</span></div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Веранда -->
+      <article class="hall">
+        <div class="hall__top">
+          <div class="hall__ph"><img loading="lazy" src="https://static.tildacdn.com/tild3430-3165-4337-b938-323630623035/-/resize/1200x/__0005_2_1.jpg" alt="Лаунж-зона на веранде с видом на памятник Петру I"></div>
+          <div class="hall__i">
+            <h3>Веранда на крыше</h3>
+            <p>Выездные церемонии, велком‑зона, барбекю, кино под открытым небом. Работает круглый год: часть под навесом, подвесные обогреватели, пледы и глинтвейн для прохладных вечеров.</p>
+            <dl>
+              <div><dt>Площадь</dt><dd>200 м²</dd></div>
+              <div><dt>Закрытая часть</dt><dd>70 м²</dd></div>
+              <div><dt>Вид</dt><dd>Москва‑река, памятник&nbsp;Петру&nbsp;I</dd></div>
+              <div><dt>Зимой</dt><dd>подвесные обогреватели, пледы</dd></div>
+              <div><dt>Оснащение</dt><dd>бар, свет, звук</dd></div>
+              <div><dt>При брони Белого зала</dt><dd>входит в стоимость</dd></div>
+            </dl>
+          </div>
+        </div>
+        <div class="hall__strip">
+          <img loading="lazy" src="https://static.tildacdn.com/tild6134-6164-4361-b562-653338393438/-/resize/700x/IMG_7498.jpg" alt="Выездная церемония на веранде">
+          <img loading="lazy" src="https://static.tildacdn.com/tild3563-3332-4937-b162-343466393336/-/resize/700x/IMG_5069_1.jpg" alt="Веранда под навесом с плетёной мебелью">
+          <img loading="lazy" src="https://static.tildacdn.com/tild3935-6166-4635-b338-616231386638/-/resize/700x/photo_2022-05-27_13-.jpg" alt="Закат над рекой с веранды">
+        </div>
+        <div class="hall__plan">
+          <img loading="lazy" src="https://static.tildacdn.com/tild6165-3265-4133-b462-343263363462/-/resize/1100x/photo_2022-10-18_17-.jpg" alt="План веранды: закрытая часть 70 кв.м, бар, обогреватели, вывод света и звука">
+          <div>
+            <h4>План веранды</h4>
+            <p>Верхний уровень — под церемонию: арка у парапета, стулья рядами, за ними — закрытая часть на 70 м². Нижний уровень отдан бару и лаунж‑зоне, свет и звук выведены на обе части.</p>
+            <h4>Что здесь обычно делают</h4>
+            <p>Регистрация, велком с шампанским, перекур между блоками программы, фотосессия на закате, салют с набережной в финале.</p>
+          </div>
+        </div>
+      </article>
+    </section>
+  </div>
+</main>
+
+<!-- ══════════════════════════════════════════════════════════════
+     ЭКРАН 3 — ЦЕНЫ
+     ══════════════════════════════════════════════════════════════ -->
+<main class="screen" id="s-prices">
+  <div class="wrap">
+    <section class="sec sec--tight">
+      <div class="sec__h">
+        <h2>Сколько это стоит</h2>
+        <p>Три пакета, цена считается за гостя. Ниже — калькулятор и список того, что входит в площадку без доплат, а что оплачивается отдельно.</p>
+      </div>
+
+      <div class="tar">
+        <section>
+          <h3>Фуршет</h3>
+          <p class="tar__p">5 000 ₽</p>
+          <p class="tar__u">за гостя</p>
+          <p class="tar__d">Даже с минимальными вложениями получается заметный вечер — за счёт самой площадки и вида из окон.</p>
+        </section>
+        <section>
+          <h3>Банкет</h3>
+          <p class="tar__p">8 000 ₽</p>
+          <p class="tar__u">за гостя</p>
+          <p class="tar__d">Всё необходимое для яркого корпоратива или свадьбы за столами, и немного сверх того.</p>
+        </section>
+        <section>
+          <h3>Премиум</h3>
+          <p class="tar__p">10 000 ₽</p>
+          <p class="tar__u">за гостя</p>
+          <p class="tar__d">Вариант для вечера, который гости должны запомнить надолго.</p>
+        </section>
+      </div>
+
+      <div class="calc">
+        <h3>Прикиньте бюджет</h3>
+        <p>Расчёт ориентировочный: точную смету менеджер собирает после разговора о меню, времени и программе.</p>
+        <div class="calc__grid">
+          <div>
+            <label class="ctl__lab" for="g2">Количество гостей</label>
+            <div class="slide">
+              <input id="g2" type="range" min="20" max="500" step="10" value="120">
+              <output for="g2" id="g2out">120</output>
+              <span>гостей</span>
+            </div>
+          </div>
+          <dl class="calc__out">
+            <div><dt>Фуршет, 5 000 ₽</dt><dd id="c1">600 000 ₽</dd></div>
+            <div><dt>Банкет, 8 000 ₽</dt><dd id="c2">960 000 ₽</dd></div>
+            <div><dt>Премиум, 10 000 ₽</dt><dd id="c3">1 200 000 ₽</dd></div>
+          </dl>
+        </div>
+        <p class="calc__hint" id="c4">Столько гостей размещается и в Белом зале, и в Лофте — выбор за вами.</p>
+      </div>
+    </section>
+
+    <section class="sec">
+      <div class="sec__h">
+        <h2>Что входит в площадку</h2>
+        <p>Это не дополнительные позиции сметы — всё уже стоит в зале и включено в аренду.</p>
+      </div>
+      <div class="incl">
+        <div><b>Мебель и декор</b><p>Полный комплект под выбранную рассадку.</p></div>
+        <div><b>Звук и свет</b><p>Концертные акустические системы, световая заливка стен.</p></div>
+        <div><b>Два светодиодных экрана</b><p>Плюс основной экран 6 × 2,5 метра у сцены в Белом зале.</p></div>
+        <div><b>Сцена</b><p>Стационарная, 6 × 3 метра.</p></div>
+        <div><b>Караоке AST100</b><p>Микрофоны, подключение ноутбука.</p></div>
+        <div><b>Гардероб и гримёрка</b><p>И помещение для подарков.</p></div>
+        <div><b>Парковка</b><p>150 мест у здания.</p></div>
+        <div><b>Веранда 200 м²</b><p>При бронировании Белого зала — в стоимость.</p></div>
+      </div>
+    </section>
+
+    <section class="sec">
+      <div class="sec__h">
+        <h2>Что заказывают дополнительно</h2>
+        <p>Считается отдельно, потому что нужно не всем. Полный список — больше семидесяти вариантов досуга.</p>
+      </div>
+      <div class="extra">
+        <div><b>Салют с набережной</b><p>Фейерверк запускают прямо с Болотной набережной, финал вечера видно с обоих залов.</p></div>
+        <div><b>Анимационные станции</b><p>Повар готовит блюдо при гостях — заменяет горячую закуску на фуршете.</p></div>
+        <div><b>VIP‑зона до 35 гостей</b><p>Закрытая часть под after‑party или отдельный стол руководства.</p></div>
+        <div><b>Барбекю на веранде</b><p>Готовят на крыше, гости едят с видом на реку.</p></div>
+        <div><b>Кинотеатр под открытым небом</b><p>Экран и проектор на веранде — обычно для летних корпоративов.</p></div>
+        <div><b>Паровые коктейли</b><p>Кальянная зона на веранде.</p></div>
+      </div>
+    </section>
+
+    <section class="sec">
+      <div class="sec__h">
+        <h2>Действующие условия</h2>
+        <p>То, что сейчас имеет смысл обсудить с менеджером.</p>
+      </div>
+      <div class="offers">
+        <div><b>До −20%</b><p>На бронирование сентябрьских дат.</p></div>
+        <div><b>Дегустация 0 ₽</b><p>Полная дегустация блюд до 30 сентября — подробности по телефону.</p></div>
+        <div><b>Веранда в подарок</b><p>При бронировании Белого зала терраса 200 м² входит в стоимость.</p></div>
+        <div><b>От 3 дней</b><p>Берёмся и за срочную подготовку, если дата горит.</p></div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<!-- ══════════════════════════════════════════════════════════════
+     ЭКРАН 4 — СВАДЬБЫ
+     ══════════════════════════════════════════════════════════════ -->
+<main class="screen" id="s-wedding">
+  <div class="cover">
+    <img src="https://static.tildacdn.com/tild6134-6164-4361-b562-653338393438/-/resize/1600x/IMG_7498.jpg" alt="Свадебная церемония на веранде: пара под аркой, за ними Москва-река и памятник Петру I">
+    <div class="cover__txt"><div class="wrap">
+      <div>
+        <h1>Свадьба на крыше шоколадной фабрики</h1>
+        <p>Церемония на веранде, банкет в Белом зале, салют с набережной — всё в одном здании, гостей никуда не везут.</p>
+      </div>
+      <p class="cover__where"><b>Экскурсия и дегустация — бесплатно</b>Покажем оба зала и веранду, дадим попробовать блюда из вашего меню. Занимает около часа.</p>
+    </div></div>
+  </div>
+
+  <section class="spec">
+    <dl>
+      <div><dt>Церемония</dt><dd>веранда 200 м²<small>арка у парапета, стулья рядами</small></dd></div>
+      <div><dt>Банкет</dt><dd>50–350 гостей<small>Белый зал, столами</small></dd></div>
+      <div><dt>Комната невесты</dt><dd>гримёрка<small>на том же этаже</small></dd></div>
+      <div><dt>After‑party</dt><dd>VIP до 35<small>закрытая зона</small></dd></div>
+      <div><dt>Финал</dt><dd>салют<small>с Болотной набережной</small></dd></div>
+      <div><dt>Парковка</dt><dd>150 мест<small>у здания</small></dd></div>
+    </dl>
+  </section>
+
+  <div class="wrap">
+    <section class="sec sec--tight">
+      <div class="sec__h">
+        <h2>Как проходит день</h2>
+        <p>Площадка рассчитана так, чтобы гости за вечер ни разу не садились в машину: церемония, банкет, танцы и after‑party — на двух соседних этажах.</p>
+      </div>
+      <div class="steps">
+        <div><b>Веранда</b><h4>Сбор гостей и церемония</h4><p>Велком на крыше, арка у парапета, за спинами — Москва‑река и памятник Петру I. Под навесом церемония идёт и в дождь.</p></div>
+        <div><b>Белый зал</b><h4>Банкет</h4><p>Пятиметровые окна, сцена 6 × 3 метра и экран 6 × 2,5 метра для фильма о паре. Кухня на этаже — горячее доезжает горячим.</p></div>
+        <div><b>Белый зал</b><h4>Танцы и программа</h4><p>Концертный звук и свет, световая заливка стен, караоке. Жилых домов рядом нет — музыка играет столько, сколько нужно.</p></div>
+        <div><b>Набережная</b><h4>Салют</h4><p>Фейерверк запускают прямо с Болотной набережной, его видно и с веранды, и из зала.</p></div>
+        <div><b>VIP‑зона</b><h4>After‑party</h4><p>Закрытая часть до 35 гостей для тех, кто остаётся до утра.</p></div>
+      </div>
+    </section>
+
+    <section class="sec">
+      <div class="sec__h">
+        <h2>На сколько гостей делаем свадьбы</h2>
+        <p>Для каждого числа есть готовая схема рассадки — менеджер пришлёт её до визита на площадку.</p>
+      </div>
+      <div class="seats" style="margin-top:26px">
+        <span>50 гостей</span><span>60</span><span>70</span><span>80</span><span>90</span><span>100</span><span>120</span><span>180</span><span>200</span><span>и другое количество</span>
+      </div>
+      <div class="gal">
+        <img loading="lazy" src="https://static.tildacdn.com/tild3038-3065-4164-b738-383233643636/-/resize/900x/0131_1.webp" alt="Белый зал: длинные столы вдоль дорожки, арка у сцены">
+        <img loading="lazy" src="https://static.tildacdn.com/tild3765-3938-4466-b666-356464363833/-/resize/600x/IMG_8020.jpg" alt="Стулья рядами на веранде, оформление белыми цветами">
+        <img loading="lazy" src="https://static.tildacdn.com/tild6264-3836-4431-b433-313761343536/-/resize/600x/816A2808_1.jpg" alt="Церемония под навесом веранды">
+        <img loading="lazy" src="https://static.tildacdn.com/tild3631-3539-4230-b534-623530303639/-/resize/600x/Rectangle_10457.webp" alt="Свадебная арка на крыше на фоне памятника Петру I">
+        <img loading="lazy" src="https://static.tildacdn.com/tild3466-3964-4436-b261-613561643566/-/resize/600x/A_0440.jpg" alt="Салют над Болотной набережной">
+      </div>
+    </section>
+
+    <section class="sec">
+      <div class="sec__h">
+        <h2>Что пишут после свадеб</h2>
+        <p>Отзывы приходят в директ — публикуем как есть.</p>
+      </div>
+      <div class="quotes">
+        <figure class="q">
+          <blockquote>«Вы написали невероятную, душевную историю нашей свадьбы. Уникальную! Не для показухи и модных фоточек, а только для нас. Этот день стал действительно волшебным — всё прошло без лишней суеты и нервов. Мы даже не вникали в технические вопросы: зачем, если есть Алина, вкусная кухня и роскошный банкетный зал, оборудованный от и до. Я была на двадцати с лишним свадьбах и сейчас уверена, что наша — одна из лучших. И это при том, что бюджет был довольно скромным.»</blockquote>
+          <figcaption>Отзыв из директа, опубликован площадкой</figcaption>
+        </figure>
+        <div class="qstack">
+          <figure class="q q--sm">
+            <blockquote>«Прошёл ровно год со дня нашей свадьбы, смотрим фотографии и с теплом вспоминаем вас. Спасибо за наш праздник.»</blockquote>
+            <figcaption>Сообщение в директ</figcaption>
+          </figure>
+          <figure class="q q--sm">
+            <blockquote>«Увидели фотографии у вас в ленте с юбилея папы. Отличный был праздник — папа постоянно вспоминает!»</blockquote>
+            <figcaption>Сообщение в директ</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec">
+      <div class="sec__h">
+        <h2>Перед бронью можно приехать и всё попробовать</h2>
+        <p>Экскурсия по залам и полная дегустация блюд — бесплатно, до 30 сентября. Обычно на это уходит час.</p>
+      </div>
+      <div class="food">
+        <figure><img loading="lazy" src="https://static.tildacdn.com/tild3339-3166-4431-a137-396134316535/-/resize/700x/fotozdance_ru-0006_1.webp" alt="Закуска с авторской подачей"><figcaption>Дегустация собирается под ваше меню</figcaption></figure>
+        <figure><img loading="lazy" src="https://static.tildacdn.com/tild3630-3265-4164-a330-323063383937/-/resize/700x/IMG_4961.jpg" alt="Сервировка стола"><figcaption>Сервировка и посадка — как в день свадьбы</figcaption></figure>
+        <figure><img loading="lazy" src="https://static.tildacdn.com/tild3430-3165-4337-b938-323630623035/-/resize/700x/__0005_2_1.jpg" alt="Лаунж-зона веранды"><figcaption>Веранду показывают в том же визите</figcaption></figure>
+      </div>
+    </section>
+  </div>
+</main>
+
+<!-- ══════════════ заявка и подвал (общие) ══════════════ -->
+<section class="ask">
+  <div class="ask__in">
+    <div class="ask__l">
+      <h2>Проверим вашу дату</h2>
+      <p>Ответим, свободен ли зал, и пришлём схему рассадки под ваше число гостей. Если дата занята — скажем сразу и предложим ближайшие свободные.</p>
+    </div>
+    <form class="ask__f" onsubmit="return false">
+      <div class="ask__row">
+        <div><label for="f-date">Дата мероприятия</label><input id="f-date" type="date"></div>
+        <div><label for="f-guests">Гостей</label><input id="f-guests" type="number" min="10" placeholder="180"></div>
+      </div>
+      <div class="ask__row">
+        <div><label for="f-kind">Повод</label>
+          <select id="f-kind">
+            <option>Свадьба</option><option>День рождения или юбилей</option><option>Корпоратив</option>
+            <option>Новогодний корпоратив</option><option>Конференция или тренинг</option><option>Фуршет</option>
+            <option>Презентация</option><option>Другое</option>
+          </select></div>
+        <div><label for="f-tel">Телефон</label><input id="f-tel" type="tel" placeholder="+7"></div>
+      </div>
+      <button class="btn" type="submit">Узнать, свободна ли дата</button>
+      <small>Это эскиз — форма ничего не отправляет. На рабочем сайте ответ приходит в течение десяти минут в рабочее время банкетной службы.</small>
+    </form>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="foot__in">
+    <div>
+      <h4>Связаться</h4>
+      <b>+7 495 308‑49‑59</b>
+      <a href="mailto:banket@crimea.moscow">banket@crimea.moscow</a>
+      <p>Банкетная служба 10:00–22:00</p>
+      <p>Площадка работает круглосуточно</p>
+    </div>
+    <div>
+      <h4>Приехать</h4>
+      <p>Болотная набережная, дом 3, строение 1</p>
+      <p>Арт‑кластер «Красный Октябрь»</p>
+      <p>Парковка на 150 мест</p>
+    </div>
+    <div>
+      <h4>Разделы</h4>
+      <a href="#" data-go="halls">Залы и вместимость</a>
+      <a href="#" data-go="prices">Цены и что входит</a>
+      <a href="#" data-go="wedding">Свадьбы</a>
+    </div>
+    <div>
+      <h4>Организаторам</h4>
+      <p>ООО «ТЕРРАСА МОСКВА»</p>
+      <p>ИНН 9706016136, КПП 770601001</p>
+      <p>ОГРН 1217700239844</p>
+    </div>
+  </div>
+  <p class="foot__legal">2019–2026 ООО «ТЕРРАСА МОСКВА»</p>
+</footer>
+
+<p class="src"><b>Об этом эскизе.</b> Это концепт нового сайта, а не готовая вёрстка. Все фотографии, цифры,
+имена сотрудников, тарифы и отзывы взяты с действующего сайта crimea.moscow — ничего не придумано.
+Изменены порядок блоков, формулировки и подача: цифры вынесены наверх, подбор зала и расчёт бюджета
+работают без звонка, планы залов и схемы рассадки показаны сразу. Перед запуском числа по вместимости
+и оснащению нужно будет сверить и зафиксировать — это обычная работа, её делаем вместе с вашим
+менеджером на старте.</p>
+
+<script>
+(function(){
+  'use strict';
+
+  /* ── переключение экранов ── */
+  var screens = ['home','halls','prices','wedding'];
+  function go(id){
+    if(screens.indexOf(id) < 0) return;
+    screens.forEach(function(s){
+      document.getElementById('s-' + s).classList.toggle('on', s === id);
+    });
+    document.querySelectorAll('[data-go]').forEach(function(el){
+      var me = el.getAttribute('data-go') === id;
+      if(el.classList.contains('proto__tab') || el.closest('.head nav')){
+        if(me) el.setAttribute('aria-current','page'); else el.removeAttribute('aria-current');
+      }
+    });
+    if(history.replaceState) history.replaceState(null,'','#'+id);
+    window.scrollTo(0,0);
+  }
+  document.addEventListener('click', function(e){
+    var t = e.target.closest('[data-go]');
+    if(!t) return;
+    e.preventDefault();
+    go(t.getAttribute('data-go'));
+  });
+  if(location.hash) go(location.hash.slice(1));
+
+  /* ── подбор зала ── */
+  var HALLS = {
+    white: { min:{banquet:50, buffet:50}, max:{banquet:350, buffet:500} },
+    loft:  { min:{banquet:null, buffet:null}, max:{banquet:90, buffet:130} }
+  };
+  var TARIFF = { buffet:5000, banquet:8000 };
+  var fmt = 'banquet';
+
+  function money(n){ return n.toLocaleString('ru-RU').replace(/ /g,' ') + ' ₽'; }
+
+  function paintHall(key, guests){
+    var h = HALLS[key], max = h.max[fmt], min = h.min[fmt];
+    var card = document.getElementById('card-' + key);
+    var v = document.getElementById('v-' + key);
+    var bar = document.getElementById('g-' + key);
+    var left = document.getElementById('gl-' + key);
+    var right = document.getElementById('gr-' + key);
+    var fits = guests <= max && (min === null || guests >= min);
+    var pct = Math.min(100, Math.round(guests / max * 100));
+
+    bar.style.width = (fits ? pct : 100) + '%';
+    card.classList.toggle('dim', !fits);
+    v.className = 'verdict ' + (fits ? 'ok' : 'no');
+
+    if(fits){
+      v.querySelector('span').textContent = pct > 88 ? 'Подходит, зал будет заполнен' : 'Подходит';
+      left.textContent = guests + ' из ' + max + ' мест';
+      right.textContent = 'заполнение ' + pct + '%';
+    } else if(guests > max){
+      v.querySelector('span').textContent = 'Не хватит места';
+      left.textContent = 'максимум ' + max + ' гостей';
+      right.textContent = 'нужно на ' + (guests - max) + ' больше';
+    } else {
+      v.querySelector('span').textContent = 'Зал рассчитан от ' + min + ' гостей';
+      left.textContent = 'от ' + min + ' до ' + max + ' мест';
+      right.textContent = '';
+    }
+    return fits;
+  }
+
+  function render(){
+    var guests = +document.getElementById('guests').value;
+    document.getElementById('gout').textContent = guests;
+
+    document.getElementById('cap-white').textContent =
+      fmt === 'banquet' ? 'Банкет 50–350, фуршет 50–500' : 'Фуршет 50–500, банкет 50–350';
+    document.getElementById('cap-loft').textContent =
+      fmt === 'banquet' ? 'Банкет до 90, фуршет до 130' : 'Фуршет до 130, банкет до 90';
+
+    var okWhite = paintHall('white', guests);
+    var okLoft  = paintHall('loft', guests);
+
+    document.getElementById('budget').textContent = money(guests * TARIFF[fmt]);
+    document.getElementById('tariff').textContent =
+      (fmt === 'banquet' ? 'Банкет, 8 000 ₽' : 'Фуршет, 5 000 ₽') + ' за гостя';
+
+    var note = document.getElementById('fitnote');
+    if(okWhite && okLoft){
+      note.textContent = 'Подходят оба зала. Лофт — с кирпичной кладкой 1890 года, Белый — со сценой и выходом на веранду.';
+    } else if(okWhite){
+      note.textContent = 'При бронировании Белого зала веранда 200 м² на крыше входит в стоимость.';
+    } else if(okLoft){
+      note.textContent = 'Белый зал рассчитан от 50 гостей. Для камерного вечера лучше подойдёт Лофт.';
+    } else {
+      note.textContent = 'Столько гостей в один зал не поместить, но залы автономны: вечер можно развести по Белому залу, Лофту и веранде. Позвоните — соберём схему.';
+    }
+  }
+
+  document.querySelectorAll('[data-fmt]').forEach(function(b){
+    b.addEventListener('click', function(){
+      fmt = b.getAttribute('data-fmt');
+      document.querySelectorAll('[data-fmt]').forEach(function(x){
+        x.setAttribute('aria-pressed', String(x === b));
+      });
+      render();
+    });
+  });
+  document.getElementById('guests').addEventListener('input', render);
+  render();
+
+  /* ── калькулятор на экране цен ── */
+  var g2 = document.getElementById('g2');
+  function calc(){
+    var n = +g2.value;
+    document.getElementById('g2out').textContent = n;
+    document.getElementById('c1').textContent = money(n * 5000);
+    document.getElementById('c2').textContent = money(n * 8000);
+    document.getElementById('c3').textContent = money(n * 10000);
+    var hint = document.getElementById('c4');
+    if(n <= 90){
+      hint.textContent = 'Столько гостей размещается и в Белом зале, и в Лофте — выбор за характером вечера.';
+    } else if(n <= 130){
+      hint.textContent = 'Для банкета за столами нужен Белый зал: в Лофте помещается до 90 гостей за столами, до 130 на фуршете.';
+    } else if(n <= 350){
+      hint.textContent = 'Это Белый зал — он рассчитан на банкет до 350 гостей.';
+    } else if(n <= 500){
+      hint.textContent = 'Столько гостей принимает Белый зал в фуршетном формате.';
+    } else {
+      hint.textContent = 'Больше 500 гостей разводят по двум залам и веранде — схему собирает менеджер.';
+    }
+  }
+  g2.addEventListener('input', calc);
+  calc();
+})();
+</script>
+</html>

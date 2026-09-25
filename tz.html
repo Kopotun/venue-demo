@@ -1,0 +1,625 @@
+<!doctype html>
+<html lang="ru">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Техническое задание · КРЫМ terrace</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,400;7..72,500;7..72,600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+:root{
+  --paper:#f4f2f1;
+  --field:#ffffff;
+  --ink:#353230;
+  --ink-2:#6b655e;
+  --ink-3:#9a938a;
+  --rule:#dfdad4;
+  --rule-soft:#ebe7e2;
+  --works:#2c6a47;
+  --works-bg:#e8f0ea;
+  --partial:#8a6a1f;
+  --partial-bg:#f5eeda;
+  --blocked:#9e2e2e;
+  --blocked-bg:#f6e6e4;
+  --read:'Literata',Georgia,'Times New Roman',serif;
+  --data:'IBM Plex Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:var(--read); font-size:17px; line-height:1.65;
+}
+button{font:inherit; color:inherit}
+a{color:var(--ink); text-underline-offset:3px; text-decoration-thickness:1px}
+:focus-visible{outline:2px solid var(--ink); outline-offset:3px}
+
+.sheet{max-width:1140px; margin:0 auto; padding:0 28px 96px}
+
+/* шапка документа */
+.masthead{padding:44px 0 0}
+.masthead__kind{font-family:var(--data); font-size:13px; color:var(--ink-3); margin:0 0 6px}
+.masthead h1{
+  font-family:var(--read); font-weight:600; font-size:clamp(30px,5.2vw,46px);
+  line-height:1.12; letter-spacing:-.015em; margin:0 0 18px; max-width:19ch;
+}
+.masthead__meta{
+  font-family:var(--data); font-size:13.5px; color:var(--ink-2);
+  display:flex; flex-wrap:wrap; gap:6px 30px; padding:16px 0 0; border-top:1px solid var(--rule);
+}
+.masthead__meta b{font-weight:500; color:var(--ink)}
+
+/* схема разрыва — единственный громкий элемент */
+.break{margin:40px 0 0; padding:30px 0 34px; border-top:3px solid var(--ink); border-bottom:1px solid var(--rule)}
+.break__q{font-size:20px; line-height:1.45; margin:0 0 26px; max-width:52ch}
+.chain{display:flex; align-items:stretch; flex-wrap:wrap; gap:0; font-family:var(--data)}
+.link{flex:1 1 150px; min-width:140px; padding:14px 16px 16px; background:var(--field); border:1px solid var(--rule)}
+.link + .link{border-left:none}
+.link__n{font-size:11.5px; color:var(--ink-3); display:block; margin-bottom:5px}
+.link__t{font-size:14.5px; font-weight:600; display:block; line-height:1.3}
+.link__d{font-size:12.5px; color:var(--ink-2); display:block; margin-top:5px; line-height:1.4}
+.gap{
+  flex:0 0 46px; position:relative; display:grid; place-items:center;
+  font-size:24px; color:var(--blocked); font-weight:400;
+}
+.gap::before{content:""; position:absolute; inset:50% 0 auto; height:1px; background:var(--blocked); opacity:.35}
+.gap span{position:relative; background:var(--paper); padding:0 6px; line-height:1}
+.break__note{font-family:var(--data); font-size:13.5px; color:var(--ink-2); margin:22px 0 0; max-width:74ch; line-height:1.6}
+
+/* оглавление */
+.toc{font-family:var(--data); font-size:14px; padding:26px 0; border-bottom:1px solid var(--rule)}
+.toc ol{margin:0; padding:0; list-style:none; display:grid; grid-template-columns:repeat(auto-fit,minmax(215px,1fr)); gap:9px 26px; counter-reset:t}
+.toc li{counter-increment:t; display:flex; gap:11px; align-items:baseline}
+.toc li::before{content:counter(t); color:var(--ink-3); font-size:12px; font-variant-numeric:tabular-nums; min-width:14px}
+.toc a{text-decoration:none; border-bottom:1px solid transparent}
+.toc a:hover{border-bottom-color:var(--ink)}
+
+/* разделы */
+section{padding:52px 0 0; scroll-margin-top:20px}
+.sec__n{font-family:var(--data); font-size:12.5px; color:var(--ink-3); display:block; margin-bottom:8px}
+h2{font-family:var(--read); font-weight:600; font-size:clamp(23px,3.4vw,30px); line-height:1.2; margin:0 0 16px; letter-spacing:-.01em; max-width:24ch}
+h3{font-family:var(--read); font-weight:600; font-size:19px; line-height:1.3; margin:34px 0 10px}
+p{margin:0 0 15px; max-width:70ch}
+.intro{font-size:18.5px; line-height:1.6; max-width:64ch; color:var(--ink)}
+ul.plain{margin:0 0 18px; padding-left:22px; max-width:70ch}
+ul.plain li{margin-bottom:9px}
+
+/* две колонки: что появится / как устроено */
+.pair{display:grid; grid-template-columns:1fr 1fr; gap:0; margin:26px 0 0; border-top:1px solid var(--rule)}
+.pair__col{padding:20px 0 4px}
+.pair__col:first-child{padding-right:34px; border-right:1px solid var(--rule)}
+.pair__col:last-child{padding-left:34px}
+.pair__h{font-family:var(--data); font-size:12.5px; font-weight:600; color:var(--ink-3); margin:0 0 12px}
+.pair__col:last-child{font-family:var(--data); font-size:14.5px; line-height:1.6; color:var(--ink-2)}
+.pair__col:last-child b{color:var(--ink); font-weight:600}
+.pair__col p{max-width:46ch}
+.pair__col ul.plain{max-width:46ch}
+
+/* таблица */
+.tbl{margin:26px 0 0; overflow-x:auto}
+table{width:100%; border-collapse:collapse; font-family:var(--data); font-size:14px; background:var(--field)}
+th,td{padding:11px 13px; text-align:left; vertical-align:top; border-bottom:1px solid var(--rule-soft)}
+thead th{font-size:12px; font-weight:600; color:var(--ink-3); border-bottom:1px solid var(--rule); white-space:nowrap}
+tbody tr:last-child td{border-bottom:none}
+td b{font-weight:600}
+.mark{display:inline-block; padding:2px 8px; border-radius:2px; font-size:12px; font-weight:600; white-space:nowrap}
+.mark--works{background:var(--works-bg); color:var(--works)}
+.mark--partial{background:var(--partial-bg); color:var(--partial)}
+.mark--blocked{background:var(--blocked-bg); color:var(--blocked)}
+
+/* врезка */
+.aside{margin:28px 0; padding:19px 22px; background:var(--field); border-left:3px solid var(--ink); font-family:var(--data); font-size:14.5px; line-height:1.6}
+.aside p{margin:0 0 10px; max-width:66ch}
+.aside p:last-child{margin-bottom:0}
+.aside b{font-weight:600}
+.aside--warn{border-left-color:var(--partial)}
+.aside--stop{border-left-color:var(--blocked)}
+
+/* нумерованные требования */
+.reqs{counter-reset:r; list-style:none; margin:22px 0 0; padding:0}
+.reqs > li{counter-increment:r; display:grid; grid-template-columns:48px 1fr; gap:18px; padding:17px 0; border-top:1px solid var(--rule-soft)}
+.reqs > li::before{content:counter(r,decimal-leading-zero); font-family:var(--data); font-size:13px; color:var(--ink-3); padding-top:3px}
+.reqs__t{font-weight:600; display:block; margin-bottom:4px}
+.reqs__d{font-family:var(--data); font-size:14.5px; color:var(--ink-2); line-height:1.6; max-width:62ch}
+
+/* этапы */
+.stage{border-top:1px solid var(--rule); padding:24px 0}
+.stage__top{display:flex; align-items:baseline; gap:16px; flex-wrap:wrap; margin-bottom:10px}
+.stage__k{font-family:var(--data); font-size:12.5px; color:var(--ink-3)}
+.stage__t{font-family:var(--read); font-weight:600; font-size:21px}
+.stage__time{font-family:var(--data); font-size:13.5px; color:var(--ink-2); margin-left:auto}
+.stage--first{background:var(--field); padding:26px 28px; border:1px solid var(--rule); border-top:3px solid var(--ink)}
+
+/* подвал */
+.foot{margin-top:60px; padding-top:26px; border-top:1px solid var(--rule); font-family:var(--data); font-size:14px; color:var(--ink-2)}
+.foot a{font-weight:500}
+
+@media (max-width:760px){
+  body{font-size:16.5px}
+  .sheet{padding:0 18px 72px}
+  .pair{grid-template-columns:1fr; gap:0}
+  .pair__col:first-child{padding-right:0; border-right:none; border-bottom:1px solid var(--rule); padding-bottom:18px}
+  .pair__col:last-child{padding-left:0}
+  .chain{flex-direction:column}
+  .link + .link{border-left:1px solid var(--rule); border-top:none}
+  .link{border-top:1px solid var(--rule)}
+  .gap{flex:0 0 34px; width:100%}
+  .gap::before{inset:0 50% auto auto; width:1px; height:100%; right:50%}
+  .reqs > li{grid-template-columns:34px 1fr; gap:12px}
+  .masthead__meta{flex-direction:column; gap:4px}
+}
+/* таблица каналов на телефоне — карточкой: канал и статус сверху, способ и задержка под ними */
+@media (max-width:600px){
+  .tbl table,.tbl tbody{display:block}
+  .tbl thead{display:none}
+  .tbl tr{display:grid; grid-template-columns:minmax(0,1fr) auto; gap:6px 12px; padding:14px 15px; border-bottom:1px solid var(--rule-soft)}
+  .tbl tbody tr:last-child{border-bottom:none}
+  .tbl td{padding:0; border:none}
+  .tbl td:nth-child(1){grid-column:1; grid-row:1}
+  .tbl td:nth-child(4){grid-column:2; grid-row:1; text-align:right}
+  .tbl td:nth-child(2){grid-column:1/-1; color:var(--ink-2); line-height:1.55}
+  .tbl td:nth-child(3){grid-column:1/-1; font-size:13px; color:var(--ink-3)}
+  .tbl td:nth-child(3)::before{content:"Задержка данных: "}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important; transition:none!important}}
+
+/* ─── сквозная навигация по пакету материалов ─── */
+.pkgnav{position:sticky; top:0; z-index:50; background:#2b2724; display:flex; align-items:stretch;
+  font-family:'IBM Plex Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;
+  overflow-x:auto; scrollbar-width:none}
+.pkgnav::-webkit-scrollbar{display:none}
+.pkgnav__b{display:flex; flex-direction:column; justify-content:center; padding:0 17px 0 22px;
+  text-decoration:none; color:#f2ece4; font-size:13px; font-weight:600; line-height:1.15;
+  white-space:nowrap; border-right:1px solid #443d37; flex:none}
+.pkgnav__b span{font-size:10px; font-weight:400; color:#9c9189; letter-spacing:.09em; margin-top:3px}
+.pkgnav__b:hover{background:#35302b}
+.pkgnav__l{display:flex; align-items:stretch; flex:none}
+.pkgnav__l a{display:flex; align-items:center; padding:0 15px; height:46px; text-decoration:none;
+  color:#b3a99f; font-size:13.5px; white-space:nowrap; border-bottom:2px solid transparent}
+.pkgnav__l a:hover{color:#f2ece4; background:#35302b}
+.pkgnav__l a[aria-current="page"]{color:#f2ece4; border-bottom-color:#c99b58; font-weight:500}
+.pkgnav__l a:focus-visible{outline:2px solid #c99b58; outline-offset:-3px}
+@media (max-width:660px){
+  .pkgnav__b{padding:0 12px 0 15px; font-size:12.5px}
+  .pkgnav__b span{display:none}
+  .pkgnav__l a{padding:0 11px; font-size:13px}
+}
+/* на телефоне все пять разделов помещаются без прокрутки: знак ведёт туда же, куда «Обзор» */
+@media (max-width:560px){
+  .pkgnav__b{display:none}
+  .pkgnav__l{flex:1; justify-content:space-between}
+  .pkgnav__l a{padding:0 8px; font-size:13px}
+}
+
+/* «как это посчитано» */
+.qm{width:16px; height:16px; padding:0; margin-left:5px; border:1px solid var(--rule); border-radius:50%;
+    background:var(--field); color:var(--ink-3); font-family:var(--data); font-size:10px; line-height:1;
+    cursor:pointer; display:inline-grid; place-items:center; vertical-align:2px; flex:none}
+.qm:hover{border-color:var(--ink-2); color:var(--ink)}
+.qm[aria-expanded="true"]{background:var(--ink); border-color:var(--ink); color:var(--paper)}
+.qpop{position:absolute; z-index:80; width:min(330px,calc(100vw - 24px)); background:#2b2724; color:#ece7e0;
+      font-family:var(--data); font-size:13.5px; line-height:1.55; padding:12px 14px; border-radius:6px;
+      box-shadow:0 8px 28px rgba(20,18,16,.3)}
+.qpop b{color:#fff; font-weight:600}
+.qpop i{font-style:normal; color:#b9afa2}
+</style>
+
+<nav class="pkgnav" aria-label="Разделы пакета">
+  <a class="pkgnav__b" href="index.html">КРЫМ terrace<span>МАТЕРИАЛЫ</span></a>
+  <div class="pkgnav__l">
+    <a href="index.html">Обзор</a>
+    <a href="tz.html" aria-current="page">Техзадание</a>
+    <a href="portal.html">Прототип</a>
+    <a href="site.html">Сайт</a>
+    <a href="restaurant.html">Ресторан</a>
+  </div>
+</nav>
+
+
+<div class="sheet">
+
+  <header class="masthead">
+    <p class="masthead__kind">Техническое задание, первая редакция</p>
+    <h1>Маркетинг, колл-центр и график банкетной площадки</h1>
+    <div class="masthead__meta">
+      <span>Заказчик: <b>КРЫМ terrace Moscow, арт-кластер «Красный Октябрь», Болотная набережная, 3с1</b></span>
+      <span>Исполнитель: <b>Алексей Копотун</b></span>
+      <span>Дата: <b>23 сентября 2026</b></span>
+    </div>
+  </header>
+
+  <div class="break">
+    <p class="break__q">Заявка на банкет проходит через четыре системы, и ни одна из них не видит её целиком.</p>
+    <div class="chain">
+      <div class="link">
+        <span class="link__n">Шаг 1</span>
+        <span class="link__t">АмоCRM</span>
+        <span class="link__d">Заявка приходит и попадает в воронку</span>
+      </div>
+      <div class="gap"><span>⁄</span></div>
+      <div class="link">
+        <span class="link__n">Шаг 2</span>
+        <span class="link__t">Чат в Telegram</span>
+        <span class="link__d">Оператор передаёт заявку менеджерам сообщением</span>
+      </div>
+      <div class="gap"><span>⁄</span></div>
+      <div class="link">
+        <span class="link__n">Шаг 3</span>
+        <span class="link__t">Устройства менеджеров</span>
+        <span class="link__d">Дальше клиента ведут вне общей системы</span>
+      </div>
+      <div class="gap"><span>⁄</span></div>
+      <div class="link">
+        <span class="link__n">Шаг 4</span>
+        <span class="link__t">Календарь в Google Docs</span>
+        <span class="link__d">Мероприятие вписывают в таблицу руками</span>
+      </div>
+    </div>
+    <p class="break__note">На каждом переходе часть информации остаётся позади. После второго шага CRM
+    перестаёт знать, что происходит со сделкой, — и именно поэтому сотни заявок замирают на этапе
+    «Передача МП», а до показа площадки доходят единицы. Дальше в документе — что с этим делать
+    по трём направлениям.</p>
+  </div>
+
+  <nav class="toc">
+    <ol>
+      <li><a href="#s1">Что происходит сейчас</a></li>
+      <li><a href="#s2">Заявки и рекламные каналы</a></li>
+      <li><a href="#s3">Звонки колл-центра</a></li>
+      <li><a href="#s4">График сотрудников и залов</a></li>
+      <li><a href="#s5">Что нужно с вашей стороны</a></li>
+      <li><a href="#s6">Данные и безопасность</a></li>
+      <li><a href="#s7">Этапы работ</a></li>
+      <li><a href="#s8">Чего мы не обещаем</a></li>
+    </ol>
+  </nav>
+
+  <!-- 1 -->
+  <section id="s1">
+    <span class="sec__n">Раздел 1</span>
+    <h2>Что происходит сейчас</h2>
+    <p class="intro">Четыре наблюдения, сделанных по вашим скриншотам АмоCRM и по описанию процесса
+    от вашей команды. Все четыре мешают принимать решения о деньгах.</p>
+
+    <ol class="reqs">
+      <li>
+        <div>
+          <span class="reqs__t">Суммы сделок не заполняются</span>
+          <span class="reqs__d">На всех этапах обеих воронок стоит 0 ₽. Пока сумма пустая, посчитать,
+          какой канал принёс деньги, невозможно в принципе — видно только количество заявок.
+          Решение о рекламном бюджете сейчас принимается вслепую.</span>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="reqs__t">Сделки копятся после передачи менеджеру</span>
+          <span class="reqs__d">Этапы до «Передачи МП» почти пустые, на самой передаче — сотни сделок,
+          а на «Показе площадки» единицы. Это значит, что заявки не задерживаются в обработке
+          у колл-центра, а накапливаются сразу после того, как уходят из системы в чат.</span>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="reqs__t">Дата закрытия сделки служебная</span>
+          <span class="reqs__d">«Успешно реализовано» ставится через какое-то время, чтобы CRM
+          не перегружалась, — разумная мера. Но из-за неё дата закрытия не совпадает с датой
+          мероприятия, и сроки сделки по системе не посчитать. Дату события будем хранить
+          отдельным полем.</span>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="reqs__t">Часть заявок приходит без источника</span>
+          <span class="reqs__d">Источник заполняется не у всех сделок, а звонки и сообщения
+          в мессенджерах меток не несут вовсе. Насколько велика эта доля — сегодня не знает никто;
+          это первое, что мы измерим после подключения.</span>
+        </div>
+      </li>
+    </ol>
+  </section>
+
+  <!-- 2 -->
+  <section id="s2">
+    <span class="sec__n">Раздел 2 · Направление первое</span>
+    <h2>Заявки и рекламные каналы</h2>
+    <p class="intro">Задача: видеть по каждому из шестнадцати источников, сколько он дал заявок,
+    сколько из них целевых, сколько дошло до показа площадки и во сколько обошлась каждая.</p>
+
+    <div class="pair">
+      <div class="pair__col">
+        <p class="pair__h">Что у вас появится</p>
+        <p>Одна таблица со всеми каналами, которую можно сортировать по любому столбцу, и график
+        заявок по дням. Отдельно видны строки «без метки» и «остальное» — то, что сейчас теряется.</p>
+        <p>Когда в сделках появятся суммы, к этому добавится выручка по каждому каналу и доля
+        рекламных расходов в ней. Тогда станет видно не «откуда много заявок», а «откуда деньги».</p>
+      </div>
+      <div class="pair__col">
+        <p class="pair__h">Как это устроено</p>
+        <p>Расход и клики — из <b>API Яндекс.Директа</b>, отчёты по кампаниям и ключевым словам.
+        Визиты, источники и метки — из <b>API Яндекс.Метрики</b>. Оттуда же забирается идентификатор
+        посетителя, и по нему заявка с сайта связывается с конкретным визитом и рекламной кампанией.</p>
+        <p>Сделки, этапы и история изменений — из <b>API АмоCRM</b>, версия 4. Опрос раз в несколько
+        минут плюс вебхуки на срочные события.</p>
+      </div>
+    </div>
+
+    <h3>Откуда берутся данные по каждому каналу</h3>
+    <p>Честная картина: официальный программный доступ есть не везде. Ниже — что подключается само,
+    что добывается обходным путём и что остаётся за человеком.</p>
+
+    <div class="tbl">
+      <table>
+        <thead><tr><th>Канал</th><th>Способ</th><th>Задержка<button class="qm" type="button" aria-expanded="false" aria-label="Как это посчитано" data-q="Срок, через который данные становятся полными. Это свойство самих источников, а не нашей системы: Метрика досчитывает визиты до трёх суток, счётчик Яндекс Бизнеса — тоже. <i>Поэтому «сегодня» всегда будет неполным, и никакая сквозная аналитика этого не обходит.</i>">?</button></th><th>Статус</th></tr></thead>
+        <tbody>
+          <tr><td><b>Яндекс.Директ</b></td><td>Официальный API, отчёты по кампаниям</td><td>Сутки</td><td><span class="mark mark--works">По API</span></td></tr>
+          <tr><td><b>Органика и сайт</b></td><td>API Метрики, журнал визитов</td><td>2–3 суток</td><td><span class="mark mark--works">По API</span></td></tr>
+          <tr><td><b>Яндекс.Карты</b></td><td>Счётчик Метрики, который Яндекс заводит организации автоматически: показы карточки, переходы, маршруты, нажатия на телефон</td><td>До 3 суток</td><td><span class="mark mark--works">По API</span></td></tr>
+          <tr><td><b>Формы и чат на сайте</b></td><td>Наш скрипт на сайте плюс вебхук АмоCRM</td><td>Мгновенно</td><td><span class="mark mark--works">По API</span></td></tr>
+          <tr><td><b>Нейросети</b><br>ChatGPT, Perplexity, Алиса</td><td>Правило разметки по адресу перехода в Метрике. Обычная сквозная аналитика этот источник не выделяет — он тонет в прямых заходах</td><td>2–3 суток</td><td><span class="mark mark--works">По API</span></td></tr>
+          <tr><td><b>Соцсети</b><br>ВК, Telegram, Instagram</td><td>Метки в ссылках плюс Метрика</td><td>2–3 суток</td><td><span class="mark mark--works">По API</span></td></tr>
+          <tr><td><b>Заявки с почты</b></td><td>Выделенный ящик, автоматический разбор писем</td><td>Минуты</td><td><span class="mark mark--works">По API</span></td></tr>
+          <tr><td><b>Звонки</b></td><td>API вашего оператора телефонии</td><td>Минуты</td><td><span class="mark mark--works">По API</span></td></tr>
+          <tr><td><b>2GIS</b></td><td>Своего API статистики для владельца бизнеса не существует. Ставим подменный номер и ссылку с меткой — звонки и переходы считаются точно. Показы карточки переносим из кабинета вручную</td><td>Звонки сразу, показы раз в месяц</td><td><span class="mark mark--partial">Обходным путём</span></td></tr>
+          <tr><td><b>Горько.ру</b></td><td>API нет. «Быстрый запрос» приходит письмом — заводим под него отдельный ящик и разбираем письма автоматически</td><td>Минуты</td><td><span class="mark mark--partial">Обходным путём</span></td></tr>
+          <tr><td><b>Рестоклаб</b></td><td>API нет, но есть кабинет ресторатора и собственный коллтрекинг. Как передаются платные заявки, нужно уточнить у их менеджера</td><td>Уточняется</td><td><span class="mark mark--partial">Обходным путём</span></td></tr>
+          <tr><td><b>СМИ и публикации</b></td><td>Отдельная ссылка с меткой и кодовое слово в тексте</td><td>Мгновенно</td><td><span class="mark mark--partial">Обходным путём</span></td></tr>
+          <tr><td><b>Zoon</b></td><td>API нет, и свой номер поставить нельзя: Zoon подменяет телефон собственным, чтобы считать звонки себе. Остаётся выгрузка из их кабинета</td><td>Раз в месяц</td><td><span class="mark mark--blocked">Только вручную</span></td></tr>
+          <tr><td><b>4банкет</b></td><td>Ни API, ни кабинета с аналитикой. Заявку передаёт их банкетный консультант — звонком или письмом</td><td>Вручную</td><td><span class="mark mark--blocked">Только вручную</span></td></tr>
+          <tr><td><b>Офлайн</b><br>вывеска, рекомендации</td><td>Обязательное поле «Как узнали о нас» в карточке сделки и кодовые слова</td><td>Вручную</td><td><span class="mark mark--blocked">Только вручную</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Что делаем с тем, что технически не отследить</h3>
+    <p>Часть гостей приходит «просто так»: увидели вывеску, услышали от знакомых, позвонили
+    на общий номер. Такой поток есть у любой площадки. Плохо не то, что он есть, а то, что
+    сегодня он сваливается в общую кучу. Пять приёмов закрывают это организационно:</p>
+    <ul class="plain">
+      <li><b>Свой подменный номер на каждую площадку.</b> Один номер — один канал. Гость звонит
+      с карточки 2GIS, и звонок попадает в CRM с уже проставленным источником, без участия оператора.</li>
+      <li><b>Отдельный почтовый ящик на каждый агрегатор.</b> В профиле Горько.ру и Рестоклаба
+      указывается не общая почта, а служебный адрес. Письмо разбирается автоматически.</li>
+      <li><b>Кодовое слово со скидкой.</b> «Скидка 5% по слову ГОРЬКО» в карточке площадки. Гость
+      называет источник сам — и заодно охотнее доводит разговор до брони.</li>
+      <li><b>Обязательное поле «Как узнали о нас».</b> Сделку нельзя перевести дальше квалификации,
+      пока поле пустое.</li>
+      <li><b>QR-код с меткой</b> на вывеске, в меню и на пригласительных. Переход из офлайна
+      становится обычным размеченным визитом.</li>
+    </ul>
+
+    <div class="aside">
+      <p><b>Проверяемый результат направления.</b> Доля заявок без определённого источника
+      измеряется системой ежедневно и выводится на первый экран. Задача первых двух месяцев —
+      довести её до величины, о которой договоримся после первого замера. Сейчас назвать цель
+      в процентах нельзя: никто не знает, какая эта доля сегодня.</p>
+    </div>
+  </section>
+
+  <!-- 3 -->
+  <section id="s3">
+    <span class="sec__n">Раздел 3 · Направление второе</span>
+    <h2>Звонки колл-центра</h2>
+    <p class="intro">Задача: не слушать сто разговоров, чтобы найти три проблемных. Система
+    расшифровывает каждый звонок, сверяет его с вашим скриптом и показывает, что именно
+    было упущено.</p>
+
+    <div class="pair">
+      <div class="pair__col">
+        <p class="pair__h">Что у вас появится</p>
+        <p>Список звонков с оценкой по каждому и фильтрами: с нарушениями, пропущенные, лучшие.
+        В карточке разговора — расшифровка, где отмечено, какие пункты скрипта оператор выполнил,
+        а какие пропустил, и короткий вывод простым языком.</p>
+        <p>Сводка за месяц по каждому пункту скрипта: где проседает вся смена, а где конкретный
+        оператор. Лучшие разговоры можно использовать как учебные.</p>
+      </div>
+      <div class="pair__col">
+        <p class="pair__h">Как это устроено</p>
+        <p><b>Записи уже ведёт ваша телефония</b> — менять оператора и что-либо переносить не нужно.
+        Мы забираем записи по его API и складываем в своё хранилище.</p>
+        <p>Это важно: <b>АмоCRM хранит не сам файл, а только ссылку на сервер оператора</b>. Когда
+        у оператора истечёт срок хранения, записи пропадут и из карточек сделок тоже. Своё
+        хранилище снимает эту зависимость.</p>
+        <p>Расшифровка — на российских мощностях, около 36 ₽ за час аудио<button class="qm" type="button" aria-expanded="false" aria-label="Как это посчитано" data-q="Цена складывается из тарифа облачного распознавания речи на российских мощностях: порядка <b>0,5–0,6 ₽ за минуту</b> в пакетном режиме, когда запись обрабатывается не в реальном времени, а после звонка. Полчаса разговоров в день — это около тысячи рублей в месяц. <i>Это ориентир по публичным прайсам, а не договорная цена: точную назовём на этапе подключения, когда выберем сервис и померяем ваш реальный объём записей.</i>">?</button>. Разделение реплик
+        оператора и клиента надёжнее всего работает, если телефония пишет разговор в два канала.</p>
+      </div>
+    </div>
+
+    <div class="aside aside--warn">
+      <p><b>Без чего направление не запускается.</b> Нужен скрипт продаж в письменном виде —
+      с ним сверяют разговор. Если формализованного скрипта нет, первым шагом мы составляем его
+      вместе с вами на основе лучших реальных звонков: это отдельная небольшая работа, и её
+      лучше запланировать заранее.</p>
+      <p>Также нужно название оператора телефонии и доступ к его API. У Zadarma и МТС Exolve
+      документация полностью открыта, у Манго, UIS, Sipuni и Телфина доступ выдаётся по заявке.
+      У МегаФона записи хранятся год и выгружаются по FTP.</p>
+    </div>
+  </section>
+
+  <!-- 4 -->
+  <section id="s4">
+    <span class="sec__n">Раздел 4 · Направление третье</span>
+    <h2>График сотрудников и залов</h2>
+    <p class="intro">Задача: видеть, кто, когда и где работает, считать часы и заранее замечать дни,
+    в которые площадка не справится с нагрузкой.</p>
+
+    <div class="pair">
+      <div class="pair__col">
+        <p class="pair__h">Что у вас появится</p>
+        <p>Месяц целиком на одном экране: смены по каждому сотруднику, отдельной колонкой —
+        отработанные часы и количество смен, с подсветкой переработки сверх нормы месяца.
+        Любую неделю можно открыть подробно и переставить смену перетаскиванием.</p>
+        <p>Второй слой — залы. Белый, Лофт и Веранда на шкале вечера: показы, дегустации,
+        мероприятия, монтаж. Мероприятия берутся из АмоCRM, а не вписываются руками.</p>
+        <p>Система сама проверяет график и предупреждает: в субботу три показа площадки, а менеджер
+        в смене один; у оператора шестая смена подряд; у сотрудника переработка за месяц.</p>
+      </div>
+      <div class="pair__col">
+        <p class="pair__h">Как это устроено</p>
+        <p>Мероприятия подтягиваются из сделок АмоCRM по дате события и залу. Это заменяет ручной
+        календарь в Google Docs: одна запись вместо двух, и она не расходится с CRM.</p>
+        <p>Правила проверки настраиваются: сколько менеджеров нужно на показ, сколько смен подряд
+        допустимо, какая норма часов в месяце. Кнопка автоматического заполнения расставляет смены
+        под нагрузку и снимает переработку.</p>
+        <p>Права доступа по должностям: кто видит весь график, кто только свой, кто может править.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 -->
+  <section id="s5">
+    <span class="sec__n">Раздел 5</span>
+    <h2>Что нужно с вашей стороны</h2>
+    <p class="intro">Без этого работа либо не начнётся, либо встанет посередине. Первые два пункта
+    имеет смысл закрыть в первый же день.</p>
+
+    <ol class="reqs">
+      <li><div><span class="reqs__t">Права администратора в АмоCRM</span>
+        <span class="reqs__d">Чтобы создать интеграцию и получить ключи доступа. Занимает несколько минут.</span></div></li>
+      <li><div><span class="reqs__t">Заявка на доступ к API Яндекс.Директа</span>
+        <span class="reqs__d">Её рассматривают до семи дней, и подать её можно только с вашего аккаунта.
+        Это единственное место, где мы зависим от внешних сроков, поэтому подаём сразу.</span></div></li>
+      <li><div><span class="reqs__t">Доступы к Метрике и Яндекс Бизнесу</span>
+        <span class="reqs__d">Часто владелец Директа, владелец счётчика и владелец карточки организации —
+        три разных аккаунта. Это самая частая причина, по которой проекты такого рода срываются по срокам.</span></div></li>
+      <li><div><span class="reqs__t">Оператор телефонии и доступ к записям</span>
+        <span class="reqs__d">Название оператора, доступ к его API и срок, в течение которого он хранит записи.</span></div></li>
+      <li><div><span class="reqs__t">Скрипт продаж в письменном виде</span>
+        <span class="reqs__d">Либо готовность составить его вместе на первом этапе.</span></div></li>
+      <li><div><span class="reqs__t">Кабинеты 2GIS, Zoon, Рестоклаб, Горько.ру</span>
+        <span class="reqs__d">Для настройки подменных номеров, ссылок с метками и служебных почтовых адресов.</span></div></li>
+      <li><div><span class="reqs__t">Решение: что считается продажей</span>
+        <span class="reqs__d">Бронь, предоплата или проведённое мероприятие. От этого зависит, как
+        считается конверсия и выручка канала.</span></div></li>
+      <li><div><span class="reqs__t">Согласие на обработку персональных данных</span>
+        <span class="reqs__d">И текст уведомления о том, что разговор записывается.</span></div></li>
+    </ol>
+  </section>
+
+  <!-- 6 -->
+  <section id="s6">
+    <span class="sec__n">Раздел 6</span>
+    <h2>Данные и безопасность</h2>
+    <p>Персональные данные гостей, записи разговоров и их расшифровки хранятся на российском
+    сервере. Распознавание речи выполняется на российских мощностях — аудио за границу не уходит.</p>
+    <p>Языковая модель используется только для формулировок и выводов, и в неё передаётся
+    обезличенный текст: имена, телефоны, адреса и почта заменяются метками до отправки. Канал
+    передачи шифрованный, с двусторонними сертификатами.</p>
+    <p>Все расчёты выполняет база данных, а не модель. Это принципиально: числа в отчётах
+    воспроизводимы и проверяемы, любое из них можно раскрыть до исходной записи. Без языковой
+    модели система продолжает работать целиком — теряются только пояснения человеческим языком.</p>
+  </section>
+
+  <!-- 7 -->
+  <section id="s7">
+    <span class="sec__n">Раздел 7</span>
+    <h2>Этапы работ</h2>
+    <p class="intro">Я намеренно не называю сумму на весь объём. Пока системы не подключены,
+    настоящий объём работ не виден, и любая оценка на весь проект была бы взята с потолка.
+    Поэтому начинаем с короткого первого этапа.</p>
+
+    <div class="stage stage--first">
+      <div class="stage__top">
+        <span class="stage__t">Подключение и диагностика</span>
+        <span class="stage__time">2–3 недели · фиксированная стоимость<button class="qm" type="button" aria-expanded="false" aria-label="Как это посчитано" data-q="Срок сложен из работ этапа: подключение четырёх систем (АмоСRM, Метрика, Директ, телефония), расшифровка записей за прошедший период и сборка дашборда на ваших данных. <b>Разброс в неделю — это не наша скорость, а сроки выдачи доступов.</b> Заявку на API Яндекс.Директа рассматривают до семи дней, и подаётся она только с вашего аккаунта — чем раньше подадим, тем ближе к двум неделям.">?</button></span>
+      </div>
+      <p>Подключаем АмоCRM, Метрику, Директ и вашу телефонию. Расшифровываем реальные звонки
+      за прошедший период. Собираем рабочий дашборд — тот, что вы видели в прототипе, но на ваших
+      данных. Отдельно готовим письменный отчёт: какая доля заявок приходит без источника, где
+      именно рассыпается воронка, что происходит в разговорах.</p>
+      <p>По итогам этапа вы получаете работающую аналитику и можете остановиться. Если идём дальше —
+      к этому моменту виден реальный объём, и стоимость остальных этапов называется точно,
+      а не приблизительно.</p>
+    </div>
+
+    <div class="stage">
+      <div class="stage__top">
+        <span class="stage__k">Далее</span>
+        <span class="stage__t">Сквозная разметка каналов</span>
+      </div>
+      <p>Подменные номера, служебные почтовые ящики, метки и кодовые слова по всем шестнадцати
+      источникам. Обязательное поле «Как узнали о нас». Выручка по каналам, когда в сделках
+      появятся суммы.</p>
+    </div>
+
+    <div class="stage">
+      <div class="stage__top">
+        <span class="stage__k">Далее</span>
+        <span class="stage__t">Контроль качества звонков</span>
+      </div>
+      <p>Расшифровка всех разговоров, сверка со скриптом, оценки, сводки по операторам, уведомления
+      о проблемных звонках.</p>
+    </div>
+
+    <div class="stage">
+      <div class="stage__top">
+        <span class="stage__k">Далее</span>
+        <span class="stage__t">График сотрудников и залов</span>
+      </div>
+      <p>Месячный график с учётом часов, расписание залов, проверка на конфликты, синхронизация
+      мероприятий с АмоCRM вместо ручного календаря.</p>
+    </div>
+
+    <div class="stage">
+      <div class="stage__top">
+        <span class="stage__k">После внедрения</span>
+        <span class="stage__t">Сопровождение</span>
+        <span class="stage__time">ежемесячно</span>
+      </div>
+      <p>Сервер и его обслуживание, обновления, мелкие доработки, расход на распознавание речи.
+      Отдельная небольшая сумма, которую имеет смысл зафиксировать заранее.</p>
+    </div>
+  </section>
+
+  <!-- 8 -->
+  <section id="s8">
+    <span class="sec__n">Раздел 8</span>
+    <h2>Чего мы не обещаем</h2>
+    <p class="intro">Этот раздел здесь потому, что обратное обычно выясняется в середине работ
+    и портит отношения.</p>
+    <ul class="plain">
+      <li><b>Отзывы на Яндекс.Картах и в 2GIS не автоматизируются.</b> Официального способа
+      получать их и отвечать на них программно не существует. Есть платные сторонние сервисы —
+      если тема важна, разберём отдельно.</li>
+      <li><b>Статистика карточек 2GIS и Zoon переносится вручную.</b> Пятнадцать минут раз в месяц.
+      Это единственная ручная операция, которая остаётся в регламенте.</li>
+      <li><b>Цифры в отчётах не совпадут с интерфейсом Метрики один в один.</b> Яндекс официально
+      предупреждает о расхождении: в веб-интерфейсе применяются дополнительные коэффициенты.
+      Это не ошибка расчёта.</li>
+      <li><b>Данные приходят с задержкой.</b> Метрика — до трёх суток до полноты, счётчик
+      Яндекс Бизнеса — до трёх суток. «Сегодня» всегда будет неполным, и это свойство источников,
+      а не системы.</li>
+      <li><b>Мы не подбираем данные скрытым обходом кабинетов.</b> Автоматический сбор из личных
+      кабинетов нарушает их правила и ломается при первом же обновлении интерфейса. Мы этого
+      не делаем.</li>
+    </ul>
+  </section>
+
+  <footer class="foot">
+    <p>Прототип интерфейса, о котором идёт речь в разделах 2–4:
+    <a href="portal.html">открыть в браузере</a>. Все числа в нём вымышлены — это макет, показывающий,
+    как экраны будут выглядеть на ваших данных.</p>
+    <p>Вопросы и правки: Алексей Копотун. Документ — первая редакция, рассчитан на обсуждение.</p>
+  </footer>
+
+</div>
+
+<script>
+(function(){
+  var pop=null, btn=null;
+  function close(){ if(pop){pop.remove(); pop=null;} if(btn){btn.setAttribute('aria-expanded','false'); btn=null;} }
+  document.addEventListener('click',function(e){
+    var t=e.target, b=t&&t.closest?t.closest('.qm'):null;
+    if(!b){ if(pop && !(t.closest&&t.closest('.qpop'))) close(); return; }
+    e.preventDefault();
+    var again=(btn===b); close(); if(again) return;
+    var w=document.createElement('div');
+    w.className='qpop'; w.innerHTML=b.getAttribute('data-q');
+    document.body.appendChild(w);
+    var r=b.getBoundingClientRect(), vw=document.documentElement.clientWidth;
+    var x=r.left+window.pageXOffset-10, max=window.pageXOffset+vw-w.offsetWidth-12;
+    w.style.left=Math.round(Math.max(window.pageXOffset+12,Math.min(x,max)))+'px';
+    w.style.top=Math.round(r.bottom+window.pageYOffset+7)+'px';
+    pop=w; btn=b; b.setAttribute('aria-expanded','true');
+  });
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape') close(); });
+})();
+</script>

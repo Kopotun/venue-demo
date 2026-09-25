@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="ru">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Решения для ресторана · КРЫМ terrace</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,400;7..72,500;7..72,600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+:root{
+  --paper:#f2f3f1; --field:#ffffff; --ink:#32302d; --ink-2:#6a645d; --ink-3:#98918a;
+  --rule:#dedad4; --rule-soft:#eae7e2;
+  --op:#2f6a4a;   --op-bg:#e9f1ec;
+  --ed:#2e5b7d;   --ed-bg:#e8eef3;
+  --fi:#8a6520;   --fi-bg:#f5eedc;
+  --pl:#514c62;   --pl-bg:#eeecf1;
+  --read:'Literata',Georgia,serif;
+  --data:'IBM Plex Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--read);font-size:17px;line-height:1.65;-webkit-font-smoothing:antialiased}
+:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+.sheet{max-width:1060px;margin:0 auto;padding:0 28px 84px}
+
+.masthead{padding:48px 0 0}
+.masthead h1{font-weight:600;font-size:clamp(29px,5vw,44px);line-height:1.12;letter-spacing:-.018em;margin:0 0 20px;max-width:19ch}
+.masthead .by{font-family:var(--data);font-size:13.5px;color:var(--ink-2);padding-top:16px;border-top:1px solid var(--rule)}
+.lede{font-size:19px;line-height:1.58;max-width:60ch;margin:32px 0 0}
+.lede em{font-style:normal;background:linear-gradient(transparent 62%, #dfe8e1 62%)}
+
+.facts{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--rule);border:1px solid var(--rule);margin:40px 0 0}
+.fact{background:var(--field);padding:18px 20px}
+.fact b{display:block;font-family:var(--data);font-weight:600;font-size:27px;letter-spacing:-.02em;line-height:1.1}
+.fact span{display:block;font-family:var(--data);font-size:13px;color:var(--ink-2);margin-top:5px;line-height:1.4}
+
+h2{font-weight:600;font-size:clamp(23px,3.2vw,29px);line-height:1.2;letter-spacing:-.012em;margin:0 0 12px;max-width:26ch}
+p{margin:0 0 15px;max-width:66ch}
+section{padding:54px 0 0}
+
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:28px}
+.card{background:var(--field);border:1px solid var(--rule);display:flex;flex-direction:column}
+.card__top{height:4px}
+.card__head{display:flex;gap:14px;align-items:flex-start;padding:22px 24px 0}
+.card__ico{flex:0 0 auto;width:38px;height:38px;border-radius:50%;display:grid;place-items:center}
+.card__ico svg{width:20px;height:20px;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.card__t{font-weight:600;font-size:21px;line-height:1.2;margin:4px 0 3px}
+.card__sub{font-family:var(--data);font-size:13.5px;color:var(--ink-2);line-height:1.45;max-width:34ch}
+.card ul{list-style:none;margin:16px 0 0;padding:0 24px 4px;font-family:var(--data);font-size:14.5px;line-height:1.55}
+.card li{position:relative;padding:0 0 0 17px;margin-bottom:12px;color:var(--ink-2)}
+.card li::before{content:"";position:absolute;left:0;top:8px;width:6px;height:6px;border-radius:1px}
+.card li b{color:var(--ink);font-weight:600}
+.card__note{margin-top:auto;font-family:var(--data);font-size:13.5px;line-height:1.5;padding:14px 24px;border-top:1px solid var(--rule-soft)}
+
+.c-op .card__top{background:var(--op)} .c-op .card__ico{background:var(--op-bg)} .c-op .card__ico svg{stroke:var(--op)}
+.c-op li::before{background:var(--op)} .c-op .card__note{background:var(--op-bg);color:var(--op)}
+.c-ed .card__top{background:var(--ed)} .c-ed .card__ico{background:var(--ed-bg)} .c-ed .card__ico svg{stroke:var(--ed)}
+.c-ed li::before{background:var(--ed)} .c-ed .card__note{background:var(--ed-bg);color:var(--ed)}
+.c-fi .card__top{background:var(--fi)} .c-fi .card__ico{background:var(--fi-bg)} .c-fi .card__ico svg{stroke:var(--fi)}
+.c-fi li::before{background:var(--fi)} .c-fi .card__note{background:var(--fi-bg);color:var(--fi)}
+.c-pl .card__top{background:var(--pl)} .c-pl .card__ico{background:var(--pl-bg)} .c-pl .card__ico svg{stroke:var(--pl)}
+.c-pl li::before{background:var(--pl)} .c-pl .card__note{background:var(--pl-bg);color:var(--pl)}
+.c-pl{grid-column:1 / -1}
+.c-pl ul{columns:2;column-gap:34px}
+.c-pl li{break-inside:avoid}
+
+.term{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--rule);border:1px solid var(--rule);margin:26px 0 0}
+.term div{background:var(--field);padding:18px 22px}
+.term b{display:block;font-family:var(--data);font-weight:600;font-size:22px;letter-spacing:-.015em;line-height:1.15}
+.term span{display:block;font-family:var(--data);font-size:13.5px;color:var(--ink-2);margin-top:6px;line-height:1.45}
+
+.qlist{margin:26px 0 0;border-top:1px solid var(--rule)}
+.q{display:grid;grid-template-columns:30px 1fr;gap:14px;padding:16px 0;border-bottom:1px solid var(--rule-soft);align-items:start}
+.q__n{font-family:var(--data);font-size:13px;font-weight:600;color:var(--ink-3);padding-top:3px}
+.q__t{font-weight:600;font-size:17.5px;line-height:1.35;margin:0 0 5px;max-width:54ch}
+.q__w{font-family:var(--data);font-size:14px;line-height:1.55;color:var(--ink-2);margin:0;max-width:62ch}
+
+.aside{margin:30px 0 0;padding:20px 24px;background:var(--field);border-left:3px solid var(--ink);font-family:var(--data);font-size:14.5px;line-height:1.6}
+.aside p{margin:0 0 10px;max-width:62ch}
+.aside p:last-child{margin:0}
+.aside b{font-weight:600}
+.close{margin:38px 0 0;padding:28px 30px;background:var(--field);border:1px solid var(--rule);border-top:3px solid var(--op)}
+.close h3{font-size:23px;font-weight:600;margin:0 0 14px;line-height:1.25}
+.close p{font-family:var(--data);font-size:15px;line-height:1.65;color:var(--ink-2);margin:0 0 13px;max-width:62ch}
+.close p:last-child{margin-bottom:0}
+.close b{color:var(--ink);font-weight:600}
+@media(max-width:700px){.close{padding:22px 20px}}
+
+.foot{margin-top:60px;padding-top:22px;border-top:1px solid var(--rule);font-family:var(--data);font-size:14px;color:var(--ink-2)}
+
+@media (max-width:860px){
+  .grid{grid-template-columns:1fr}
+  .c-pl ul{columns:1}
+  .facts{grid-template-columns:1fr 1fr}
+}
+@media (max-width:620px){
+  .term{grid-template-columns:1fr}
+}
+@media (max-width:560px){
+  body{font-size:16.5px}
+  .sheet{padding:0 18px 66px}
+  .lede{font-size:17.5px}
+}
+
+/* ─── сквозная навигация по пакету материалов ─── */
+.pkgnav{position:sticky; top:0; z-index:50; background:#2b2724; display:flex; align-items:stretch;
+  font-family:'IBM Plex Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;
+  overflow-x:auto; scrollbar-width:none}
+.pkgnav::-webkit-scrollbar{display:none}
+.pkgnav__b{display:flex; flex-direction:column; justify-content:center; padding:0 17px 0 22px;
+  text-decoration:none; color:#f2ece4; font-size:13px; font-weight:600; line-height:1.15;
+  white-space:nowrap; border-right:1px solid #443d37; flex:none}
+.pkgnav__b span{font-size:10px; font-weight:400; color:#9c9189; letter-spacing:.09em; margin-top:3px}
+.pkgnav__b:hover{background:#35302b}
+.pkgnav__l{display:flex; align-items:stretch; flex:none}
+.pkgnav__l a{display:flex; align-items:center; padding:0 15px; height:46px; text-decoration:none;
+  color:#b3a99f; font-size:13.5px; white-space:nowrap; border-bottom:2px solid transparent}
+.pkgnav__l a:hover{color:#f2ece4; background:#35302b}
+.pkgnav__l a[aria-current="page"]{color:#f2ece4; border-bottom-color:#c99b58; font-weight:500}
+.pkgnav__l a:focus-visible{outline:2px solid #c99b58; outline-offset:-3px}
+@media (max-width:660px){
+  .pkgnav__b{padding:0 12px 0 15px; font-size:12.5px}
+  .pkgnav__b span{display:none}
+  .pkgnav__l a{padding:0 11px; font-size:13px}
+}
+/* на телефоне все пять разделов помещаются без прокрутки: знак ведёт туда же, куда «Обзор» */
+@media (max-width:560px){
+  .pkgnav__b{display:none}
+  .pkgnav__l{flex:1; justify-content:space-between}
+  .pkgnav__l a{padding:0 8px; font-size:13px}
+}
+
+/* «как это посчитано» */
+.qm{width:16px; height:16px; padding:0; margin-left:5px; border:1px solid var(--rule); border-radius:50%;
+    background:var(--field); color:var(--ink-3); font-family:var(--data); font-size:10px; line-height:1;
+    cursor:pointer; display:inline-grid; place-items:center; vertical-align:2px; flex:none}
+.qm:hover{border-color:var(--ink-2); color:var(--ink)}
+.qm[aria-expanded="true"]{background:var(--ink); border-color:var(--ink); color:var(--paper)}
+.qpop{position:absolute; z-index:80; width:min(330px,calc(100vw - 24px)); background:#2b2724; color:#ece7e0;
+      font-family:var(--data); font-size:13.5px; line-height:1.55; padding:12px 14px; border-radius:6px;
+      box-shadow:0 8px 28px rgba(20,18,16,.3)}
+.qpop b{color:#fff; font-weight:600}
+.qpop i{font-style:normal; color:#b9afa2}
+</style>
+
+<nav class="pkgnav" aria-label="Разделы пакета">
+  <a class="pkgnav__b" href="index.html">КРЫМ terrace<span>МАТЕРИАЛЫ</span></a>
+  <div class="pkgnav__l">
+    <a href="index.html">Обзор</a>
+    <a href="tz.html">Техзадание</a>
+    <a href="portal.html">Прототип</a>
+    <a href="site.html">Сайт</a>
+    <a href="restaurant.html" aria-current="page">Ресторан</a>
+  </div>
+</nav>
+
+
+<div class="sheet">
+  <header class="masthead">
+    <h1>Что можно сделать в ресторане</h1>
+    <div class="by">Алексей Копотун, 23 сентября 2026</div>
+  </header>
+
+  <p class="lede">Всё, что описано ниже, <em>уже написано и развёрнуто</em> в действующем
+  ресторане в Петербурге — на боевом сервере, на живых накладных и живых деньгах.
+  Это не список идей, а список того, что можно поставить у вас.</p>
+
+  <section>
+    <h2>Из чего это состоит</h2>
+    <p>Три помощника в телеграме и общий веб-кабинет. Сотрудник работает там, где ему удобно —
+    с телефона в зале или с компьютера в кабинете.</p>
+
+    <div class="grid">
+
+      <article class="card c-op">
+        <div class="card__top"></div>
+        <div class="card__head">
+          <div class="card__ico"><svg viewBox="0 0 24 24"><path d="M9 4h6v3H9z"/><path d="M15 5.5h2.5a1 1 0 0 1 1 1V19a1 1 0 0 1-1 1h-11a1 1 0 0 1-1-1V6.5a1 1 0 0 1 1-1H9"/><path d="M8.5 11.5l1.5 1.5 3-3.5"/><path d="M8.5 16.5h7"/></svg></div>
+          <div>
+            <div class="card__t">Операционный помощник</div>
+            <div class="card__sub">Смена, склад, деньги поставщикам</div>
+          </div>
+        </div>
+        <ul>
+          <li><b>Чек-листы смены с фотографией.</b> Открытие, закрытие, санитария. Не сделано — руководитель узнаёт сразу, а не через неделю.</li>
+          <li><b>Задачи и поручения.</b> Со сроком и ответственным, с напоминанием и отметкой о выполнении.</li>
+          <li><b>Табель.</b> Приход и уход отмечаются с телефона, часы считаются сами.</li>
+          <li><b>Дисциплина.</b> Опоздания и невыполненные задачи собираются в сводку по каждому сотруднику.</li>
+          <li><b>Оплаты поставщикам.</b> Кому и сколько должны, у кого какая отсрочка, что платим на этой неделе. Двойные счета находятся до оплаты.</li>
+          <li><b>Приёмка накладных по фото.</b> Сотрудник фотографирует бумагу — документ распознаётся и проходит одиннадцать сверок с тем, что пришло из учётной программы. Спорные позиции уходят вопросом шефу, а не молча внутрь. Через фотографию прошло больше сотни накладных.</li>
+          <li><b>Проведение без бухгалтера.</b> Сошедшееся агент проводит в учётной программе сам. За один день так прошло около тридцати накладных — человеку осталось подтверждение.</li>
+        </ul>
+        <div class="card__note">Владелец платит поставщикам отсюда — вместо таблицы и памяти.</div>
+      </article>
+
+      <article class="card c-ed">
+        <div class="card__top"></div>
+        <div class="card__head">
+          <div class="card__ico"><svg viewBox="0 0 24 24"><path d="M12 4.5l8 3.5-8 3.5-8-3.5z"/><path d="M7 10v4.8c0 1.2 2.2 2.2 5 2.2s5-1 5-2.2V10"/><path d="M20 8v4.5"/></svg></div>
+          <div>
+            <div class="card__t">Обучающий помощник</div>
+            <div class="card__sub">Персонал знает меню и правила</div>
+          </div>
+        </div>
+        <ul>
+          <li><b>Справочник блюд.</b> Состав, аллергены, вес, цена, подача. Находит даже с опечаткой — официант не уходит от гостя за ответом.</li>
+          <li><b>Курсы и тесты.</b> Назначаются по должности, со сроком и напоминанием. Видно, кто прошёл, а кто тянет.</li>
+          <li><b>Ответы по регламентам.</b> Сотрудник спрашивает своими словами — получает ответ цитатой из вашего документа.</li>
+          <li><b>Личный наставник официанта.</b> Его показатели против средних по залу: средний чек, десерты, допродажи. И что конкретно подтянуть.</li>
+          <li><b>Микроурок перед сменой.</b> Две-три минуты по тому, что у человека просело.</li>
+          <li><b>Тренировка с виртуальным гостем.</b> Отработка возражений и сложных ситуаций с разбором по шести критериям.</li>
+        </ul>
+        <div class="card__note">Содержание заводится ваше: блюда, техкарты, курсы, регламенты.</div>
+      </article>
+
+      <article class="card c-fi">
+        <div class="card__top"></div>
+        <div class="card__head">
+          <div class="card__ico"><svg viewBox="0 0 24 24"><path d="M4 19h16"/><path d="M7 19V12"/><path d="M12 19V6.5"/><path d="M17 19v-4.5"/></svg></div>
+          <div>
+            <div class="card__t">Финансовый помощник</div>
+            <div class="card__sub">Цифры по заведению без бухгалтера</div>
+          </div>
+        </div>
+        <ul>
+          <li><b>Выручка в реальном времени.</b> Обновляется каждые пять-десять минут, смотреть можно с телефона откуда угодно.</li>
+          <li><b>Девятнадцать показателей.</b> Средний чек, гости, выручка по залам и официантам, сравнение с прошлой неделей и прошлым годом.</li>
+          <li><b>Любая цифра раскрывается.</b> До конкретного чека и конкретного блюда — видно, откуда она взялась.</li>
+          <li><b>Себестоимость и фудкост.</b> По блюду, по группе, по заведению; отклонения подсвечиваются.</li>
+          <li><b>ABC-анализ и матрица меню.</b> Что приносит прибыль, что держат ради ассортимента, а что пора убрать.</li>
+          <li><b>Сигналы об отклонениях.</b> Система сама пишет, когда выручка просела, фудкост вырос или списания выше обычного.</li>
+          <li><b>Сводка владельцу.</b> Короткий отчёт в телеграм в то время, когда вам удобно его читать.</li>
+        </ul>
+        <div class="card__note">Вопрос «как вчера отработали» закрывается за десять секунд с телефона.</div>
+      </article>
+
+      <article class="card c-pl">
+        <div class="card__top"></div>
+        <div class="card__head">
+          <div class="card__ico"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="7" height="7" rx="1"/><rect x="13" y="4" width="7" height="7" rx="1"/><rect x="4" y="13" width="7" height="7" rx="1"/><rect x="13" y="13" width="7" height="7" rx="1"/></svg></div>
+          <div>
+            <div class="card__t">Общая платформа</div>
+            <div class="card__sub">То, что держит все три вместе и делает из них одну систему, а не три разные программы</div>
+          </div>
+        </div>
+        <ul>
+          <li><b>Один сотрудник — один доступ.</b> Завели человека один раз, он работает во всех трёх помощниках. Уволили — доступ закрылся везде сразу.</li>
+          <li><b>Права по должностям.</b> Официант видит своё, шеф — кухню, управляющий — всё заведение.</li>
+          <li><b>Деньги — отдельно.</b> Право видеть и проводить оплаты нельзя выдать должности: только конкретному человеку и только вами.</li>
+          <li><b>Веб-кабинет.</b> Всё то же самое в браузере с компьютера: сегодняшние дела, смена, финансы, склад, обучение, команда.</li>
+          <li><b>Уведомления адресно.</b> Приходят тому, кого касаются, а не в общий чат, где их никто не читает.</li>
+          <li><b>Считает система, а не нейросеть.</b> Все суммы и проценты берутся из базы; ИИ только объясняет их человеческим языком.</li>
+          <li><b>Отдельный сервер под ваше заведение.</b> Своя база, свои боты. Ваши данные не лежат вперемешку с чужими.</li>
+          <li><b>Данные остаются в России.</b> Персональные данные и рабочая часть — на российском сервере.</li>
+        </ul>
+        <div class="card__note">Добавить четвёртое направление позже — это надстройка, а не новая система с нуля.</div>
+      </article>
+
+    </div>
+  </section>
+
+  <section>
+    <h2>Сроки и что на них влияет</h2>
+    <p>Предлагаю не браться за ресторан первым. Сначала банкетная площадка: там задача понятнее
+    и результат виден быстрее. К моменту, когда площадка заработает, мы уже сработаемся,
+    и разговор про ресторан пойдёт предметно.</p>
+    <p>Чтобы было от чего отталкиваться — как это шло в Петербурге:</p>
+
+    <div class="term">
+      <div><b>2 недели<button class="qm" type="button" aria-expanded="false" aria-label="Как это посчитано" data-q="Две недели — это перенос готовой платформы, а не разработка с нуля: вход, права, сотрудники, боты и портал уже работают в проде у другого ресторана. <b>В эти две недели не входит коннектор к iiko</b> — всё готовое написано под другую кассу, и эту часть мы оценим отдельно, когда увидим версию вашей iiko и доступы к ней.">?</button></b><span>от утверждённого задания до первого блока, работающего на сервере
+      с настоящими накладными</span></div>
+      <div><b>около месяца</b><span>до всех трёх помощников и общего кабинета, открытых персоналу</span></div>
+    </div>
+
+    <p style="margin-top:22px">У вас срок будет свой. Учётная программа у вас iiko — это я уже
+    знаю, и связь с ней пишется под ваш случай: это самая длинная часть работы. Остальной
+    разброс задают два вопроса:</p>
+
+    <div class="qlist">
+      <div class="q">
+        <div class="q__n">01</div>
+        <div>
+          <p class="q__t">С какого блока начинаем</p>
+          <p class="q__w">Один блок — это недели. Всё сразу — месяцы и совсем другая сумма.
+          Обычно берут то, что болит прямо сейчас, а остальное добавляют потом поверх готового.</p>
+        </div>
+      </div>
+      <div class="q">
+        <div class="q__n">02</div>
+        <div>
+          <p class="q__t">Кто сейчас заводит приходные документы и как</p>
+          <p class="q__w">От этого зависит, что помощник возьмёт на себя целиком, а что будет
+          готовить человеку на подтверждение.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="aside">
+      <p><b>Как считаем.</b> Фиксированная стоимость за согласованный объём работ и календарный
+      план, а не почасовая оплата. Ответы превращаются в перечень работ, перечень — в цену
+      и срок. Дальше они не меняются: если я ошибся в оценке, это моя проблема, а не ваш
+      дополнительный счёт.</p>
+    </div>
+
+    <div class="close">
+      <h3>С чего начать</h3>
+      <p>Самое простое — <b>полчаса разобрать вашу кухню</b>. Управляющий рассказывает, что
+      сегодня делается руками и где утекает время: приёмка документов, смена, обучение людей,
+      себестоимость. На каждое место я говорю, чем оно закрыто в работающей системе и что
+      из этого переносится к вам без переделки.</p>
+      <p>После этого выбираем <b>первый блок</b> — тот, что болит сильнее всего, — и по нему
+      я называю объём, срок и стоимость. Один блок это недели, а не месяцы: можно запустить,
+      посмотреть на результат и уже потом решать про остальное.</p>
+      <p><b>Скажите, когда вам и управляющему удобно</b> — полчаса на этой неделе или на
+      следующей, как получится.</p>
+    </div>
+  </section>
+
+  <footer class="foot">
+    <p>Алексей Копотун · материал для обсуждения. Всё перечисленное написано и развёрнуто
+    в действующем ресторане; разобрать любой пункт подробно готов на созвоне.</p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  var pop=null, btn=null;
+  function close(){ if(pop){pop.remove(); pop=null;} if(btn){btn.setAttribute('aria-expanded','false'); btn=null;} }
+  document.addEventListener('click',function(e){
+    var t=e.target, b=t&&t.closest?t.closest('.qm'):null;
+    if(!b){ if(pop && !(t.closest&&t.closest('.qpop'))) close(); return; }
+    e.preventDefault();
+    var again=(btn===b); close(); if(again) return;
+    var w=document.createElement('div');
+    w.className='qpop'; w.innerHTML=b.getAttribute('data-q');
+    document.body.appendChild(w);
+    var r=b.getBoundingClientRect(), vw=document.documentElement.clientWidth;
+    var x=r.left+window.pageXOffset-10, max=window.pageXOffset+vw-w.offsetWidth-12;
+    w.style.left=Math.round(Math.max(window.pageXOffset+12,Math.min(x,max)))+'px';
+    w.style.top=Math.round(r.bottom+window.pageYOffset+7)+'px';
+    pop=w; btn=b; b.setAttribute('aria-expanded','true');
+  });
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape') close(); });
+})();
+</script>
