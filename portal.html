@@ -416,15 +416,18 @@ tfoot td{height:34px; font-weight:600; background:var(--surface-2); border-top:1
   .clist{border-right:none; border-bottom:1px solid var(--line); max-height:280px}
   .sheet{grid-template-columns:minmax(0,1fr)}
   .sheet__s{display:none}
-  .sheet__p{border-left:none; border-top:1px solid var(--line); border-radius:10px 10px 0 0; margin-top:52px}
+  .sheet__p{border-left:none; border-top:1px solid var(--line); border-radius:10px 10px 0 0; margin-top:46px}
   .tr li{grid-template-columns:minmax(0,1fr); gap:3px}
   .tr__w{padding-top:0}
-  .body{padding-bottom:78px}
+  .body{padding-bottom:40px}
   .mcal__s .q{display:none}
-  .tabbar{display:grid; grid-template-columns:repeat(5,1fr); position:fixed; left:0; right:0; bottom:0; z-index:50; background:var(--surface); border-top:1px solid var(--line); padding-bottom:env(safe-area-inset-bottom,0px)}
-  .tabbar button{background:none; border:none; padding:9px 2px; cursor:pointer; font-size:10.5px; color:var(--ink-3); position:relative}
-  .tabbar button[aria-current="true"]{color:var(--bronze-deep); font-weight:600}
-  .tabbar button[aria-current="true"]::before{content:""; position:absolute; top:0; left:20%; right:20%; height:2px; background:var(--bronze)}
+  .tabbar{display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:4px; position:sticky; top:46px; z-index:45;
+          padding:7px 8px; background:var(--surface); border-bottom:1px solid var(--line-2); box-shadow:0 6px 14px -10px rgba(53,50,48,.35)}
+  .tabbar button{position:relative; height:40px; padding:0 2px; border:1px solid var(--line); border-radius:7px; background:var(--paper);
+                 cursor:pointer; font-size:12.5px; font-weight:500; color:var(--ink-2); white-space:nowrap; overflow:visible}
+  .tabbar button[aria-current="true"]{background:var(--ink); border-color:var(--ink); color:var(--paper); font-weight:600}
+  .tabbar button i{position:absolute; top:-6px; right:-3px; min-width:17px; height:17px; padding:0 4px; border-radius:9px;
+                   background:var(--bad); color:#fff; font-style:normal; font-family:var(--mono); font-size:10px; line-height:17px; text-align:center}
 }
 /* ─── телефон: свои раскладки графика, таблицы карточками ─── */
 .msort{display:none}
@@ -601,6 +604,7 @@ tfoot td{height:34px; font-weight:600; background:var(--surface-2); border-top:1
 </nav>
 
 
+<nav class="tabbar" id="tabbar" aria-label="Разделы прототипа"></nav>
 <div class="app">
   <aside class="side">
     <div class="mark">
@@ -636,7 +640,6 @@ tfoot td{height:34px; font-weight:600; background:var(--surface-2); border-top:1
     </div>
   </main>
 </div>
-<nav class="tabbar" id="tabbar"></nav>
 
 <script>
 (function(){
@@ -934,7 +937,7 @@ function buildNav(){
   PAGES.forEach(function(p){
     var x=el('button','slink','<span class="slink__b"></span><span>'+p.nav+'</span>'+(p.bad?'<span class="slink__c">'+p.bad+'</span>':''));
     x.type='button'; x.dataset.n=p.id; x.addEventListener('click',function(){go(p.id);}); n.appendChild(x);
-    var t=el('button',null,'<span>'+p.nav.split(' ')[0]+'</span>');
+    var t=el('button',null,'<span>'+p.nav.split(' ')[0]+'</span>'+(p.bad?'<i>'+p.bad+'</i>':''));
     t.type='button'; t.dataset.t=p.id; t.addEventListener('click',function(){go(p.id);}); b.appendChild(t);
   });
 }
@@ -1186,6 +1189,8 @@ function renderSched(){
   EMP.forEach(function(e){var x=hrs(e.id); totH+=x; totS+=shf(e.id); if(x>NORM)over++;});
   var bd=$('[data-n="schedule"] .slink__c');
   if(bd){ bd.textContent=ISS.length; bd.style.display=ISS.length?'':'none'; }
+  var tb=$('[data-t="schedule"] i');
+  if(tb){ tb.textContent=ISS.length; tb.style.display=ISS.length?'':'none'; }
 
   var h='<div class="kpis">'
     + kpi('Часов в сентябре', nhf(totH), 'по девяти сотрудникам, по времени смен',
